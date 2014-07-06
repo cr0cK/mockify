@@ -1,0 +1,3 @@
+#!/bin/bash
+
+nodemon -L --watch . --debug app.js
