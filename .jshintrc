@@ -18,6 +18,8 @@
   "trailing": true,
   "smarttabs": true,
   "white": true,
+  "maxlen": 80,
+  "strict": false,
   "globals": {
     "jQuery": true
   }
