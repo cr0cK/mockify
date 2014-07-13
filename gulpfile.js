@@ -1,99 +1,147 @@
-var gulp = require('gulp'),
+var settings = require('./gulpsettings.js'),
+    async = require('async'),
+    gulp = require('gulp'),
+    gutil = require('gulp-util'),
     less = require('gulp-less'),
-    concat = require('gulp-concat'),
+    clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
-    uglify = require('gulp-uglify'),
-    watch = require('gulp-watch'),
-    minifyCss = require('gulp-minify-css'),
+    inject = require('gulp-inject'),
+    // uglify = require('gulp-uglify'),
+    // watch = require('gulp-watch'),
+    // minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
-    concat =  require('gulp-concat'),
+    // concat =  require('gulp-concat'),
     shell  = require('gulp-shell'),
-    livereload = require('gulp-livereload');
+    startLog = function (log) {
+      return gutil.log(':: ' + gutil.colors.bold(log));
+    };
 
-// config to hold the path files
-var paths = {
-  server: [
-    'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
-    'app.js', 'config.js'
-  ],
-  client: ['./public/js/**/*.js', '!./public/js/**/*.min.js']
+/**
+ * Clean the build dir.
+ */
+gulp.task('_cleanBuild', function () {
+  startLog('Cleaning the build directory');
+  return gulp
+    .src(settings.buildDir, {read: false})
+    .pipe(clean());
+});
+
+/**
+ * Lint the JS server files.
+ */
+var lint = function (next) {
+  startLog('Lint server files');
+  gulp
+    .src([
+      'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
+      'app.js', 'config.js'
+    ])
+    .pipe(jshint('.jshintrc'))
+    .pipe(jshint.reporter('jshint-stylish'));
+
+  next();
 };
 
-// Made the tasks simpler and modular
-// so that every task handles a particular build/dev process
-// If there is any improvement that you think can help make these tasks simpler
-// open an issue at https://github/com/ngenerio/generator-express-simple
-// It can be made simpler
-
-// Lint the javascript server files
-gulp.task('lintserver', function () {
-  gulp
-    .src(paths.server)
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
-});
-
-// Lint the javascript client files
-gulp.task('lintclient', function () {
-  gulp
-    .src(paths.client)
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
-});
+/**
+ * Lint the JS client files.
+ */
+// gulp.task('lintclient', function () {
+//   gulp
+//     .src(paths.client)
+//     .pipe(jshint('.jshintrc'))
+//     .pipe(jshint.reporter('jshint-stylish'));
+// });
 
 // Uglify the client/frontend javascript files
-gulp.task('uglify', function () {
-  gulp
-    .src(paths.client)
-    .pipe(uglify())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('./public/js'));
-});
+// gulp.task('uglify', function () {
+//   gulp
+//     .src(paths.client)
+//     .pipe(uglify())
+//     .pipe(rename({suffix: '.min'}))
+//     .pipe(gulp.dest('./public/js'));
+// });
 
-// Concat the built javascript files from the uglify task with the vendor/lib
-// javascript files into one file
-// Let's save the users some bandwith
-gulp.task('concatJs', function () {
-  gulp
-    .src([
-      './public/vendor/jquery/dist/jquery.min.js',
-      './public/vendor/bootstrap/dist/js/bootstrap.min.js',
-      './public/js/main.min.js'
-    ])
-    .pipe(concat('app.min.js'))
-    .pipe(gulp.dest('./public/js'));
-});
 
-gulp.task('buildCss', function () {
+/**
+ * Build CSS files.
+ */
+var buildCSS = function (next) {
+  startLog('Build CSS');
   gulp
-    .src('./public/less/**/*.less')
+    .src('./public/less/**/main.less')
     .pipe(less())
-    .pipe(minifyCss())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('./public/css'));
-});
+    .pipe(gulp.dest('./build/static/css'));
+
+  next();
+};
+
+/**
+ * Buils JS files.
+ */
+var buildJS = function (next) {
+  startLog('Build public JS');
+  gulp
+    .src((settings.vendorFiles).concat(
+      './public/js/**/*.js'
+    ))
+    .pipe(gulp.dest('./build/static/js'));
+
+  next();
+};
+
+/**
+ * Build the base HTML template.
+ */
+var buildAssets = function () {
+  startLog('Create base.html');
+  gulp.src('./views/_base.html')
+    .pipe(
+      inject(
+        gulp.src([
+          settings.buildDir + '/static/**/*.css',
+          settings.buildDir + '/static/**/*.js'
+        ], { read: false }),
+        { ignorePath: '/build' }
+      )
+    )
+    .pipe(rename('base.html'))
+    .pipe(gulp.dest('./views'));
+};
 
 // Watch the various files and runs their respective tasks
-gulp.task('watch', function () {
-  gulp.watch(paths.server, ['lintserver']);
-  gulp.watch(paths.client, ['lintclient']);
-  gulp.watch(paths.client, ['buildJs']);
-  gulp.watch('./public/less/**/*.less', ['buildCss']);
-  gulp
-    .src([
-      './views/**/*.html',
-      './public/css/**/*.min.css',
-      './public/js/**/*.min.js'
-    ])
-    .pipe(watch())
-    .pipe(livereload());
-});
+// gulp.task('watch', function () {
+//   gulp.watch(paths.server, ['lintserver']);
+//   gulp.watch(paths.client, ['lintclient']);
+//   gulp.watch(paths.client, ['buildJs']);
+//   gulp.watch('./public/less/**/*.less', ['buildCss']);
+//   gulp
+//     .src([
+//       './views/**/*.html',
+//       './public/css/**/*.min.css',
+//       './public/js/**/*.min.js'
+//     ])
+//     .pipe(watch());
+// });
 
 gulp.task('_serve', shell.task([
   'nodemon -L --watch . --debug app.js'
 ]));
 
-gulp.task('lint', ['lintserver', 'lintclient']);
-gulp.task('buildJs', ['concatJs', 'uglify']);
-gulp.task('default', ['lint', 'buildCss', 'buildJs', 'watch']);
+gulp.task('clean', ['_cleanBuild']);
+// gulp.task('lint', ['_lintServer']);
+// gulp.task('build', ['_build'], function () {
+//   gulp.start('_buildAssets');
+// });
+
+gulp.task('build', function () {
+  gulp.start('clean', function () {
+    console.log('test');
+
+    async.parallel([lint, buildCSS, buildJS], buildAssets);
+  });
+});
+
+// gulp.task('buildJs', ['concatJs', 'uglify']);
+// gulp.task('default', ['lint', 'buildCss', 'buildJs', 'watch']);
+
 gulp.task('serve', ['_serve']);

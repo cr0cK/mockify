@@ -3,6 +3,6 @@ pids
 *.pid
 *.seed
 
-build
 node_modules
 public/vendor
+build
