@@ -7,11 +7,15 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
     concat =  require('gulp-concat'),
+    shell  = require('gulp-shell'),
     livereload = require('gulp-livereload');
 
 // config to hold the path files
 var paths = {
-  server: ['controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js', 'app.js', 'config.js'],
+  server: [
+    'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
+    'app.js', 'config.js'
+  ],
   client: ['./public/js/**/*.js', '!./public/js/**/*.min.js']
 };
 
@@ -46,11 +50,16 @@ gulp.task('uglify', function () {
     .pipe(gulp.dest('./public/js'));
 });
 
-// Concat the built javascript files from the uglify task with the vendor/lib javascript files into one file
+// Concat the built javascript files from the uglify task with the vendor/lib
+// javascript files into one file
 // Let's save the users some bandwith
 gulp.task('concatJs', function () {
   gulp
-    .src(['./public/vendor/jquery/dist/jquery.min.js', './public/vendor/bootstrap/dist/js/bootstrap.min.js', './public/js/main.min.js'])
+    .src([
+      './public/vendor/jquery/dist/jquery.min.js',
+      './public/vendor/bootstrap/dist/js/bootstrap.min.js',
+      './public/js/main.min.js'
+    ])
     .pipe(concat('app.min.js'))
     .pipe(gulp.dest('./public/js'));
 });
@@ -71,11 +80,20 @@ gulp.task('watch', function () {
   gulp.watch(paths.client, ['buildJs']);
   gulp.watch('./public/less/**/*.less', ['buildCss']);
   gulp
-    .src(['./views/**/*.hbs', './public/css/**/*.min.css', './public/js/**/*.min.js'])
+    .src([
+      './views/**/*.html',
+      './public/css/**/*.min.css',
+      './public/js/**/*.min.js'
+    ])
     .pipe(watch())
     .pipe(livereload());
 });
 
+gulp.task('_serve', shell.task([
+  'nodemon -L --watch . --debug app.js'
+]));
+
 gulp.task('lint', ['lintserver', 'lintclient']);
 gulp.task('buildJs', ['concatJs', 'uglify']);
 gulp.task('default', ['lint', 'buildCss', 'buildJs', 'watch']);
+gulp.task('serve', ['_serve']);
