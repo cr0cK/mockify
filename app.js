@@ -5,7 +5,7 @@
 var express        = require('express'),
     path           = require('path'),
     mongoose       = require('mongoose'),
-    hbs            = require('express-hbs'),
+    swig           = require('swig'),
     logger         = require('morgan'),
     bodyParser     = require('body-parser'),
     compress       = require('compression'),
@@ -24,29 +24,12 @@ mongoose.connection.on('error', function () {
 var app = express();
 
 /**
- * A simple if condtional helper for handlebars
- *
- * Usage:
- *   {{#ifvalue env value='development'}}
- *     do something marvellous
- *   {{/ifvalue}}
- * For more information, check out this gist: https://gist.github.com/pheuter/3515945
- */
-hbs.registerHelper('ifvalue', function (conditional, options) {
-  if (options.hash.value === conditional) {
-    return options.fn(this);
-  } else {
-    return options.inverse(this);
-  }
-});
-
-/**
  * Express configuration.
  */
 app.set('port', config.server.port);
-app.engine('hbs', hbs.express3());
+app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', 'html');
 
 app
   .use(compress())
@@ -62,6 +45,7 @@ app
 
 if (app.get('env') === 'development') {
   app.use(errorHandler());
+  swig.setDefaults({ cache: false });
 }
 
 app.listen(app.get('port'), function () {
