@@ -1,5 +1,5 @@
 var settings = require('./gulpsettings.js'),
-    async = require('async'),
+    // async = require('async'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
     less = require('gulp-less'),
@@ -27,74 +27,52 @@ gulp.task('_cleanBuild', function () {
 });
 
 /**
+ * Build CSS files.
+ */
+gulp.task('_buildCSS', ['clean'], function () {
+  startLog('Build CSS');
+  return gulp
+    .src('./public/less/**/main.less')
+    .pipe(less())
+    .pipe(gulp.dest('./build/static/css'));
+});
+
+/**
  * Lint the JS server files.
  */
-var lint = function (next) {
+gulp.task('_lintServer', ['clean'], function () {
   startLog('Lint server files');
-  gulp
+  return gulp
     .src([
       'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
       'app.js', 'config.js'
     ])
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('jshint-stylish'));
-
-  next();
-};
-
-/**
- * Lint the JS client files.
- */
-// gulp.task('lintclient', function () {
-//   gulp
-//     .src(paths.client)
-//     .pipe(jshint('.jshintrc'))
-//     .pipe(jshint.reporter('jshint-stylish'));
-// });
-
-// Uglify the client/frontend javascript files
-// gulp.task('uglify', function () {
-//   gulp
-//     .src(paths.client)
-//     .pipe(uglify())
-//     .pipe(rename({suffix: '.min'}))
-//     .pipe(gulp.dest('./public/js'));
-// });
-
-
-/**
- * Build CSS files.
- */
-var buildCSS = function (next) {
-  startLog('Build CSS');
-  gulp
-    .src('./public/less/**/main.less')
-    .pipe(less())
-    .pipe(gulp.dest('./build/static/css'));
-
-  next();
-};
+});
 
 /**
  * Buils JS files.
  */
-var buildJS = function (next) {
+gulp.task('_buildJS', ['clean', '_lintServer'], function () {
   startLog('Build public JS');
-  gulp
+  return gulp
     .src((settings.vendorFiles).concat(
       './public/js/**/*.js'
     ))
     .pipe(gulp.dest('./build/static/js'));
-
-  next();
-};
+});
 
 /**
  * Build the base HTML template.
  */
-var buildAssets = function () {
+gulp.task(
+  '_buildAssets',
+  ['clean', '_buildCSS', '_lintServer', '_buildJS'],
+  function () {
+
   startLog('Create base.html');
-  gulp.src('./views/_base.html')
+  return gulp.src('./views/_layout.html')
     .pipe(
       inject(
         gulp.src([
@@ -104,9 +82,9 @@ var buildAssets = function () {
         { ignorePath: '/build' }
       )
     )
-    .pipe(rename('base.html'))
+    .pipe(rename('layout.html'))
     .pipe(gulp.dest('./views'));
-};
+});
 
 // Watch the various files and runs their respective tasks
 // gulp.task('watch', function () {
@@ -127,19 +105,13 @@ gulp.task('_serve', shell.task([
   'nodemon -L --watch . --debug app.js'
 ]));
 
-gulp.task('clean', ['_cleanBuild']);
 // gulp.task('lint', ['_lintServer']);
 // gulp.task('build', ['_build'], function () {
 //   gulp.start('_buildAssets');
 // });
 
-gulp.task('build', function () {
-  gulp.start('clean', function () {
-    console.log('test');
-
-    async.parallel([lint, buildCSS, buildJS], buildAssets);
-  });
-});
+gulp.task('clean', ['_cleanBuild']);
+gulp.task('build', ['_buildAssets']);
 
 // gulp.task('buildJs', ['concatJs', 'uglify']);
 // gulp.task('default', ['lint', 'buildCss', 'buildJs', 'watch']);
