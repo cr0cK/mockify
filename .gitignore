@@ -6,3 +6,6 @@ pids
 node_modules
 public/vendor
 build
+bin
+# generated layout by gulp
+views/layout.html

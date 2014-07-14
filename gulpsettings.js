@@ -3,10 +3,14 @@
 var settings = (function () {
   'use strict';
 
-  var moduleName = 'hostingstats';
-
   return {
+    appName: 'mocKr',
     buildDir: './build',
+    binDir: './bin',
+    serverFiles: [
+      'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
+      'app.js', 'config.js'
+    ],
     vendorFiles: [
       './public/vendor/jquery/dist/jquery.min.js'
     ]
