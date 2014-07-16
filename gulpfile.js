@@ -12,6 +12,8 @@ var settings = require('./gulpsettings.js'),
     rename = require('gulp-rename'),
     concat =  require('gulp-concat'),
     shell  = require('gulp-shell'),
+    green = gutil.colors.green,
+    cyan = gutil.colors.cyan,
     startLog = function (log) {
       return gutil.log(':: ' + gutil.colors.bold(log));
     };
@@ -147,7 +149,9 @@ gulp.task(
   return injectAssets(settings.binDir);
 });
 
-// Watch the various files and runs their respective tasks
+/**
+ * Watch the various files and runs their respective tasks.
+ */
 gulp.task('_watch', function () {
   gulp.watch(settings.serverFiles, ['_lintServer']);
   gulp.watch([
@@ -172,8 +176,31 @@ gulp.task('_serve', shell.task([
 ]));
 
 /**
+ * Display some help.
+ */
+gulp.task('help', function() {
+  gutil.log('');
+  gutil.log(cyan('To install:') + ':');
+  gutil.log(' - npm install');
+  gutil.log(' - bower install');
+  gutil.log(' - gulp build');
+  gutil.log(' - gulp serve');
+
+  gutil.log('');
+
+  gutil.log(cyan('Available tasks') + ':');
+  // gutil.log(' - ' + green('test') + ': launch Karma unittests');
+  gutil.log(' - ' + green('watch') + ': watch JS and less files and trigger' +
+    ' the build task on modifications');
+  gutil.log(' - ' + green('build') + ': build less and JS files.');
+  gutil.log(' - ' + green('compile') + ': compile (minify) less and JS files.');
+  gutil.log('');
+});
+
+/**
  * Public tasks.
  */
+gulp.task('default', ['help']);
 gulp.task('clean', ['_cleanBuild', '_cleanBin']);
 gulp.task('build', ['_buildAssets']);
 gulp.task('compile', ['_compileAssets']);

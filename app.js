@@ -22,6 +22,7 @@ mongoose.connection.on('error', function () {
 });
 
 var app = express();
+var isDevelopment = app.get('env') === 'development';
 
 /**
  * Express configuration.
@@ -37,13 +38,14 @@ app
   .use(logger('dev'))
   .use(bodyParser())
   .use(methodOverride())
-  .use(express.static(path.join(__dirname, 'public')))
+  .use(express.static(path.join(__dirname,
+    isDevelopment ? 'build' : 'bin')))
   .use(routes.indexRouter)
   .use(function (req, res) {
     res.status(404).render('404', {title: 'Not Found :('});
   });
 
-if (app.get('env') === 'development') {
+if (isDevelopment) {
   app.use(errorHandler());
   swig.setDefaults({ cache: false });
 }
