@@ -61,6 +61,32 @@ gulp.task('_compileCSS', ['clean'], function () {
     .pipe(gulp.dest(settings.binDir + '/static/css'));
 });
 
+var copyImages = function (dir) {
+  return gulp
+    .src([
+      './public/images/**/*.jpg',
+      './public/images/**/*.png',
+      './public/images/**/*.gif'
+    ])
+    .pipe(gulp.dest(dir + '/static/images'));
+}
+
+/**
+ * Copy images to the build dir.
+ */
+gulp.task('_buildImages', ['clean'], function () {
+  startLog('Copy images');
+  copyImages(settings.buildDir);
+});
+
+/**
+ * Copy images to the bin dir.
+ */
+gulp.task('_compileImages', ['clean'], function () {
+  startLog('Copy images');
+  copyImages(settings.binDir);
+});
+
 /**
  * Lint the server JS files.
  */
@@ -130,7 +156,7 @@ var injectAssets = function (dir) {
  */
 gulp.task(
   '_buildAssets',
-  ['clean', '_buildCSS', '_lintPublic', '_buildJS'],
+  ['clean', '_buildCSS', '_lintPublic', '_buildJS', '_buildImages'],
   function () {
 
   startLog('Inject assets in the layout');
@@ -142,7 +168,7 @@ gulp.task(
  */
 gulp.task(
   '_compileAssets',
-  ['clean', '_compileCSS', '_lintPublic', '_compileJS'],
+  ['clean', '_compileCSS', '_lintPublic', '_compileJS', '_compileImages'],
   function () {
 
   startLog('Inject assets in the layout');
