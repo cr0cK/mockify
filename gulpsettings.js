@@ -5,14 +5,15 @@ var settings = (function () {
 
   return {
     appName: 'mocKr',
-    buildDir: './build',
-    binDir: './bin',
+    buildDir: './build/static',
     serverFiles: [
       'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
       'app.js', 'config.js'
     ],
     vendorFiles: [
-      './public/vendor/jquery/dist/jquery.min.js'
+      './public/vendor/jquery/dist/jquery.min.js',
+      './public/vendor/angular/angular.min.js',
+      './public/vendor/angular-ui-router/release/angular-ui-router.min.js'
     ]
   };
 

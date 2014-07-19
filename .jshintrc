@@ -1,5 +1,7 @@
 {
   "globals": {
+    "__dirname": {},
+    "require": {},
     "angular": {},
     "moment": {},
     "_": {}

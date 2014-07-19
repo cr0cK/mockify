@@ -35,17 +35,16 @@ app.set('view engine', 'html');
 app
   .use(compress())
   .use(favicon())
-  .use(logger('dev'))
   .use(bodyParser())
   .use(methodOverride())
-  .use(express.static(path.join(__dirname,
-    isDevelopment ? 'build' : 'bin')))
+  .use(express.static(path.join(__dirname, 'build')))
   .use(routes.indexRouter)
   .use(function (req, res) {
     res.status(404).render('404', {title: 'Not Found :('});
   });
 
 if (isDevelopment) {
+  app.use(logger('dev'));
   app.use(errorHandler());
   swig.setDefaults({ cache: false });
 }
