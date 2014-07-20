@@ -1,11 +1,2 @@
-# Runtime data
-pids
-*.pid
-*.seed
-
-node_modules
-public/vendor
-build
-bin
-# generated layout by gulp
-views/layout.html
+app/node_modules
+app/public/vendor
