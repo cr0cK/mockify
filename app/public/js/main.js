@@ -1,3 +1,5 @@
+/* global io */
+
 (function () {
   'use strict';
 
@@ -28,5 +30,16 @@
   .controller('IndexCtrl', ['$scope', function ($scope) {
     $scope.title = 'Bienvenue !';
     $scope.hello = 'Hello !';
+
+    var socket = io.connect('http://localhost:3334');
+      socket.on('news', function (data) {
+      console.log(data);
+      socket.emit('my other event', { my: 'data' });
+    });
+
+    $scope.send = function () {
+      socket.emit('action', { value: $scope.value });
+      $scope.value = '';
+    };
   }]);
 })();

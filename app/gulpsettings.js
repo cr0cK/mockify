@@ -13,6 +13,7 @@ var settings = (function () {
     vendorFiles: [
       './public/vendor/jquery/dist/jquery.min.js',
       './public/vendor/angular/angular.min.js',
+      './public/vendor/socket.io-client/socket.io.js',
       './public/vendor/angular-ui-router/release/angular-ui-router.min.js'
     ]
   };
