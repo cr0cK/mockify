@@ -184,6 +184,7 @@ gulp.task('_watch', function () {
   gulp.watch(settings.buildDir + '/../../views/_layout.html', ['build']);
   gulp.watch([
     'public/less/**/*.less',
+    'public/templates/**/*.html',
     'public/js/**/*.js'
   ], ['build']);
 
