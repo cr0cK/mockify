@@ -1,0 +1,53 @@
+0. A lot of Express apps.
+
+  One app to serve the Angular app which is the mocKr interface.
+
+  One app started to proxy one or several API(s).
+  This app should be able to return custom responses without being restarted (see 2.)
+
+  An another app is started when a mock is started.
+
+  Each app (except the mocKr app itself) could be started and stopped. The state of each app is displayed in the Angular app.
+
+  The port of each app is configurable in the Angular app.
+
+
+1. No mocking, just proxy.
+
+  Apps query an Express app which proxy an existing API(s) and return responses.
+
+  It is possible to save a bunch of queries/responses couples.
+
+  The storage is a database.
+
+
+2. Mocking just the response of a specific query.
+
+  It is possible to skip the HTTP response to alter the response in order to change the response code or response body.
+
+  The custom response is saved in the DB and is used instead of using the proxy.
+
+
+3. Saving an history of queries/responses.
+
+  All is already saved in the DB. A internal mechanism export the DB rows to swagger definitions files.
+
+  No tool seem exist so a specific generator should be developped for this task.
+
+
+4. Mocking a complete API from the swagger definitions thought the Express app.
+
+  This tool seems be the solution: https://www.npmjs.org/package/swagger-jack
+
+  An API is served from a new started Express app.
+
+  The proxy is disabled.
+
+  At any time, it's is possible to stop this mock which restarts the proxy.
+
+  The proxy could be started or stopped too.
+
+
+
+
+
