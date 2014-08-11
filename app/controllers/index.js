@@ -1,10 +1,19 @@
-/**
- * do something with the user model
- * var User = require('../models/user');
- */
+var index = (function () {
+  'use strict';
 
-exports.index = function (req, res) {
-  res.render('index', {
-    title: 'mockr'
-  });
-};
+  /**
+   * do something with the user model
+   * var User = require('../models/user');
+   */
+
+
+  return function (req, res) {
+    res.render('index', {
+      title: 'mockr'
+    });
+  };
+
+
+})();
+
+exports.index = index;
