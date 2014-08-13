@@ -1,28 +1,30 @@
 /* global module, process */
 
+'use strict';
+
 var config = {
   development: {
     server: {
       port: 3000,
     },
-    database: {
-      url: 'mongodb://localhost/mockr_dev'
+    wsapp: {
+      port: 3334,
     }
   },
   testing: {
     server: {
       port: 3001
     },
-    database: {
-      url: 'mongodb://localhost/mockr_test'
+    wsapp: {
+      port: 3334,
     }
   },
   production: {
     server: {
       port: 8080
     },
-    database: {
-      url: 'mongodb://localhost/mockr'
+    wsapp: {
+      port: 3334,
     }
   }
 };
