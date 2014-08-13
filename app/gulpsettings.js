@@ -1,13 +1,13 @@
 /* global module */
 
-var settings = (function () {
-  'use strict';
+'use strict';
 
+var settings = (function () {
   return {
     appName: 'mocKr',
     buildDir: './build/static',
     serverFiles: [
-      'controllers/**/*.js', 'models/**/*.js', 'routes/**/*.js',
+      'app/controllers/**/*.js', 'app/routes/**/*.js',
       'app.js', 'config.js'
     ],
     vendorFiles: [
