@@ -28,18 +28,34 @@
   })
 
   .controller('IndexCtrl', ['$scope', function ($scope) {
-    $scope.title = 'Bienvenue !';
-    $scope.hello = 'Hello !';
+    var socket = io('http://localhost:3334');
 
-    var socket = io.connect('http://localhost:3334');
-      socket.on('news', function (data) {
-      console.log(data);
-      socket.emit('my other event', { my: 'data' });
+    $scope.proxyLogs = [];
+
+    socket.on('proxyLog', function (data) {
+      console.log('receive', data);
+
+      $scope.$apply(function () {
+        $scope.proxyLogs.push(data);
+      });
     });
 
-    $scope.send = function () {
-      socket.emit('action', { value: $scope.value });
-      $scope.value = '';
+    $scope.startProxy = function () {
+      console.log('start proxy');
+      socket.emit('proxy', {
+        action: 'start',
+        url: $scope.url,
+        port: $scope.port
+      });
+    };
+
+    $scope.stopProxy = function () {
+      console.log('stop proxy');
+      socket.emit('proxy', {
+        action: 'stop',
+        url: $scope.url,
+        port: $scope.port
+      });
     };
   }]);
 })();

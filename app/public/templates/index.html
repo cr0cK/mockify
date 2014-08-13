@@ -1,7 +1,37 @@
-<p>{{ hello }}</p>
+<h1>MocKr</h1>
 
-
-<form>
+<!-- <form>
   <input ng-model="value" type="text" name="" value="" />
   <input type="submit" value="Send" ng-click="send()" />
+</form> -->
+
+<form>
+  <fieldset>
+    <h3>Proxy</h3>
+
+    <p>
+      <label id="url">URL</label>
+      <input for="url" type="text" ng-model="url" required />
+    </p>
+
+    <p>
+      <label id="port">Port</label>
+      <input for="port" type="text" ng-model="port" required />
+    </p>
+
+    <p>
+      <input type="submit" ng-click="url && port && startProxy()" value="Start" />
+      <input type="submit" ng-click="url && port && stopProxy()" value="Stop" />
+    </p>
+  </fieldset>
+
+  <p>
+    <h3>Proxy logs</h3>
+    <ul>
+      <li ng-repeat="log in proxyLogs track by $index">
+        {{log}}
+      </li>
+    </ul>
+  </p>
+
 </form>

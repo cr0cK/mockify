@@ -1,6 +1,7 @@
 /* global __dirname */
 
-var settings = require('./gulpsettings.js'),
+var rootDir = process.env.PWD,
+    settings = require('./gulpsettings.js'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
     less = require('gulp-less'),
@@ -146,7 +147,7 @@ gulp.task('_buildAssets',
   startLog(':: Inject assets in the layout');
 
   return gulp
-    .src(settings.buildDir + '/../../views/_layout.html')
+    .src(rootDir + '/app/views/_layout.html')
     .pipe(
       inject(gulp
         .src([
@@ -160,7 +161,7 @@ gulp.task('_buildAssets',
       )
     )
     .pipe(rename('layout.html'))
-    .pipe(gulp.dest(settings.buildDir + '/../../views'));
+    .pipe(gulp.dest(rootDir + '/app/views'));
 });
 
 /**
