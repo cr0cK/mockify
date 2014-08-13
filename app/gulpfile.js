@@ -205,6 +205,11 @@ gulp.task('_serve', shell.task([
 ]));
 
 /**
+ * Start the debugger
+ */
+gulp.task('_debug', shell.task(['node-inspector --web-port=8081']));
+
+/**
  * Display some help.
  */
 gulp.task('help', function() {
@@ -223,6 +228,9 @@ gulp.task('help', function() {
     ' the build task on modifications');
   gutil.log(' - ' + green('build') + ': build less and JS files.');
   gutil.log(' - ' + green('compile') + ': compile (minify) less and JS files.');
+  gutil.log(' - ' + green('watch') + ': watch files and build on modification.');
+  gutil.log(' - ' + green('serve') + ': start the apps.');
+  gutil.log(' - ' + green('debug') + ': launch node-inspector.');
   gutil.log('');
 });
 
@@ -237,3 +245,4 @@ gulp.task('compile', [
   '_compileCSS', '_lintPublic', '_compileJS', '_copyImages', '_compileAssets']);
 gulp.task('watch', ['build', '_watch']);
 gulp.task('serve', ['_serve']);
+gulp.task('debug', ['_debug']);
