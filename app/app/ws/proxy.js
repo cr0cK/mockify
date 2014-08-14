@@ -78,6 +78,9 @@ module.exports = (function () {
             // say that a new proxy has been started
             eventEmitter.emit('list', childStore);
           }
+          else {
+            eventEmitter.emit('log', 'This proxy is already started!');
+          }
 
           break;
 
@@ -88,10 +91,10 @@ module.exports = (function () {
           if (_.has(childStore, childId)) {
             childStore[childId].child().kill('SIGHUP');
             delete childStore[childId];
-            eventEmitter.emit('log', 'Process has been killed.');
+            eventEmitter.emit('log', 'Proxy has been killed.');
           }
           else {
-            eventEmitter.emit('log', 'No process found.');
+            eventEmitter.emit('log', 'No proxy found for this port/target.');
           }
 
           // say that a proxy has been killed
