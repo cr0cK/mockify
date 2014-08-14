@@ -1,19 +1,9 @@
-var index = (function () {
-  'use strict';
+'use strict';
 
-  /**
-   * do something with the user model
-   * var User = require('../models/user');
-   */
-
-
+exports.index = (function () {
   return function (req, res) {
     res.render('index', {
       title: 'mockr'
     });
   };
-
-
 })();
-
-exports.index = index;

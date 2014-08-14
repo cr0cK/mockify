@@ -1,19 +1,20 @@
-/**
- * Module dependencies
- */
-var express = require('express'),
-    controllers = require('../controllers');
+'use strict';
 
-/**
- * the new Router exposed in express 4
- * the indexRouter handles all requests to the `/` path
- */
-var indexRouter = express.Router();
+exports.indexRouter = (function () {
+  var express = require('express'),
+      controllers = require('../controllers');
 
-/**
- * this accepts all request methods to the `/` path
- */
-indexRouter.route('/')
-  .all(controllers.index);
+  /**
+   * the new Router exposed in express 4
+   * the indexRouter handles all requests to the `/` path
+   */
+  var indexRouter = express.Router();
 
-exports.indexRouter = indexRouter;
+  /**
+   * this accepts all request methods to the `/` path
+   */
+  indexRouter.route('/')
+    .all(controllers.index);
+
+  return indexRouter;
+})();

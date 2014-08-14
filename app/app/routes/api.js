@@ -1,9 +1,13 @@
-var express = require('express'),
-    controllers = require('../controllers/api');
+'use strict';
 
-var apiRouter = express.Router();
+exports.apiRouter = (function () {
+  var express = require('express'),
+      controllers = require('../controllers/api');
 
-apiRouter.route('/').all(controllers.index);
-apiRouter.get('/proxy/list', controllers.proxy.list);
+  var apiRouter = express.Router();
 
-exports.apiRouter = apiRouter;
+  apiRouter.route('/').all(controllers.index);
+  apiRouter.get('/proxy/list', controllers.proxy.list);
+
+  return apiRouter;
+})();

@@ -1,7 +1,9 @@
 'use strict';
 
-var mainApp = require('./app/main'),
-    wsApp = require('./app/ws');
+(function () {
+  var mainApp = require('./app/main'),
+      wsApp = require('./app/ws');
 
-mainApp.run();
-wsApp.run();
+  mainApp.run();
+  wsApp.run();
+})();
