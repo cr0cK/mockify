@@ -31,6 +31,7 @@
     var socket = io('http://localhost:3334');
 
     $scope.proxyLogs = [];
+    $scope.proxyList = [];
 
     socket.on('proxyLog', function (data) {
       console.log('receive', data);
@@ -40,13 +41,18 @@
       });
     });
 
+    socket.on('proxyList', function (data) {
+      $scope.$apply(function () {
+        $scope.proxyList = data;
+      });
+    });
+
     $scope.defaultValues = {
       target: 'http://localhost',
       port: 4000
     };
 
     $scope.startProxy = function () {
-      console.log('start proxy');
       socket.emit('proxy', {
         action: 'start',
         target: ($scope.target || $scope.defaultValues.target),
@@ -54,12 +60,22 @@
       });
     };
 
-    $scope.stopProxy = function () {
-      console.log('stop proxy');
+    $scope.stopProxy = function (proxy) {
       socket.emit('proxy', {
         action: 'stop',
-        target: ($scope.target || $scope.defaultValues.target),
-        port: ($scope.port || $scope.defaultValues.port)
+        target: (
+          // if a proxy has been defined
+          (proxy && proxy.target) ||
+          // input value
+          $scope.target ||
+          // fallback to default value
+          $scope.defaultValues.target
+        ),
+        port: (
+          (proxy && proxy.port) ||
+          $scope.port ||
+          $scope.defaultValues.port
+        )
       });
     };
 

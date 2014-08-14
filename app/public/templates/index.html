@@ -5,33 +5,48 @@
   <input type="submit" value="Send" ng-click="send()" />
 </form> -->
 
-<form>
-  <fieldset>
-    <h3>Proxy</h3>
+<p>
+  <h3>Current proxies</h3>
 
-    <p>
-      <label id="target">Target</label>
-      <input for="target" type="text" placeholder="{{defaultValues.target}}" ng-model="target" />
-    </p>
+  <table class="table table-striped">
+    <tr ng-repeat="proxy in proxyList track by $index">
+      <td>{{proxy.port}}</td>
+      <td>{{proxy.target}}</td>
+      <td>
+        <span class="glyphicon glyphicon-remove" ng-click="stopProxy(proxy)"></span>
+      </td>
+    </tr>
+  </table>
+</p>
 
-    <p>
-      <label id="port">Port</label>
-      <input for="port" type="text" placeholder="{{defaultValues.port}}" ng-model="port" />
-    </p>
+<p>
+  <form>
+    <fieldset>
+      <h3>Proxy</h3>
 
-    <p>
-      <input type="submit" ng-click="startProxy()" value="Start" />
-      <input type="submit" ng-click="stopProxy()" value="Stop" />
-    </p>
-  </fieldset>
+      <p>
+        <label id="port">Port</label>
+        <input for="port" type="text" placeholder="{{defaultValues.port}}" ng-model="port" />
+      </p>
 
-  <p>
-    <h3>Proxy logs</h3>
-    <ul>
-      <li ng-repeat="log in proxyLogs track by $index">
-        {{log}}
-      </li>
-    </ul>
-  </p>
+      <p>
+        <label id="target">Target</label>
+        <input for="target" type="text" placeholder="{{defaultValues.target}}" ng-model="target" />
+      </p>
 
-</form>
+      <p>
+        <input type="submit" ng-click="startProxy()" value="Start" />
+        <input type="submit" ng-click="stopProxy()" value="Stop" />
+      </p>
+    </fieldset>
+  </form>
+</p>
+
+<p>
+  <h3>Proxy logs</h3>
+  <ul>
+    <li ng-repeat="log in proxyLogs track by $index">
+      {{log}}
+    </li>
+  </ul>
+</p>

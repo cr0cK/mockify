@@ -74,6 +74,9 @@ module.exports = (function () {
             // save the child in a ChildStorage object
             childStorage.child(spawnedChild);
             childStore[childId] = childStorage;
+
+            // say that a new proxy has been started
+            eventEmitter.emit('list', childStore);
           }
 
           break;
@@ -90,6 +93,10 @@ module.exports = (function () {
           else {
             eventEmitter.emit('log', 'No process found.');
           }
+
+          // say that a proxy has been killed
+          eventEmitter.emit('list', childStore);
+
           break;
 
         default:
