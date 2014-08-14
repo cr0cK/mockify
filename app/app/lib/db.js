@@ -13,14 +13,14 @@ var file      = 'db.sqlite',
     schemas = [
       'CREATE  TABLE "main"."response"' +
       ' ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
+      ' "uuid" VARCHAR NOT NULL,' +
       ' "dateCreated" DATETIME NOT NULL DEFAULT CURRENT_DATE,' +
       ' "path" VARCHAR NOT NULL,' +
       ' "method" VARCHAR NOT NULL,' +
-      ' "headers" TEXT NOT NULL,' +
       ' "parameters" TEXT NOT NULL,' +
-      ' "body" TEXT NOT NULL,' +
-      ' "acceptContentType" VARCHAR NOT NULL,' +
-      ' "contentType" VARCHAR NOT NULL,' +
+      ' "reqHeaders" TEXT NOT NULL,' +
+      ' "resHeaders" TEXT,' +
+      ' "body" TEXT,' +
       ' "comment" TEXT,' +
       ' "apiId" INTEGER)',
       'CREATE  TABLE "main"."api"' +

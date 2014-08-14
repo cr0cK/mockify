@@ -48,7 +48,8 @@
     });
 
     $scope.defaultValues = {
-      target: 'http://localhost',
+      // target: 'http://localhost',
+      target: 'https://crock.gandi.net',
       port: 4000
     };
 

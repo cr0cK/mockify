@@ -6,14 +6,14 @@ module.exports = {
    */
   Response: function (db) {
     return db.define('response', {
+      uuid        : String,
       dateCreated : Date,
       path        : String,
       method      : String,
-      headers     : Object,
       parameters  : Object,
+      reqHeaders  : Object,
+      resHeaders  : Object,
       body        : Object,
-      acceptContentType: String,
-      contentType : String,
       comment     : String,
       apiId       : Number
     }, {
