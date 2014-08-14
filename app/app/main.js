@@ -13,7 +13,8 @@ module.exports = (function () {
       errorHandler   = require('errorhandler'),
       db             = require('./lib/db'),
       config         = require('./config'),
-      routes         = require('./routes');
+      indexRoutes    = require('./routes/index'),
+      apiRoutes      = require('./routes/api');
 
   /**
    * Create Dabase if it not exists
@@ -37,7 +38,8 @@ module.exports = (function () {
     .use(favicon())
     .use(methodOverride())
     .use(express.static(path.join(rootPath, 'build')))
-    .use(routes.indexRouter)
+    .use(indexRoutes.indexRouter)
+    .use('/api', apiRoutes.apiRouter)
     .use(function (req, res) {
       res.status(404).render('404', {title: 'Not Found :('});
     })

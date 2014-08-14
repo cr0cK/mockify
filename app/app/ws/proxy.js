@@ -2,13 +2,43 @@
 
 
 module.exports = (function () {
-  var binPath       = path.join(process.env.PWD, 'app', 'bin'),
-      path          = require('path'),
+  var path          = require('path'),
+      binPath       = path.join(process.env.PWD, 'app', 'bin'),
       spawn         = require('child_process').spawn,
       _             = require('lodash'),
       eventEmitter  = new (require('events').EventEmitter)();
 
-  var childs = {};
+  var childStore = {};
+
+  /**
+   * Allows to store spawn objects with additional informations.
+   */
+  var ChildStorage = function (target, port, child) {
+    this._target = target;
+    this._port = port;
+    this._child = child;
+  };
+
+  ChildStorage.prototype = {
+    id: function () {
+      return [this._target, this._port].join('|');
+    },
+
+    target: function () {
+      return this._target;
+    },
+
+    port: function () {
+      return this._port;
+    },
+
+    child: function (child) {
+      if (child) {
+        this._child = child;
+      }
+      return this._child;
+    }
+  };
 
   return {
     /**
@@ -20,15 +50,16 @@ module.exports = (function () {
         return;
       }
 
-      var childId = [data.target, data.port].join(':');
+      var childStorage = new ChildStorage(data.target, data.port),
+          childId = childStorage.id();
 
       switch (data.action) {
         /**
          * Start the child
          */
         case 'start':
-          if (!_.has(childs, childId)) {
-            var child = spawn('node', [
+          if (!_.has(childStore, childId)) {
+            var spawnedChild = spawn('node', [
               path.join(binPath, 'proxy.js'),
               '--target=' + data.target,
               '--port=' + data.port
@@ -36,12 +67,13 @@ module.exports = (function () {
 
             // send child stdout to an eventEmitter, listened by
             // the main app and forwarded to the browser via websockets
-            child.stdout.on('data', function (data) {
+            spawnedChild.stdout.on('data', function (data) {
               eventEmitter.emit('log', data);
             });
 
-            // save childs
-            childs[childId] = child;
+            // save the child in a ChildStorage object
+            childStorage.child(spawnedChild);
+            childStore[childId] = childStorage;
           }
 
           break;
@@ -50,9 +82,14 @@ module.exports = (function () {
          * Stop the child.
          */
         case 'stop':
-          childs[childId].kill('SIGHUP');
-          delete childs[childId];
-          eventEmitter.emit('log', 'Process has been killed.');
+          if (_.has(childStore, childId)) {
+            childStore[childId].child().kill('SIGHUP');
+            delete childStore[childId];
+            eventEmitter.emit('log', 'Process has been killed.');
+          }
+          else {
+            eventEmitter.emit('log', 'No process found.');
+          }
           break;
 
         default:
@@ -64,8 +101,15 @@ module.exports = (function () {
     /**
      * Return the event emitter for logging.
      */
-    getEventEmitter: function () {
+    eventEmitter: function () {
       return eventEmitter;
+    },
+
+    /**
+     * Return the childStore object (dictionnary of ChildStorage objects)
+     */
+    childStore: function () {
+      return childStore;
     }
   };
 })();

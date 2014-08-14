@@ -11,17 +11,17 @@
 
     <p>
       <label id="target">Target</label>
-      <input for="target" type="text" ng-model="target" required />
+      <input for="target" type="text" placeholder="{{defaultValues.target}}" ng-model="target" />
     </p>
 
     <p>
       <label id="port">Port</label>
-      <input for="port" type="text" ng-model="port" required />
+      <input for="port" type="text" placeholder="{{defaultValues.port}}" ng-model="port" />
     </p>
 
     <p>
-      <input type="submit" ng-click="target && port && startProxy()" value="Start" />
-      <input type="submit" ng-click="target && port && stopProxy()" value="Stop" />
+      <input type="submit" ng-click="startProxy()" value="Start" />
+      <input type="submit" ng-click="stopProxy()" value="Stop" />
     </p>
   </fieldset>
 

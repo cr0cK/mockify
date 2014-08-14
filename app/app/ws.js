@@ -18,7 +18,7 @@ module.exports = (function () {
     socket.on('proxy', proxy.handleWS);
 
     // send the proxy childs stdout to websocket
-    proxy.getEventEmitter().on('log', function (data) {
+    proxy.eventEmitter().on('log', function (data) {
       socket.emit('proxyLog', data.toString('utf8'));
     });
   });

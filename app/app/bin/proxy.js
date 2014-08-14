@@ -56,6 +56,6 @@
     });
   });
 
-  console.log('listening on port ' + port);
+  console.log('Proxy listening on port ' + port + ' and proxying ' + target);
   server.listen(port);
 })();
