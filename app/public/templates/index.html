@@ -1,10 +1,5 @@
 <h1>MocKr</h1>
 
-<!-- <form>
-  <input ng-model="value" type="text" name="" value="" />
-  <input type="submit" value="Send" ng-click="send()" />
-</form> -->
-
 <p>
   <h3>Current proxies</h3>
 
@@ -13,7 +8,7 @@
       <td>{{proxy.port}}</td>
       <td>{{proxy.target}}</td>
       <td>
-        <span class="glyphicon glyphicon-remove" ng-click="stopProxy(proxy)"></span>
+        <span class="glyphicon glyphicon-remove" ng-click="stopProxy(proxy)" title="Kill proxy"></span>
       </td>
     </tr>
   </table>
@@ -24,19 +19,19 @@
     <fieldset>
       <h3>Proxy</h3>
 
-      <p>
-        <label id="port">Port</label>
-        <input for="port" type="text" placeholder="{{defaultValues.port}}" ng-model="port" />
-      </p>
+      <div class="input-group">
+        <span class="input-group-addon size-label-small">Port</span>
+        <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon size-label-small">Target</span>
+        <input type="text" class="form-control" placeholder="{{defaultValues.target}}" ng-model="target" />
+      </div>
 
       <p>
-        <label id="target">Target</label>
-        <input for="target" type="text" placeholder="{{defaultValues.target}}" ng-model="target" />
-      </p>
-
-      <p>
-        <input type="submit" ng-click="startProxy()" value="Start" />
-        <input type="submit" ng-click="stopProxy()" value="Stop" />
+        <button type="button" class="btn btn-primary" ng-click="startProxy()">Start</button>
+        <button type="button" class="btn btn-danger" ng-click="stopProxy()">Kill</button>
       </p>
     </fieldset>
   </form>
