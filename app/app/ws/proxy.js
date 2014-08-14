@@ -2,7 +2,7 @@
 
 
 module.exports = (function () {
-  var pathAbs       = process.env.PWD,
+  var binPath       = path.join(process.env.PWD, 'app', 'bin'),
       path          = require('path'),
       spawn         = require('child_process').spawn,
       _             = require('lodash'),
@@ -29,7 +29,7 @@ module.exports = (function () {
         case 'start':
           if (!_.has(childs, childId)) {
             var child = spawn('node', [
-              path.join(pathAbs, 'proxy.js'),
+              path.join(binPath, 'proxy.js'),
               '--target=' + data.target,
               '--port=' + data.port
             ]);

@@ -1,3 +1,7 @@
+/**
+ * Standalone proxy.
+ * Started as a child process of the Express app.
+ */
 'use strict';
 
 (function () {
@@ -33,7 +37,7 @@
       '** proxified url **'
     );
 
-    // captured by the main app
+    // stdout captured by the main app
     console.log(log);
 
     // decode body to json
