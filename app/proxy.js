@@ -3,12 +3,13 @@
 (function () {
   var httpProxy = require('http-proxy'),
       anyBody = require('body/any'),
+      argv = require('minimist')(process.argv.slice(2)),
       _ = require('lodash'),
-      _s = require('underscore.string');
+      _s = require('underscore.string'),
+      port = argv.port || 4000,
+      target = argv.target || 'http://localhost';
 
-  //
-  // Create a proxy server with custom application logic
-  //
+  // create proxy
   var proxy = httpProxy.createProxyServer({
     secure: false,
     xfwd: true
@@ -47,10 +48,10 @@
     // You can define here your custom logic to handle the request
     // and then proxy the request.
     proxy.web(req, res, {
-      target: 'https://crock.gandi.net'
+      target: target
     });
   });
 
-  console.log('listening on port 4000');
-  server.listen(4000);
+  console.log('listening on port ' + port);
+  server.listen(port);
 })();

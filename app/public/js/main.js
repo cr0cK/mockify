@@ -44,7 +44,7 @@
       console.log('start proxy');
       socket.emit('proxy', {
         action: 'start',
-        url: $scope.url,
+        target: $scope.target,
         port: $scope.port
       });
     };
@@ -53,7 +53,7 @@
       console.log('stop proxy');
       socket.emit('proxy', {
         action: 'stop',
-        url: $scope.url,
+        target: $scope.target,
         port: $scope.port
       });
     };

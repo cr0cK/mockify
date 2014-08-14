@@ -7,6 +7,7 @@ module.exports = (function () {
       proxy   = require('./ws/proxy'),
       config  = require('./config');
 
+
   /**
    * Init Websockets connexion.
    */
@@ -17,8 +18,8 @@ module.exports = (function () {
     socket.on('proxy', proxy.handleWS);
 
     // send the proxy childs stdout to websocket
-    proxy.getEventEmitter().on('stdout', function (data) {
-      io.emit('proxyLog', data.toString('utf8'));
+    proxy.getEventEmitter().on('log', function (data) {
+      socket.emit('proxyLog', data.toString('utf8'));
     });
   });
 

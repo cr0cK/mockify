@@ -10,8 +10,8 @@
     <h3>Proxy</h3>
 
     <p>
-      <label id="url">URL</label>
-      <input for="url" type="text" ng-model="url" required />
+      <label id="target">Target</label>
+      <input for="target" type="text" ng-model="target" required />
     </p>
 
     <p>
@@ -20,8 +20,8 @@
     </p>
 
     <p>
-      <input type="submit" ng-click="url && port && startProxy()" value="Start" />
-      <input type="submit" ng-click="url && port && stopProxy()" value="Stop" />
+      <input type="submit" ng-click="target && port && startProxy()" value="Start" />
+      <input type="submit" ng-click="target && port && stopProxy()" value="Stop" />
     </p>
   </fieldset>
 
