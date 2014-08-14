@@ -69,6 +69,17 @@ gulp.task('_copyImages', ['clean'], function () {
 });
 
 /**
+ * Copy fonts to the build dir.
+ */
+gulp.task('_copyFonts', ['clean'], function () {
+  startLog(':: Copy fonts');
+
+  return gulp
+    .src('./public/fonts/**/*')
+    .pipe(gulp.dest(settings.buildDir + '/fonts'));
+});
+
+/**
  * Lint the server JS files.
  */
 gulp.task('_lintServer', function () {
@@ -241,9 +252,11 @@ gulp.task('help', function() {
 gulp.task('default', ['help']);
 gulp.task('clean', ['_clean']);
 gulp.task('build', [
-  '_buildCSS', '_lintPublic', '_buildJS', '_copyImages', '_buildAssets']);
+  '_buildCSS', '_lintPublic', '_buildJS', '_copyImages', '_copyFonts',
+  '_buildAssets']);
 gulp.task('compile', [
-  '_compileCSS', '_lintPublic', '_compileJS', '_copyImages', '_compileAssets']);
+  '_compileCSS', '_lintPublic', '_compileJS', '_copyImages', '_copyFonts',
+  '_compileAssets']);
 gulp.task('watch', ['build', '_watch']);
 gulp.task('serve', ['_serve']);
 gulp.task('debug', ['_debug']);
