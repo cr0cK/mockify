@@ -58,6 +58,9 @@
         target: ($scope.target || $scope.defaultValues.target),
         port: ($scope.port || $scope.defaultValues.port)
       });
+
+      delete $scope.target;
+      delete $scope.port;
     };
 
     $scope.stopProxy = function (proxy) {
