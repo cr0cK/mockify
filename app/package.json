@@ -1,25 +1,26 @@
 {
   "name": "mockr",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
+    "body": "^4.5.0",
     "body-parser": "^1.0.2",
+    "cli-color": "^0.3.2",
     "compression": "^1.0.1",
     "errorhandler": "^1.0.2",
     "express": "^4.0.0",
     "http-proxy": "^1.1.6",
     "lodash": "^2.4.1",
     "method-override": "^1.0.2",
+    "minimist": "^1.1.0",
+    "moment": "^2.8.1",
     "morgan": "^1.0.1",
     "nodemon": "^1.2.1",
-    "simple-http-proxy": "^0.5.11",
+    "orm": "^2.1.18",
     "socket.io": "^1.0.6",
+    "sqlite3": "^2.2.7",
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
-    "sqlite3": "^2.2.7",
-    "orm": "^2.1.18",
-    "cli-color": "^0.3.2",
-    "moment": "^2.8.1",
-    "minimist": "^1.1.0"
+    "underscore.string": "^2.3.3"
   },
   "devDependencies": {
     "gulp": "^3.6.2",
@@ -37,6 +38,7 @@
     "gulp-uglify": "^0.3.1",
     "gulp-util": "^2.2.20",
     "gulp-watch": "~0.6.4",
-    "jshint-stylish": "^0.2.0"
+    "jshint-stylish": "^0.2.0",
+    "node-inspector": "^0.7.4"
   }
 }
