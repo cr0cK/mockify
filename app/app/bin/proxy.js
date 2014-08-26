@@ -58,23 +58,21 @@
 
     // decode body to json
     anyBody(req, res, function (__, json) {
-      if (_.isObject(json)) {
-        var data = {
-          uuid        : uuid,
-          dateCreated : moment().toDate(),
-          path        : req.url,
-          method      : req.method,
-          parameters  : json,
-          reqHeaders  : req.headers,
-          apiId       : 42
-        };
+      var data = {
+        uuid        : uuid,
+        dateCreated : moment().toDate(),
+        path        : req.url,
+        method      : req.method,
+        parameters  : (_.isObject(json) && json) || {},
+        reqHeaders  : req.headers,
+        apiId       : 42
+      };
 
-        db.model('Response').create([data], function (err) {
-          if (err) {
-            console.log('An error has occurred', err);
-          }
-        });
-      }
+      db.model('Response').create([data], function (err) {
+        if (err) {
+          console.log('An error has occurred', err);
+        }
+      });
     });
   });
 
