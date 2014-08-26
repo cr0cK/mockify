@@ -13,6 +13,7 @@
       _           = require('lodash'),
       _s          = require('underscore.string'),
       moment      = require('moment'),
+      url         = require('url'),
       db          = require('./../lib/db'),
       guid        = require('./../lib/helper').guid,
       port        = argv.port || 4000,
@@ -33,10 +34,19 @@
   // is made to the target.
   //
   proxy.on('proxyReq', function(proxyReq, req, res, options) {
-    var log = _s.sprintf('[%s] %s%s',
+    // hack the host in the header to be able to proxy a different host
+    var parsedTarget = url.parse(target);
+    proxyReq._headers.host = parsedTarget.host;
+
+    // don't send cookies of localhost!
+    proxyReq._headers.cookie = '';
+
+    var log = _s.sprintf('[%s] %s%s -> %s%s',
       req.method,
       req.headers.host,
-      req.url
+      req.url,
+      proxyReq._headers.host,
+      proxyReq.path
     );
 
     // stdout captured by the main app
@@ -104,6 +114,7 @@
     proxy.web(req, res, {target: target});
   });
 
-  console.log('Proxy listening on port ' + port + ' and proxying ' + target);
+  console.log('Proxy listening on localhost:' + port + ' and proxying ' +
+    target);
   server.listen(port);
 })();
