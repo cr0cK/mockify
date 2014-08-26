@@ -75,7 +75,7 @@ module.exports = (function () {
             childStorage.child(spawnedChild);
             childStore[childId] = childStorage;
 
-            // say that a new proxy has been started
+            // return the list of proxies
             eventEmitter.emit('list', childStore);
           }
           else {
@@ -97,7 +97,7 @@ module.exports = (function () {
             eventEmitter.emit('log', 'No proxy found for this port/target.');
           }
 
-          // say that a proxy has been killed
+          // return the list of proxies
           eventEmitter.emit('list', childStore);
 
           break;
