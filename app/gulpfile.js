@@ -1,5 +1,7 @@
 /* global __dirname */
 
+'use strict';
+
 var rootDir = process.env.PWD,
     settings = require('./gulpsettings.js'),
     gulp = require('gulp'),
@@ -124,31 +126,16 @@ gulp.task('_buildJS', ['clean', '_lintPublic'], function () {
   startLog(':: Build public JS');
 
   return gulp
-    .src((settings.vendorFiles).concat('./public/js/**/*.js'))
+    .src([].concat(
+      settings.vendorFiles,
+      './public/js/**/*.js'
+    ))
     .pipe(gulp.dest(function (file) {
       return file.path
         .replace(__dirname + '/public', settings.buildDir)
         .split('/').slice(0, -1).join('/');
     }));
 });
-
-/**
- * Compile JS files.
- */
-// gulp.task('_compileJS', ['clean', '_lintPublic'], function () {
-//   startLog(':: Compile public JS');
-
-//   return gulp
-//     .src((settings.vendorFiles).concat(
-//       './public/js/**/*.js'
-//     ))
-//     .pipe(ngmin())
-//     .pipe(uglify())
-//     .pipe(concat(settings.appName + '.js'))
-//     .pipe(gulp.dest(settings.buildDir + '/js'));
-// });
-//
-//
 
 /**
  * Inject the builded assets in the main layout.
@@ -161,32 +148,20 @@ gulp.task('_buildAssets',
     .src(rootDir + '/app/views/_layout.html')
     .pipe(
       inject(gulp
-        .src([
-          settings.buildDir + '/vendor/**/*.js',
+        .src([].concat(
+          settings.vendorFiles,
           settings.buildDir + '/js/**/*.js',
           settings.buildDir + '/css/main.css'
-        ], { read: false }),
+        ), { read: false }),
         {
-          ignorePath: '/build'
+          ignorePath: ['/build/static', '/public'],
+          addPrefix: '/static'
         }
       )
     )
     .pipe(rename('layout.html'))
     .pipe(gulp.dest(rootDir + '/app/views'));
 });
-
-/**
- * Inject the compiled assets in the main layout.
- */
-// gulp.task(
-//   '_compileAssets',
-//   ['clean', '_compileCSS', '_lintPublic', '_compileJS', '_compileImages'],
-//   function () {
-
-//   startLog(':: Inject assets in the layout');
-
-//   return injectAssets(settings.binDir);
-// });
 
 /**
  * Watch the various files and runs their respective tasks.
@@ -199,14 +174,6 @@ gulp.task('_watch', function () {
     'public/templates/**/*.html',
     'public/js/**/*.js'
   ], ['build']);
-
-  // gulp
-  //   .src([
-  //     './views/**/*.html',
-  //     './public/css/**/*.min.css',
-  //     './public/js/**/*.min.js'
-  //   ])
-  //   .pipe(watch());
 });
 
 /**
@@ -240,7 +207,7 @@ gulp.task('help', function() {
     ' the build task on modifications');
   gutil.log(' - ' + green('build') + ': build less and JS files.');
   gutil.log(' - ' + green('compile') + ': compile (minify) less and JS files.');
-  gutil.log(' - ' + green('watch') + ': watch files and build on modification.');
+  gutil.log(' - ' + green('watch') + ': watch files and build on updates.');
   gutil.log(' - ' + green('serve') + ': start the apps.');
   gutil.log(' - ' + green('debug') + ': launch node-inspector.');
   gutil.log('');
