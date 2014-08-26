@@ -3,10 +3,12 @@
 (function () {
   'use strict';
 
-  angular.module('app', [
+  angular.module('mocKr', [
     'ui.router',
+    'ui.bootstrap',
 
-    'templates'
+    'templates',
+    'mocKr.service.localStorage',
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {
@@ -27,15 +29,14 @@
       });
   })
 
-  .controller('IndexCtrl', ['$scope', function ($scope) {
+  .controller('IndexCtrl', [
+    '$scope', 'localStorageFactory', function ($scope, localStorage) {
+
     var socket = io('http://localhost:3334');
 
-    $scope.proxyLogs = [];
-    $scope.proxyList = [];
+    $scope.proxyLogs = $scope.proxyList = [];
 
     socket.on('proxyLog', function (data) {
-      console.log('receive', data);
-
       $scope.$apply(function () {
         $scope.proxyLogs.push(data);
       });
@@ -47,21 +48,36 @@
       });
     });
 
+    var initDefaultTarget = function () {
+      $scope.targetsStored = localStorage.get('targets');
+      return localStorage.last('targets') || 'http://httpbin.org';
+    };
+
     $scope.defaultValues = {
       // target: 'http://localhost',
-      target: 'https://crock.gandi.net',
+      target: initDefaultTarget(),
       port: 4000
     };
 
     $scope.startProxy = function () {
+      // @TODO check format
+      // see https://gist.github.com/jlong/2428561
+
+      var target = ($scope.target || $scope.defaultValues.target);
+
+      // save the target
+      localStorage.push('targets', target);
+
       socket.emit('proxy', {
         action: 'start',
-        target: ($scope.target || $scope.defaultValues.target),
+        target: target,
         port: ($scope.port || $scope.defaultValues.port)
       });
 
       delete $scope.target;
       delete $scope.port;
+
+      $scope.defaultValues.target = initDefaultTarget();
     };
 
     $scope.stopProxy = function (proxy) {
@@ -83,5 +99,11 @@
       });
     };
 
+    $scope.deleteSavedTargets = function () {
+      localStorage.delete('targets');
+
+      delete $scope.target;
+      $scope.defaultValues.target = initDefaultTarget();
+    };
   }]);
 })();

@@ -26,7 +26,9 @@
 
       <div class="input-group">
         <span class="input-group-addon size-label-small">Target</span>
-        <input type="text" class="form-control" placeholder="{{defaultValues.target}}" ng-model="target" />
+        <input bs-typeahead class="form-control" type="text" ng-model="target" placeholder="{{defaultValues.target}}"
+          typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
+        <span class="cursor glyphicon glyphicon-remove" title="Delete saved targets" ng-click="deleteSavedTargets()"></span>
       </div>
 
       <p>
