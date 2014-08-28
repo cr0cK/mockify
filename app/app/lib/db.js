@@ -92,7 +92,7 @@ module.exports = {
   },
 
   /**
-   * Return a new Sqlite3 instance mapped to a in-memory dabatase
+   * Return a new Sqlite3 instance mapped to an in-memory dabatase
    * filled with the content of the SQLite database saved on the disk.
    *
    * Will be used to create a temporary mock.

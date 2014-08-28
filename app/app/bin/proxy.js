@@ -38,8 +38,8 @@
     var parsedTarget = url.parse(target);
     proxyReq._headers.host = parsedTarget.host;
 
-    // generate a random uuid to mismatch Etag and 304 not modified
-    // (304 response will not trigger the 'data' event on the response object
+    // generate a random uuid to not match Etag and avoid "304 not modified"
+    // (304 responses will not trigger the 'data' event from the response object
     // and therefore we can't save body in database)
     proxyReq._headers['if-none-match'] = guid();
 
