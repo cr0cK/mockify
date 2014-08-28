@@ -8,7 +8,7 @@
 
 (function () {
   var httpProxy   = require('http-proxy'),
-      anyBody     = require('body/any'),
+      jsonBody    = require('body/json'),
       argv        = require('minimist')(process.argv.slice(2)),
       _           = require('lodash'),
       _s          = require('underscore.string'),
@@ -62,7 +62,7 @@
     proxyReq.setHeader('X-MocKr-rowuuid', uuid);
 
     // decode body to json
-    anyBody(req, res, function (__, json) {
+    jsonBody(req, res, function (__, json) {
       var data = {
         uuid        : uuid,
         dateCreated : moment().toDate(),
