@@ -1,44 +1,5 @@
 <p>
-  <h3>Current proxies</h3>
-
-  <table class="table table-striped">
-    <tr ng-repeat="proxy in proxyList track by $index">
-      <td>{{proxy.port}}</td>
-      <td>{{proxy.target}}</td>
-      <td>
-        <span class="glyphicon glyphicon-remove" ng-click="stopProxy(proxy)" title="Kill proxy"></span>
-      </td>
-    </tr>
-  </table>
-</p>
-
-<p>
-  <form>
-    <fieldset>
-      <h3>Proxy</h3>
-
-      <div class="input-group">
-        <span class="input-group-addon size-label-small">Port</span>
-        <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
-      </div>
-
-      <div class="input-group">
-        <span class="input-group-addon size-label-small">Target</span>
-        <input bs-typeahead class="form-control" type="text" ng-model="target" placeholder="{{defaultValues.target}}"
-          typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
-        <span class="cursor glyphicon glyphicon-remove" title="Delete saved targets" ng-click="deleteSavedTargets()"></span>
-      </div>
-
-      <p>
-        <button type="button" class="btn btn-primary" ng-click="startProxy()">Start</button>
-        <button type="button" class="btn btn-danger" ng-click="stopProxy()">Kill</button>
-      </p>
-    </fieldset>
-  </form>
-</p>
-
-<p>
-  <h3>Proxy logs</h3>
+  <h3>Logs</h3>
   <ul>
     <li ng-repeat="log in proxyLogs track by $index">
       {{log}}

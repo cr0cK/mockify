@@ -1,26 +1,18 @@
-/* global io */
-
 (function () {
   'use strict';
 
-  angular.module('mocKr.logs', [
+  angular.module('mocKr.process', [
+    'mocKr.service.webSocket',
     'mocKr.service.localStorage'
   ])
 
-  .controller('LogsCtrl', [
-    '$scope', 'localStorageFactory', function ($scope, localStorage) {
+  .controller('ProcessListCtrl', [
+    '$scope', 'webSocketService', 'localStorageFactory',
+    function ($scope, webSocket, localStorage) {
 
-    var socket = io('http://localhost:3334');
+    $scope.proxyList = [];
 
-    $scope.proxyLogs = $scope.proxyList = [];
-
-    socket.on('proxyLog', function (data) {
-      $scope.$apply(function () {
-        $scope.proxyLogs.push(data);
-      });
-    });
-
-    socket.on('proxyList', function (data) {
+    webSocket.on('proxyList', function (data) {
       $scope.$apply(function () {
         $scope.proxyList = data;
       });
@@ -28,7 +20,8 @@
 
     var initDefaultTarget = function () {
       $scope.targetsStored = localStorage.get('targets');
-      return localStorage.last('targets') || 'http://httpbin.org';
+      return localStorage.last('targets') ||
+        'http://jsonplaceholder.typicode.com';
     };
 
     $scope.defaultValues = {
@@ -46,7 +39,7 @@
       // save the target
       localStorage.push('targets', target);
 
-      socket.emit('proxy', {
+      webSocket.emit('proxy', {
         action: 'start',
         target: target,
         port: ($scope.port || $scope.defaultValues.port)
@@ -59,7 +52,7 @@
     };
 
     $scope.stopProxy = function (proxy) {
-      socket.emit('proxy', {
+      webSocket.emit('proxy', {
         action: 'stop',
         target: (
           // if a proxy has been defined
