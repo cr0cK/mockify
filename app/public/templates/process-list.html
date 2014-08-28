@@ -1,48 +1,47 @@
 <p>
-  <h3>Current proxies</h3>
+  <h3>Current processes</h3>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>Port</th>
         <th>Target</th>
+        <th>Status</th>
         <th>Delete</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr ng-repeat="proxy in proxyList track by $index">
+      <tr ng-show="!proxiesList.length">
+        <td colspan="4">No process is running.</td>
+      </tr>
+
+      <tr ng-repeat="proxy in proxiesList track by $index">
         <td>{{proxy.port}}</td>
         <td>{{proxy.target}}</td>
+        <td>{{proxy.status}}</td>
         <td>
-          <span class="glyphicon glyphicon-remove" ng-click="stopProxy(proxy)" title="Kill proxy"></span>
+          <span class="glyphicon glyphicon-remove" ng-click="removeProxy(proxy)" title="Delete proxy"></span>
+        </td>
+      </tr>
+
+      <tr ng-show="showProxyFields">
+        <td><input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" /></td>
+        <td colspan="2">
+          <input type="text" class="form-control" placeholder="{{defaultValues.target}}" ng-model="target"
+            typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
+        </td>
+        <td
+          <div class="pull-right">
+            <button type="button" class="btn btn-success" ng-click="addProxy(port, target, 'inactive'); showProxyFields = false">OK</button>
+            <button type="button" class="btn btn-default" ng-click="showProxyFields = false">Cancel</button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
-</p>
 
-<p>
-  <form>
-    <fieldset>
-      <h3>Proxy</h3>
-
-      <div class="input-group">
-        <span class="input-group-addon size-label-small">Port</span>
-        <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
-      </div>
-
-      <div class="input-group">
-        <span class="input-group-addon size-label-small">Target</span>
-        <input bs-typeahead class="form-control" type="text" ng-model="target" placeholder="{{defaultValues.target}}"
-          typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
-        <span class="cursor glyphicon glyphicon-remove" title="Delete saved targets" ng-click="deleteSavedTargets()"></span>
-      </div>
-
-      <p>
-        <button type="button" class="btn btn-primary" ng-click="startProxy()">Start</button>
-        <button type="button" class="btn btn-danger" ng-click="stopProxy()">Kill</button>
-      </p>
-    </fieldset>
-  </form>
+  <p class="pull-right">
+    <button type="button" class="btn btn-default" ng-click="showProxyFields = true">Add</button>
+  </p>
 </p>

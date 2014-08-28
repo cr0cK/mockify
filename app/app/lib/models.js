@@ -2,7 +2,7 @@
 
 module.exports = {
   /**
-   * Create an empty Sqlite database.
+   * Response model
    */
   Response: function (db) {
     return db.define('response', {
@@ -30,12 +30,13 @@ module.exports = {
   },
 
   /**
-   * Return the model `model`.
+   * Proxy model
    */
-  Api: function (db) {
-    return db.define('api', {
-      url         : String,
-      enabled     : Boolean
+  Proxy: function (db) {
+    return db.define('proxy', {
+      port        : Number,
+      target      : String,
+      status      : ['active', 'inactive']
     }, {
       methods: {
         // fullName: function () {

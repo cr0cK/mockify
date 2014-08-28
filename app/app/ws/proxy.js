@@ -5,6 +5,8 @@ module.exports = (function () {
   var path          = require('path'),
       binPath       = path.join(process.env.PWD, 'app', 'bin'),
       spawn         = require('child_process').spawn,
+      db            = require('./../lib/db'),
+      Proxy         = require('./../entity/proxy'),
       _             = require('lodash'),
       eventEmitter  = new (require('events').EventEmitter)();
 
@@ -41,6 +43,35 @@ module.exports = (function () {
   };
 
   return {
+    /**
+     * Register a new proxy in the DB.
+     */
+    add: function (data, callback) {
+      db.model('Proxy').create([data], function (err) {
+        callback(err);
+      });
+    },
+
+    /**
+     * Remove a proxy in the DB.
+     */
+    remove: function (proxyEntity, callback) {
+      db.model('Proxy').find({id: proxyEntity.id}).remove(function (err) {
+        callback(err);
+      });
+    },
+
+    /**
+     * Return the list of proxies from the DB.
+     */
+    list: function (callback) {
+      db.model('Proxy').find({}, function (err, proxies) {
+        callback(err, _.map(proxies, function (properties) {
+          return new Proxy(properties);
+        }));
+      });
+    },
+
     /**
      * Receive the data from the websocket and handle the proxy child process.
      */

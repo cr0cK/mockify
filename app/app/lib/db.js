@@ -35,10 +35,11 @@ var file      = 'db.sqlite',
       // replace if the query is the same than a previous one
       ' UNIQUE (status, url, method, parameters) ON CONFLICT REPLACE)',
 
-      'CREATE  TABLE "main"."api"' +
+      'CREATE  TABLE "main"."proxy"' +
       ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,' +
-      ' "url" VARCHAR NOT NULL ,' +
-      ' "enabled" BOOL NOT NULL)'
+      ' "port" INTEGER NOT NULL ,' +
+      ' "target" VARCHAR NOT NULL ,' +
+      ' "status" VARCHAR NOT NULL)'
     ],
     guid      = require('./helper').guid;
 

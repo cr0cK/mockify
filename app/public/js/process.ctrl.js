@@ -3,20 +3,23 @@
 
   angular.module('mocKr.process', [
     'mocKr.service.webSocket',
-    'mocKr.service.localStorage'
+    'mocKr.service.localStorage',
+    'mocKr.entity.proxy'
   ])
 
   .controller('ProcessListCtrl', [
-    '$scope', 'webSocketService', 'localStorageFactory',
-    function ($scope, webSocket, localStorage) {
+    '$scope',
+    'webSocketService',
+    'localStorageFactory',
+    'proxyFactory',
+    function (
+      $scope,
+      webSocket,
+      localStorage,
+      Proxy
+    ) {
 
     $scope.proxyList = [];
-
-    webSocket.on('proxyList', function (data) {
-      $scope.$apply(function () {
-        $scope.proxyList = data;
-      });
-    });
 
     var initDefaultTarget = function () {
       $scope.targetsStored = localStorage.get('targets');
@@ -28,6 +31,30 @@
       // target: 'http://localhost',
       target: initDefaultTarget(),
       port: 4000
+    };
+
+    /**
+     * Register a proxy in the DB.
+     */
+    $scope.addProxy = function (port, target, status) {
+      port = port || $scope.defaultValues.port;
+      target = target || $scope.defaultValues.target;
+
+      var proxy = new Proxy({
+        port: port,
+        target: target,
+        status: status
+      });
+
+      webSocket.emit('addProxy', proxy);
+    };
+
+    /**
+     * Remove a proxy on the DB
+     * @param  {Proxy}  proxy  Proxy entity
+     */
+    $scope.removeProxy = function (proxy) {
+      webSocket.emit('removeProxy', proxy);
     };
 
     $scope.startProxy = function () {
@@ -76,5 +103,18 @@
       delete $scope.target;
       $scope.defaultValues.target = initDefaultTarget();
     };
+
+    /**
+     * Websockets events
+     */
+
+    // add proxies in the scope
+    webSocket.on('listProxies', function (proxies) {
+      $scope.$apply(function () {
+        $scope.proxiesList = _.map(proxies, function (proxyProperties) {
+          return new Proxy(proxyProperties);
+        });
+      });
+    });
   }]);
 })();
