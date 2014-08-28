@@ -8,7 +8,8 @@ module.exports = {
     return db.define('response', {
       uuid        : String,
       dateCreated : Date,
-      path        : String,
+      status      : Number,
+      url         : String,
       method      : String,
       parameters  : Object,
       reqHeaders  : Object,

@@ -61,7 +61,7 @@
       var data = {
         uuid        : uuid,
         dateCreated : moment().toDate(),
-        path        : req.url,
+        url         : req.url,
         method      : req.method,
         parameters  : (_.isObject(json) && json) || {},
         reqHeaders  : req.headers,
@@ -94,6 +94,7 @@
         // if response found, update headers and body
         if (response) {
           response.resHeaders = res_.headers;
+          response.status = res_.statusCode;
           response.body = megaBuffer.toString('utf8');
 
           response.save(function (err) {

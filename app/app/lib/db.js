@@ -1,33 +1,46 @@
 'use strict';
 
 var _         = require('lodash'),
+    _s        = require('underscore.string'),
     fs        = require('fs'),
     path      = require('path'),
-    orm       = require('orm');
+    orm       = require('orm'),
+    sqlite3   = require('sqlite3').verbose(),
+    exec      = require('child_process').exec,
+    os        = require('os');
 
 var file      = 'db.sqlite',
     absFile   = path.join(process.env.PWD, file),
     conStr    = 'sqlite://' + absFile,
     exists    = fs.existsSync(file),
     models    = require('./models'),
-    schemas = [
+    schemas   = [
       'CREATE  TABLE "main"."response"' +
       ' ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
-      ' "uuid" VARCHAR NOT NULL,' +
+      // index on uuid to improve speed
+      ' "uuid" VARCHAR UNIQUE NOT NULL,' +
       ' "dateCreated" DATETIME NOT NULL DEFAULT CURRENT_DATE,' +
-      ' "path" VARCHAR NOT NULL,' +
+      // can be null because it will be updated when receiving the response
+      ' "status" INTEGER,' +
+      ' "url" VARCHAR NOT NULL,' +
       ' "method" VARCHAR NOT NULL,' +
       ' "parameters" TEXT NOT NULL,' +
       ' "reqHeaders" TEXT NOT NULL,' +
+      // can be null because it will be updated when receiving the response
       ' "resHeaders" TEXT,' +
+      // can be null because it will be updated when receiving the response
       ' "body" TEXT,' +
       ' "comment" TEXT,' +
-      ' "apiId" INTEGER)',
+      ' "apiId" INTEGER,' +
+      // replace if the query is the same than a previous one
+      ' UNIQUE (status, url, method, parameters) ON CONFLICT REPLACE)',
+
       'CREATE  TABLE "main"."api"' +
       ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,' +
       ' "url" VARCHAR NOT NULL ,' +
-      ' "enabled" BOOL NOT NULL )'
-    ];
+      ' "enabled" BOOL NOT NULL)'
+    ],
+    guid      = require('./helper').guid;
 
 var _models = {};
 
@@ -50,18 +63,25 @@ orm.connect(conStr, function (err, db) {
 module.exports = {
   /**
    * Create an empty Sqlite database.
+   *
+   * If a `schemas_` is defined, the database is created in-memory.
+   * (Used by the toMemory() method of this module)
    */
-  create: function () {
-    var sqlite3 = require('sqlite3').verbose(),
-        db      = new sqlite3.Database(absFile);
+  create: function (schemas_) {
+    var dest = schemas_ ? ':memory:' : absFile;
+    var db = new sqlite3.Database(dest);
+    var localSchemas =
+      (schemas_ && _.without(schemas_.split('\n'), '')) || schemas;
 
-    db.serialize(function() {
-      if (!exists) {
-        _.forEach(schemas, function (schema) {
+    db.serialize(function () {
+      if (schemas_ || !exists) {
+        _.forEach(localSchemas, function (schema) {
           db.run(schema);
         });
       }
     });
+
+    return this;
   },
 
   /**
@@ -69,5 +89,51 @@ module.exports = {
    */
   model: function (model) {
     return _.has(_models, model) && _models[model];
+  },
+
+  /**
+   * Return a new Sqlite3 instance mapped to a in-memory dabatase
+   * filled with the content of the SQLite database saved on the disk.
+   *
+   * Will be used to create a temporary mock.
+   *
+   * Since it seems there is no way to dump a SQLite file with NodeJS,
+   * we do a shell call.
+   * Therefore, the "sqlite3" binary must be installed on the system.
+   */
+  toMemory: function (callback) {
+    var self = this;
+    var file = 'mocKr_dump_' + guid() + '.sql';
+    var destFile = path.join(os.tmpDir(), file);
+    var cmdLind = 'sqlite3 ' + absFile + ' .dump > ' + destFile;
+
+    // dump the SQLite database into a temp file
+    exec(cmdLind, function (err, stdout, stderr) {
+      if (err) {
+        var errs = [];
+
+        errs.push(
+          'An error has occurred when trying to dump the SQLite file: ',
+          _s.trim(stderr));
+
+        if (/not found/.test(stderr)) {
+          errs.push(
+            'Try to install sqlite binary: sudo apt-get install sqlite3');
+        }
+
+        // call the callback with the error
+        return callback(errs.join('\n'), undefined);
+      }
+
+      // read file
+      var dumpSql = fs.readFileSync(destFile);
+
+      // delete file since its content has been read
+      fs.unlinkSync(destFile);
+
+      // call the callback without error and with a new instance of this module
+      // with a in-memory database mapped to the dump SQL
+      return callback(undefined, self.create(dumpSql.toString('utf-8')));
+    });
   }
 };
