@@ -19,7 +19,8 @@ var settings = (function () {
       './public/vendor/moment.js',
       './public/vendor/lodash/dist/lodash.js',
       './public/vendor/lodash/dist/lodash.js',
-      './public/vendor/underscore.string/lib/underscore.string.js'
+      './public/vendor/underscore.string/lib/underscore.string.js',
+      './public/vendor/angular-bootstrap-toggle-switch/angular-toggle-switch.js'
     ]
   };
 

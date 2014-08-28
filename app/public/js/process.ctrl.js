@@ -4,7 +4,9 @@
   angular.module('mocKr.process', [
     'mocKr.service.webSocket',
     'mocKr.service.localStorage',
-    'mocKr.entity.proxy'
+    'mocKr.entity.proxy',
+
+    'toggle-switch'
   ])
 
   .controller('ProcessListCtrl', [

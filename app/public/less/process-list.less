@@ -1,0 +1,24 @@
+table.process-list {
+  td.switch {
+    padding: 6px !important;
+  }
+
+  tr.fields {
+    input {
+      &[ng-model="port"] {
+        width: 80px;
+      }
+      &[ng-model="target"] {
+        width: 280px;
+      }
+
+      display: inline !important;
+    }
+  }
+
+  span.glyphicon-record {
+    &.on {
+      color: red;
+    }
+  }
+}

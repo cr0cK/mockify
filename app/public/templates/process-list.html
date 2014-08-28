@@ -1,41 +1,63 @@
 <p>
   <h3>Current processes</h3>
 
-  <table class="table table-striped">
+  <table class="process-list table table-striped">
     <thead>
       <tr>
         <th>Port</th>
         <th>Target</th>
+        <th>Rec.</th>
         <th>Status</th>
+        <th>ID</th>
         <th>Delete</th>
       </tr>
     </thead>
 
     <tbody>
       <tr ng-show="!proxiesList.length">
-        <td colspan="4">No process is running.</td>
+        <td colspan="6">No process is running.</td>
       </tr>
 
       <tr ng-repeat="proxy in proxiesList track by $index">
         <td>{{proxy.port}}</td>
         <td>{{proxy.target}}</td>
-        <td>{{proxy.status}}</td>
         <td>
-          <span class="glyphicon glyphicon-remove" ng-click="removeProxy(proxy)" title="Delete proxy"></span>
+          <span
+            ng-class="{'on': proxy._isRecording}"
+            class="glyphicon glyphicon-record"
+            ng-click="toggleRecordProxy(proxy)"></span>
+        </td>
+        <td class="switch">
+          <toggle-switch
+            model="proxy.status"
+            class="switch-success switch-small"
+            on-label="proxy"
+            off-label="mock">
+          <toggle-switch>
+        </td>
+        <td>
+          <span
+            class="label label-primary">
+            {{proxy.id}}
+          </span>
+        </td>
+        <td>
+          <span
+            class="glyphicon glyphicon-remove"
+            ng-click="removeProxy(proxy)"
+            title="Delete proxy"></span>
         </td>
       </tr>
 
-      <tr ng-show="showProxyFields">
-        <td><input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" /></td>
-        <td colspan="2">
+      <tr class="fields" ng-show="showProxyFields">
+        <td colspan="6">
+          <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
           <input type="text" class="form-control" placeholder="{{defaultValues.target}}" ng-model="target"
             typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
-        </td>
-        <td
-          <div class="pull-right">
-            <button type="button" class="btn btn-success" ng-click="addProxy(port, target, 'inactive'); showProxyFields = false">OK</button>
+          <span class="pull-right">
+            <button type="button" class="btn btn-success" ng-click="addAndStartProxy(port, target, 'inactive'); showProxyFields = false">OK</button>
             <button type="button" class="btn btn-default" ng-click="showProxyFields = false">Cancel</button>
-          </div>
+          </span>
         </td>
       </tr>
     </tbody>
