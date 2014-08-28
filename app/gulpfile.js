@@ -6,16 +6,13 @@ var rootDir = process.env.PWD,
     settings = require('./gulpsettings.js'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
-    less = require('gulp-less'),
+    less = require('gulp-less-sourcemap'),
     clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
     inject = require('gulp-inject'),
     templateCache = require('gulp-angular-templatecache'),
-    // ngmin = require('gulp-ngmin'),
-    // uglify = require('gulp-uglify'),
     minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
-    // concat =  require('gulp-concat'),
     shell  = require('gulp-shell'),
     green = gutil.colors.green,
     cyan = gutil.colors.cyan,
@@ -42,7 +39,9 @@ gulp.task('_buildCSS', ['clean'], function () {
 
   return gulp
     .src('./public/less/**/main.less')
-    .pipe(less())
+    .pipe(less({
+      sourceMap: true
+    }))
     .pipe(gulp.dest(settings.buildDir + '/css'));
 });
 
