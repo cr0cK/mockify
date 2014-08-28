@@ -10,20 +10,8 @@ module.exports = (function () {
   var app     = require('express')(),
       server  = require('http').Server(app),
       io      = require('socket.io')(server),
-      proxy   = require('./ws/proxy'),
+      Proxy   = require('./entity/proxy'),
       config  = require('./config');
-
-  /**
-   * Format the list of proxies from ChildStorage objects.
-   */
-  // var formatProxyList = function (childStore) {
-  //   return _.map(childStore, function (childStorage) {
-  //     return {
-  //       target: childStorage.target(),
-  //       port: childStorage.port()
-  //     };
-  //   });
-  // };
 
   /**
    * Once connection is etablished, listen events and send/emit WS.
@@ -35,34 +23,28 @@ module.exports = (function () {
 
     // refresh the list of proxies
     var emitListProxies = function () {
-      proxy.list(function (err, proxies) {
+      Proxy.list(function (err, proxies) {
         socket.emit('listProxies', proxies);
       });
-    }
+    };
 
     // send the list of proxies when loading the Angular interface
     emitListProxies();
 
-    // proxy logs (+stdout of childs)
-    proxy.eventEmitter().on('log', function (data) {
+    // Forward childs stdout to websockets
+    Proxy.eventEmitter().on('log', function (data) {
       socket.emit('proxyLog', data.toString('utf8'));
     });
 
-    // list of proxy childs
-    // proxy.eventEmitter().on('list', function (childStore) {
-    //   proxy.list(function (err, proxies) {
-    //     socket.emit('listProxies', proxies);
-    //   });
-    // });
-
     /* Listeners */
 
-    // ...
-    socket.on('proxy', proxy.handleWS);
+    /**
+     * Add a proxy in DB and emit a WS to refresh the list.
+     */
+    socket.on('addProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
 
-    // add a proxy in DB and emit a WS to refresh the list.
-    socket.on('addProxy', function (proxyEntity) {
-      proxy.add(proxyEntity, function (err) {
+      proxyEntity.add(function (err) {
         if (err) {
           console.log('An error has occurred when saving a new Proxy.', err);
           return;
@@ -72,9 +54,13 @@ module.exports = (function () {
       });
     });
 
-    // remove a proxy in DB and emit a WS to refresh the list.
-    socket.on('removeProxy', function (proxyEntity) {
-      proxy.remove(proxyEntity, function (err) {
+    /**
+     * Remove a proxy in DB and emit a WS to refresh the list.
+     */
+    socket.on('removeProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+
+      proxyEntity.remove(function (err) {
         if (err) {
           console.log('An error has occurred when deleting a Proxy.', err);
           return;
@@ -82,6 +68,22 @@ module.exports = (function () {
 
         emitListProxies();
       });
+    });
+
+    /**
+     * Start a proxy.
+     */
+    socket.on('startProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+      proxyEntity.start();
+    });
+
+    /**
+     * Stop a proxy.
+     */
+    socket.on('stopProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+      proxyEntity.stop();
     });
   });
 

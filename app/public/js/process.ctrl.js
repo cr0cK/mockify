@@ -19,13 +19,13 @@
       Proxy
     ) {
 
-    $scope.proxyList = [];
-
     var initDefaultTarget = function () {
       $scope.targetsStored = localStorage.get('targets');
       return localStorage.last('targets') ||
         'http://jsonplaceholder.typicode.com';
     };
+
+    $scope.proxyList = [];
 
     $scope.defaultValues = {
       // target: 'http://localhost',
@@ -34,43 +34,27 @@
     };
 
     /**
-     * Register a proxy in the DB.
+     * Register a proxy in the DB and start it.
      */
-    $scope.addProxy = function (port, target, status) {
+    $scope.addAndStartProxy = function (port, target, status) {
+      // @TODO check format
+      // see https://gist.github.com/jlong/2428561
       port = port || $scope.defaultValues.port;
       target = target || $scope.defaultValues.target;
 
+      // save the target
+      localStorage.push('targets', target);
+
+      // create an entity
       var proxy = new Proxy({
         port: port,
         target: target,
         status: status
       });
 
-      webSocket.emit('addProxy', proxy);
-    };
-
-    /**
-     * Remove a proxy on the DB
-     * @param  {Proxy}  proxy  Proxy entity
-     */
-    $scope.removeProxy = function (proxy) {
-      webSocket.emit('removeProxy', proxy);
-    };
-
-    $scope.startProxy = function () {
-      // @TODO check format
-      // see https://gist.github.com/jlong/2428561
-
-      var target = ($scope.target || $scope.defaultValues.target);
-
-      // save the target
-      localStorage.push('targets', target);
-
-      webSocket.emit('proxy', {
-        action: 'start',
-        target: target,
-        port: ($scope.port || $scope.defaultValues.port)
-      });
+      // send websockets
+      proxy.add();
+      proxy.start();
 
       delete $scope.target;
       delete $scope.port;
@@ -78,25 +62,25 @@
       $scope.defaultValues.target = initDefaultTarget();
     };
 
-    $scope.stopProxy = function (proxy) {
-      webSocket.emit('proxy', {
-        action: 'stop',
-        target: (
-          // if a proxy has been defined
-          (proxy && proxy.target) ||
-          // input value
-          $scope.target ||
-          // fallback to default value
-          $scope.defaultValues.target
-        ),
-        port: (
-          (proxy && proxy.port) ||
-          $scope.port ||
-          $scope.defaultValues.port
-        )
-      });
+    /**
+     * Stop and remove a proxy from the DB
+     * @param  {Proxy}  proxy  Proxy entity
+     */
+    $scope.removeProxy = function (proxy) {
+      proxy.stop();
+      proxy.remove();
     };
 
+    /**
+     * Enable/Disable the record for a proxy.
+     */
+    $scope.toggleRecordProxy = function (proxy) {
+      proxy._isRecording = !proxy._isRecording;
+    };
+
+    /**
+     * ...
+     */
     $scope.deleteSavedTargets = function () {
       localStorage.delete('targets');
 
