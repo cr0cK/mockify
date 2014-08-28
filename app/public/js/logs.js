@@ -3,33 +3,11 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr', [
-    'ui.router',
-    'ui.bootstrap',
-
-    'templates',
-    'mocKr.service.localStorage',
+  angular.module('mocKr.logs', [
+    'mocKr.service.localStorage'
   ])
 
-  .config(function ($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider
-      .state('index', {
-        url: '/',
-        // data: {
-        //   pageTitle: gettext('Title')
-        // },
-        views: {
-          'main': {
-            templateUrl: 'index.html',
-            controller: 'IndexCtrl'
-          }
-        }
-      });
-  })
-
-  .controller('IndexCtrl', [
+  .controller('LogsCtrl', [
     '$scope', 'localStorageFactory', function ($scope, localStorage) {
 
     var socket = io('http://localhost:3334');

@@ -12,7 +12,13 @@
 </head>
 
 <body>
-  <div class="main" ui-view="main"></div>
+  <div class="main container-fluid">
+    <div class="wrapper">
+      <div class="header" ui-view="header"></div>
+      <div class="layout" ui-view="layout"></div>
+      <div class="footer" ui-view="footer"></div>
+    </div>
+  </div>
 
   <!-- inject:js -->
   <script src="/static/vendor/jquery/dist/jquery.min.js"></script>
@@ -22,9 +28,12 @@
   <script src="/static/vendor/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="/static/vendor/lodash/dist/lodash.js"></script>
   <script src="/static/vendor/underscore.string/lib/underscore.string.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/dashboard.js"></script>
   <script src="/static/js/globals.js"></script>
   <script src="/static/js/localstorage.service.js"></script>
-  <script src="/static/js/main.js"></script>
+  <script src="/static/js/logs.js"></script>
+  <script src="/static/js/process.js"></script>
   <script src="/static/js/templates.js"></script>
   <!-- endinject -->
 </body>

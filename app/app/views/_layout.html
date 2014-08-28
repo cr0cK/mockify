@@ -11,7 +11,13 @@
 </head>
 
 <body>
-  <div class="main" ui-view="main"></div>
+  <div class="main container-fluid">
+    <div class="wrapper">
+      <div class="header" ui-view="header"></div>
+      <div class="layout" ui-view="layout"></div>
+      <div class="footer" ui-view="footer"></div>
+    </div>
+  </div>
 
   <!-- inject:js -->
   <!-- endinject -->

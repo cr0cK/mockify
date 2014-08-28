@@ -1,0 +1,34 @@
+body {
+  background: #272B30;
+  color: #eee;
+}
+
+.wrapper {
+  .make-row();
+}
+
+.header, .footer {
+  .make-lg-column(12);
+}
+
+.header {
+  .background-image(linear-gradient(to top, #272B30 0%,#424951 100%));
+
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+}
+
+.primary-container {
+  .make-lg-column(6);
+}
+
+.secondary-container {
+  .make-lg-column(5);
+  .make-lg-column-offset(1);
+}
