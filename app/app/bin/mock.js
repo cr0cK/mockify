@@ -17,7 +17,8 @@
         // search a response for the current query
         db.model('Response').find({
           method: req.method,
-          url: req.url
+          url: req.url,
+          parameters: JSON.stringify(req.body)
         }, function (err, responses) {
           if (err) {
             res.status(500).send(err);
