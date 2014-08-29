@@ -1,0 +1,5 @@
+- Démarrer les childs (proxy ou mock) au reboot de l'appli en fonction des proxy sauvegardés en DB
+- Stocker l'état recording dans la DB
+- Faire le switch proxy/mock en prenant soin de check si le PID du proxy est mort.
+
+- Faire du private attrs dans l'entity proxy node
