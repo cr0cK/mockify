@@ -36,7 +36,8 @@ module.exports = {
     return db.define('proxy', {
       port        : Number,
       target      : String,
-      status      : ['active', 'inactive']
+      isMocked    : Boolean,
+      isDisabled  : Boolean
     }, {
       methods: {
         // fullName: function () {

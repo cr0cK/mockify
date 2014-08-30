@@ -1,28 +1,31 @@
 'use strict';
 
-var Proxy_ = (function () {
-  var _             = require('lodash'),
+module.exports = (function () {
+  var _             = require('../lib/helper')._,
       path          = require('path'),
       spawn         = require('child_process').spawn,
+      // running       = require('is-running'),
       binPath       = path.join(process.env.PWD, 'app', 'bin'),
       db            = require('./../lib/db'),
       eventEmitter_ = new (require('events').EventEmitter)();
 
   var Proxy = function (properties) {
-    this.id =
-    this.port =
-    this.target =
-    this.status =
-    this._child = undefined;
+    this._id =
+    this._port =
+    this._target =
+    this._status =
+    this._isMocked =
+    this._isDisabled =
+    this._child;
 
-    _.merge(this, properties);
+    _.privateMerge(this, properties);
   };
 
   /**
    * Add a proxy in DB.
    */
   Proxy.prototype.add = function (callback) {
-    db.model('Proxy').create([this], function (err) {
+    db.model('Proxy').create([_.publicProperties(this)], function (err) {
       callback(err);
     });
   };
@@ -31,7 +34,7 @@ var Proxy_ = (function () {
    * Remove a proxy from DB.
    */
   Proxy.prototype.remove = function (callback) {
-    db.model('Proxy').find({id: this.id}).remove(function (err) {
+    db.model('Proxy').find({id: this._id}).remove(function (err) {
       callback(err);
     });
   };
@@ -68,6 +71,27 @@ var Proxy_ = (function () {
   };
 
   /**
+   * Start the mock for this proxy.
+   * The proxy child is stopped and the mock child is started on the same port.
+   */
+  Proxy.prototype.mock = function () {
+    console.log('mock!!');
+  };
+
+  /**
+   * Disable the proxy.
+   */
+  Proxy.prototype.toggleDisable = function (callback) {
+    var self = this;
+    db.model('Proxy').get(this._id, function (err, Proxy) {
+      Proxy.isDisabled = self._isDisabled;
+      Proxy.save(function (err) {
+        callback(err);
+      });
+    });
+  };
+
+  /**
    * Emit an event for logging.
    */
   Proxy.prototype._log = function (message) {
@@ -94,5 +118,3 @@ var Proxy_ = (function () {
 
   return Proxy;
 })();
-
-module.exports = Proxy_;

@@ -51,7 +51,9 @@
       var proxy = new Proxy({
         port: port,
         target: target,
-        status: status
+        status: status,
+        isDisabled: 0,
+        isMocked: 0
       });
 
       // send websockets
@@ -81,14 +83,35 @@
     };
 
     /**
+     * Enable the proxy / Disable the mock
+     * Disable the proxy / Enable the mock
+     */
+    $scope.toggleMockProxy = function (proxy) {
+      if (proxy.isMocked()) {
+        proxy.mock();
+      }
+    };
+
+    /**
+     * Disable or enable the proxy.
+     */
+    $scope.toggleDisableProxy = function (proxy) {
+      proxy.toggleDisable();
+    };
+
+    // $scope.$watch('proxiesList', function (a, b) {
+    //   console.log(a, b);
+    // }, true);
+
+    /**
      * ...
      */
-    $scope.deleteSavedTargets = function () {
-      localStorage.delete('targets');
+    // $scope.deleteSavedTargets = function () {
+    //   localStorage.delete('targets');
 
-      delete $scope.target;
-      $scope.defaultValues.target = initDefaultTarget();
-    };
+    //   delete $scope.target;
+    //   $scope.defaultValues.target = initDefaultTarget();
+    // };
 
     /**
      * Websockets events

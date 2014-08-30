@@ -24,7 +24,16 @@ module.exports = (function () {
     // refresh the list of proxies
     var emitListProxies = function () {
       Proxy.list(function (err, proxies) {
-        socket.emit('listProxies', proxies);
+        if (err) {
+          socket.emit('alert', {
+            strong: 'Can\'t list the proxies!',
+            message: err
+          });
+        }
+
+        if (proxies.length) {
+          socket.emit('listProxies', proxies);
+        }
       });
     };
 
@@ -46,8 +55,10 @@ module.exports = (function () {
 
       proxyEntity.add(function (err) {
         if (err) {
-          console.log('An error has occurred when saving a new Proxy.', err);
-          return;
+          socket.emit('alert', {
+            strong: 'Can\'t add the proxy!',
+            message: err
+          });
         }
 
         emitListProxies();
@@ -62,8 +73,10 @@ module.exports = (function () {
 
       proxyEntity.remove(function (err) {
         if (err) {
-          console.log('An error has occurred when deleting a Proxy.', err);
-          return;
+          socket.emit('alert', {
+            strong: 'Can\'t remove the proxy!',
+            message: err
+          });
         }
 
         emitListProxies();
@@ -84,6 +97,29 @@ module.exports = (function () {
     socket.on('stopProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
       proxyEntity.stop();
+    });
+
+    /**
+     * Mock a proxy.
+     */
+    socket.on('mockProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+      proxyEntity.mock();
+    });
+
+    /**
+     * Disable/enable a proxy.
+     */
+    socket.on('toggleDisableProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+      proxyEntity.toggleDisable(function (err) {
+        if (err) {
+          socket.emit('alert', {
+            strong: 'Can\'t update the proxy!',
+            message: err
+          });
+        }
+      });
     });
   });
 

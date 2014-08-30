@@ -9,6 +9,7 @@
     "errorhandler": "^1.0.2",
     "express": "^4.0.0",
     "http-proxy": "^1.1.6",
+    "is-running": "^1.0.5",
     "lodash": "^2.4.1",
     "method-override": "^1.0.2",
     "minimist": "^1.1.0",

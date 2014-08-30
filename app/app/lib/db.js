@@ -36,10 +36,11 @@ var file      = 'db.sqlite',
       ' UNIQUE (status, url, method, parameters) ON CONFLICT REPLACE)',
 
       'CREATE  TABLE "main"."proxy"' +
-      ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,' +
-      ' "port" INTEGER NOT NULL ,' +
-      ' "target" VARCHAR NOT NULL ,' +
-      ' "status" VARCHAR NOT NULL)'
+      ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL,' +
+      ' "port" INTEGER NOT NULL,' +
+      ' "target" VARCHAR NOT NULL,' +
+      ' "isMocked" INTEGER NOT NULL, ' +
+      ' "isDisabled" INTEGER NOT NULL)'
     ],
     guid      = require('./helper').guid;
 

@@ -9,6 +9,7 @@
         <th>Rec.</th>
         <th>Status</th>
         <th>ID</th>
+        <th>Disabled</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -19,28 +20,50 @@
       </tr>
 
       <tr ng-repeat="proxy in proxiesList track by $index">
-        <td>{{proxy.port}}</td>
-        <td>{{proxy.target}}</td>
         <td>
           <span
-            ng-class="{'on': proxy._isRecording}"
+            ng-class="{'disabled': proxy._isDisabled}">
+            {{proxy.port()}}
+          </span>
+        </td>
+
+        <td>
+          <span
+            ng-class="{'disabled': proxy._isDisabled}">
+            {{proxy.target()}}
+          </span>
+        </td>
+
+        <td>
+          <span
+            ng-class="{'on': proxy.isRecording() && !proxy._isDisabled, 'disabled': proxy._isDisabled}"
             class="glyphicon glyphicon-record"
             ng-click="toggleRecordProxy(proxy)"></span>
         </td>
+
         <td class="switch">
-          <toggle-switch
-            model="proxy.status"
-            class="switch-success switch-small"
-            on-label="proxy"
-            off-label="mock">
-          <toggle-switch>
+          <div ng-click="toggleMockProxy(proxy)">
+            <toggle-switch
+              model="proxy._isStarted"
+              class="switch-success switch-small"
+              ng-disabled="proxy._isDisabled"
+              on-label="proxy"
+              off-label="mock">
+            <toggle-switch>
+          </div>
         </td>
+
         <td>
           <span
             class="label label-primary">
-            {{proxy.id}}
+            {{proxy.id()}}
           </span>
         </td>
+
+        <td>
+          <input type="checkbox" ng-model="proxy._isDisabled" ng-change="toggleDisableProxy(proxy)" />
+        </td>
+
         <td>
           <span
             class="glyphicon glyphicon-remove"
@@ -62,6 +85,8 @@
       </tr>
     </tbody>
   </table>
+
+  {{proxiesList}}
 
   <p class="pull-right">
     <button type="button" class="btn btn-default" ng-click="showProxyFields = true">Add</button>
