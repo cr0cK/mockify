@@ -39,6 +39,7 @@ var file      = 'db.sqlite',
       ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL,' +
       ' "port" INTEGER NOT NULL,' +
       ' "target" VARCHAR NOT NULL,' +
+      ' "isRecording" INTEGER NOT NULL, ' +
       ' "isMocked" INTEGER NOT NULL, ' +
       ' "isDisabled" INTEGER NOT NULL)'
     ],

@@ -62,6 +62,14 @@
     };
 
     /**
+     * Set the proxy to record false/true in the DB by emitting a websocket
+     * to the server.
+     */
+    Proxy.prototype.toggleRecording = function () {
+      webSocket.emit('toggleRecordingProxy', _.publicProperties(this));
+    };
+
+    /**
      * Set the proxy to disabled false/true in the DB by emitting a websocket
      * to the server.
      */

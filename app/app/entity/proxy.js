@@ -14,6 +14,7 @@ module.exports = (function () {
     this._port =
     this._target =
     this._status =
+    this._isRecording =
     this._isMocked =
     this._isDisabled =
     this._child;
@@ -79,7 +80,20 @@ module.exports = (function () {
   };
 
   /**
-   * Disable the proxy.
+   * Disable/enable the recording for the proxy.
+   */
+  Proxy.prototype.toggleRecording = function (callback) {
+    var self = this;
+    db.model('Proxy').get(this._id, function (err, Proxy) {
+      Proxy.isRecording = self._isRecording;
+      Proxy.save(function (err) {
+        callback(err);
+      });
+    });
+  };
+
+  /**
+   * Disable/enable the proxy.
    */
   Proxy.prototype.toggleDisable = function (callback) {
     var self = this;

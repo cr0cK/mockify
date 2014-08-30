@@ -110,6 +110,21 @@ module.exports = (function () {
     });
 
     /**
+     * Disable/enable recording for a proxy.
+     */
+    socket.on('toggleRecordingProxy', function (proxy) {
+      var proxyEntity = new Proxy(proxy);
+      proxyEntity.toggleRecording(function (err) {
+        if (err) {
+          socket.emit('alert', {
+            strong: 'Can\'t update the proxy!',
+            message: err
+          });
+        }
+      });
+    });
+
+    /**
      * Disable/enable a proxy.
      */
     socket.on('toggleDisableProxy', function (proxy) {

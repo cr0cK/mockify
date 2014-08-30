@@ -80,6 +80,7 @@
      */
     $scope.toggleRecordProxy = function (proxy) {
       proxy._isRecording = !proxy._isRecording;
+      proxy.toggleRecording();
     };
 
     /**

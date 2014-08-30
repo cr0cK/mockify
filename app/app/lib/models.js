@@ -36,6 +36,7 @@ module.exports = {
     return db.define('proxy', {
       port        : Number,
       target      : String,
+      isRecording : Boolean,
       isMocked    : Boolean,
       isDisabled  : Boolean
     }, {

@@ -16,7 +16,7 @@
 
     <tbody>
       <tr ng-show="!proxiesList.length">
-        <td colspan="6">No process is running.</td>
+        <td colspan="7">No process is running.</td>
       </tr>
 
       <tr ng-repeat="proxy in proxiesList track by $index">
@@ -73,7 +73,7 @@
       </tr>
 
       <tr class="fields" ng-show="showProxyFields">
-        <td colspan="6">
+        <td colspan="7">
           <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
           <input type="text" class="form-control" placeholder="{{defaultValues.target}}" ng-model="target"
             typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
