@@ -41,7 +41,9 @@ module.exports = (function () {
     emitListProxies();
 
     // Forward childs stdout to websockets
-    Proxy.eventEmitter().on('log', function (data) {
+    // Remove listeners before binding to avoid to have as much as listeners
+    // as the user has reloaded its interface...
+    Proxy.eventEmitter().removeAllListeners('log').on('log', function (data) {
       socket.emit('proxyLog', data.toString('utf8'));
     });
 
