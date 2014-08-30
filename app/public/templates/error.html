@@ -1,0 +1,5 @@
+<div class="alert alert-dismissable alert-{{type}}" ng-show="showAlert && (strong || message)">
+  <button type="button" class="close" data-dismiss="alert" ng-click="showAlert=!showAlert">×</button>
+  <strong ng-if="strong">{{strong}}</strong>
+  <p>{{message}}</p>
+</div>

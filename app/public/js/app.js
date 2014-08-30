@@ -17,6 +17,10 @@
       .state('app', {
         url: '/',
         views: {
+          'error': {
+            templateUrl: 'error.html',
+            controller: 'ErrorCtrl'
+          },
           'header': {
             templateUrl: 'header.html'
           },
@@ -41,6 +45,25 @@
       if (current.name === 'app') {
         $state.go('app.dashboard');
       }
+    });
+  }])
+
+  /**
+   * Handle errors sent by websockets.
+   */
+  .controller('ErrorCtrl',
+    ['webSocketService', '$scope',
+    function (webSocket, $scope) {
+
+    $scope.showAlert = false;
+
+    webSocket.on('alert', function (data) {
+      $scope.$apply(function () {
+        $scope.type = data.type || 'danger';
+        $scope.strong = data.strong;
+        $scope.message = data.message;
+        $scope.showAlert = true;
+      });
     });
   }]);
 })();
