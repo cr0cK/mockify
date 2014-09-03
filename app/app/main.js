@@ -1,5 +1,3 @@
-/* global require, __dirname */
-
 'use strict';
 
 module.exports = (function () {
@@ -59,8 +57,10 @@ module.exports = (function () {
    */
   return {
     run: function () {
-      app.listen(app.get('port'), function () {
-        console.log('Express server listening on port ' + app.get('port'));
+      db.whenReady().then(function () {
+        app.listen(app.get('port'), function () {
+          console.log('Express server listening on port ' + app.get('port'));
+        });
       });
     }
   };
