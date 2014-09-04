@@ -38,5 +38,6 @@
   "forin": true,
   "latedef": "nofunc",
   "noempty": true,
-  "nonew": true
+  "nonew": true,
+  "expr": true
 }
