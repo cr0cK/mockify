@@ -17,6 +17,7 @@
       db          = require('./../lib/db'),
       guid        = require('./../lib/helper').guid,
       port        = argv.port || 4000,
+      proxyId     = argv.proxyId,
       target      = argv.target || 'http://localhost';
 
   // create proxy
@@ -33,7 +34,7 @@
   // you need to modify the proxy request before the proxy connection
   // is made to the target.
   //
-  proxy.on('proxyReq', function(proxyReq, req, res, options) {
+  proxy.on('proxyReq', function(proxyReq, req, res) {
     // hack the host in the header to be able to proxy a different host
     var parsedTarget = url.parse(target);
     proxyReq._headers.host = parsedTarget.host;
@@ -70,7 +71,7 @@
         method      : req.method,
         parameters  : (_.isObject(json) && json) || {},
         reqHeaders  : req.headers,
-        apiId       : 42
+        proxyId     : proxyId
       };
 
       db.model('Response').create([data], function (err) {

@@ -7,7 +7,9 @@ module.exports = (function () {
       // running       = require('is-running'),
       binPath       = path.join(process.env.PWD, 'app', 'bin'),
       db            = require('./../lib/db'),
-      eventEmitter_ = new (require('events').EventEmitter)();
+      eventEmitter_ = new (require('events').EventEmitter)(),
+      proxyChilds   = {},
+      mockChilds    = {};
 
   var Proxy = function (properties) {
     this._id =
@@ -16,8 +18,7 @@ module.exports = (function () {
     this._status =
     this._isRecording =
     this._isMocked =
-    this._isDisabled =
-    this._child;
+    this._isDisabled;
 
     _.privateMerge(this, properties);
   };
@@ -41,19 +42,69 @@ module.exports = (function () {
   };
 
   /**
-   * Start a child process.
+   * Start the proxy.
    */
-  Proxy.prototype.start = function () {
+  Proxy.prototype.startProxy = function () {
     var self = this;
 
-    this._child = spawn('node', [
+    proxyChilds[this._id] = spawn('node', [
       path.join(binPath, 'proxy.js'),
-      '--target=' + this.target,
-      '--port=' + this.port
+      '--target=' + this._target,
+      '--port=' + this._port,
+      '--proxyId=' + this._id
+    ]);
+
+    proxyChilds[this._id].on('message', function () {
+      console.log('message', arguments);
+    });
+
+    proxyChilds[this._id].on('exit', function () {
+      console.log('exit', arguments);
+      delete proxyChilds[this._id];
+      self._log('Proxy has been killed.');
+    });
+
+    proxyChilds[this._id].on('error', function () {
+      console.log('error', arguments);
+    });
+
+    console.log(proxyChilds[this._id].pid);
+
+    // log stdout
+    proxyChilds[this._id].stdout.on('data', function (data) {
+      self._log(data);
+    });
+
+    // log stderr
+    proxyChilds[this._id].stderr.on('data', function (data) {
+      var message = 'Unknow error';
+      var matches = data.toString('utf8')
+          .split('\n').join(', ')
+          .match(/(Error.*),/);
+
+      if (_.isArray(matches) && matches.length > 2) {
+        message = matches[1];
+      }
+
+      console.log('errorstderr', message);
+      self._log(message, 'error');
+    });
+  };
+
+  /**
+   * Start the mock
+   */
+  Proxy.prototype.startMock = function () {
+    var self = this;
+
+    mockChilds[this._id] = spawn('node', [
+      path.join(binPath, 'mock.js'),
+      '--port=' + this._port,
+      '--proxyId=' + this._id
     ]);
 
     // log stdout
-    this._child.stdout.on('data', function (data) {
+    mockChilds[this._id].stdout.on('data', function (data) {
       self._log(data);
     });
   };
@@ -61,22 +112,15 @@ module.exports = (function () {
   /**
    * Stop the child process.
    */
-  Proxy.prototype.stop = function () {
-    if (this._child) {
-      this._child.kill('SIGHUP');
-      this._log('Proxy has been killed.');
+  Proxy.prototype.stopProxy = function () {
+    var self = this;
+
+    if (proxyChilds[this._id]) {
+      proxyChilds[this._id].kill('SIGHUP');
     }
     else {
       this._log('No process has been found.');
     }
-  };
-
-  /**
-   * Start the mock for this proxy.
-   * The proxy child is stopped and the mock child is started on the same port.
-   */
-  Proxy.prototype.mock = function () {
-    console.log('mock!!');
   };
 
   /**
@@ -90,6 +134,27 @@ module.exports = (function () {
         callback(err);
       });
     });
+  };
+
+  /**
+   * Disable/enable the mock for the proxy.
+   */
+  Proxy.prototype.toggleMock = function (callback) {
+    var self = this;
+
+    if (this._isMocked) {
+      this.startProxy();
+    }
+    else {
+      this.stopProxy();
+    }
+
+    // db.model('Proxy').get(this._id, function (err, Proxy) {
+    //   Proxy.isRecording = self._isRecording;
+    //   Proxy.save(function (err) {
+    //     callback(err);
+    //   });
+    // });
   };
 
   /**
@@ -107,9 +172,18 @@ module.exports = (function () {
 
   /**
    * Emit an event for logging.
+   * @param  {String|Buffer} message   Message
+   * @param  {String} type      A choice between ['info', 'error']
    */
-  Proxy.prototype._log = function (message) {
-    eventEmitter_.emit('log', message);
+  Proxy.prototype._log = function (message, type) {
+    if (message instanceof Buffer) {
+      message = message.toString('utf8');
+    }
+
+    eventEmitter_.emit('log', {
+      message: message,
+      type: (type || 'info')
+    });
   };
 
   /**

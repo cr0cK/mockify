@@ -79,7 +79,6 @@
      * Enable/Disable the record for a proxy.
      */
     $scope.toggleRecordProxy = function (proxy) {
-      proxy._isRecording = !proxy._isRecording;
       proxy.toggleRecording();
     };
 
@@ -88,9 +87,7 @@
      * Disable the proxy / Enable the mock
      */
     $scope.toggleMockProxy = function (proxy) {
-      if (proxy.isMocked()) {
-        proxy.mock();
-      }
+      proxy.toggleMock();
     };
 
     /**

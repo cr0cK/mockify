@@ -13,6 +13,8 @@ module.exports = (function () {
       Proxy   = require('./entity/proxy'),
       config  = require('./config');
 
+  var listProxiesLoop;
+
   /**
    * Once connection is etablished, listen events and send/emit WS.
    */
@@ -31,11 +33,13 @@ module.exports = (function () {
           });
         }
 
-        if (proxies.length) {
-          socket.emit('listProxies', proxies);
-        }
+        socket.emit('listProxies', proxies);
       });
     };
+
+    // refresh proxies every x sec
+    listProxiesLoop && clearInterval(listProxiesLoop);
+    listProxiesLoop = setInterval(emitListProxies, 2500);
 
     // send the list of proxies when loading the Angular interface
     emitListProxies();
@@ -44,7 +48,7 @@ module.exports = (function () {
     // Remove listeners before binding to avoid to have as much as listeners
     // as the user has reloaded its interface...
     Proxy.eventEmitter().removeAllListeners('log').on('log', function (data) {
-      socket.emit('proxyLog', data.toString('utf8'));
+      socket.emit('proxyLog', data);
     });
 
     /* Listeners */
@@ -85,28 +89,35 @@ module.exports = (function () {
       });
     });
 
-    /**
-     * Start a proxy.
-     */
-    socket.on('startProxy', function (proxy) {
-      var proxyEntity = new Proxy(proxy);
-      proxyEntity.start();
-    });
+    // /**
+    //  * Start a proxy.
+    //  */
+    // socket.on('startProxy', function (proxy) {
+    //   var proxyEntity = new Proxy(proxy);
+    //   proxyEntity.start();
+    // });
 
-    /**
-     * Stop a proxy.
-     */
-    socket.on('stopProxy', function (proxy) {
-      var proxyEntity = new Proxy(proxy);
-      proxyEntity.stop();
-    });
+    // /**
+    //  * Stop a proxy.
+    //  */
+    // socket.on('stopProxy', function (proxy) {
+    //   var proxyEntity = new Proxy(proxy);
+    //   proxyEntity.stop();
+    // });
 
     /**
      * Mock a proxy.
      */
-    socket.on('mockProxy', function (proxy) {
+    socket.on('toggleMockProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
-      proxyEntity.mock();
+      proxyEntity.toggleMock(function (err) {
+        if (err) {
+          socket.emit('alert', {
+            strong: 'Can\'t mock the proxy!',
+            message: err
+          });
+        }
+      });
     });
 
     /**

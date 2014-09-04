@@ -16,9 +16,10 @@ module.exports = {
       resHeaders  : Object,
       body        : Object,
       comment     : String,
-      apiId       : Number
+      proxyId     : Number
     }, {
-      methods: {
+      cache       : false,
+      methods     : {
         // fullName: function () {
         //   return this.name + ' ' + this.surname;
         // }
@@ -40,7 +41,8 @@ module.exports = {
       isMocked    : Boolean,
       isDisabled  : Boolean
     }, {
-      methods: {
+      cache       : false,
+      methods     : {
         // fullName: function () {
         //   return this.name + ' ' + this.surname;
         // }

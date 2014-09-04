@@ -2,25 +2,30 @@
 
 
 (function () {
-  var _           = require('lodash'),
+  var argv        = require('minimist')(process.argv.slice(2)),
+      _           = require('lodash'),
+      _s          = require('underscore.string'),
       express     = require('express'),
       bodyParser  = require('body-parser'),
       router      = express.Router(),
-      db          = require('./../lib/db');
+      db          = require('./../lib/db'),
+      proxyId     = argv.proxyId;
 
   /**
    * Express app with an in-memory database which will be used to mock data.
    */
-  var runApp = function (db) {
+  var runApp = function (Proxy, db) {
     var mockData = (function () {
       return function (req, res) {
         // search a response for the current query
         db.model('Response').find({
           method: req.method,
           url: req.url,
-          parameters: JSON.stringify(req.body)
+          parameters: JSON.stringify(req.body),
+          proxyId: Proxy.id
         }, function (err, responses) {
           if (err) {
+            console.error('An error has occurred when fetching data.', err);
             res.status(500).send(err);
           }
           else {
@@ -30,6 +35,9 @@
               res.status(404).send('No response has been found.');
             }
             else {
+              console.error(_s.sprintf('Mocking %s %s on localhost:%s',
+                response.method, response.url, Proxy.port));
+
               // set headers
               _.forEach(response.resHeaders, function (value, key) {
                 res.setHeader(key, value);
@@ -51,24 +59,42 @@
     var app = express();
 
     app
-      // @TODO make port configurable
-      .set('port', 4001)
-      .use(bodyParser.json())          // to support JSON-encoded bodies
-      .use(bodyParser.urlencoded())    // to support URL-encoded bodies
+      .set('port', Proxy.port)
+      // to support JSON-encoded bodies()
+      .use(bodyParser.json())
+      // to support URL-encoded bodies
+      .use(bodyParser.urlencoded({
+        extended: true
+      }))
       .use(router)
       .listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
       });
   };
 
-  // dump the database in memory to be used for mocking
-  db.toMemory(function (err, db_) {
-    if (err) {
-      console.log('err', err);
-      return;
-    }
+  // search proxy in DB
+  db.whenReady().then(function () {
+    db.model('Proxy').get({id: proxyId}, function (err, Proxy_) {
+      if (err) {
+        console.error('An error has occurred when fetching data.', err);
+        process.exit(1);
+      }
 
-    // run the Express app with the in-memory database
-    runApp(db_);
+      if (!Proxy_) {
+        console.error('The proxy ID:'+ proxyId + ' has not been found!');
+        process.exit(1);
+      }
+
+      // dump the database in memory, used for this process
+      db.toMemory(function (err, db_) {
+        if (err) {
+          console.log('err', err);
+          return;
+        }
+
+        // run the Express app with the Proxy raw and the in-memory database
+        runApp(Proxy_, db_);
+      });
+    });
   });
 })();

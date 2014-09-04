@@ -2,7 +2,7 @@
   <h3>Logs</h3>
   <ul>
     <li ng-repeat="log in proxyLogs track by $index">
-      {{log}}
+      <span ng-class="log.level">{{log.message}}</span>
     </li>
   </ul>
 </p>

@@ -14,12 +14,11 @@
       this._port =
       this._target =
       this._status =
+      this._isRecording =
       this._isMocked =
       this._isDisabled;
 
       _.privateMerge(this, properties);
-
-      this._isStarted = !this._isMocked;
     };
 
     Proxy.prototype.id = function () {
@@ -34,12 +33,7 @@
       return this._target;
     };
 
-    /**
-     * Return true if the mock is enabled.
-     * The mock is started when the proxy is stopped.
-     */
     Proxy.prototype.isMocked = function () {
-      this._isMocked = !this._isStarted;
       return this._isMocked;
     };
 
@@ -66,7 +60,17 @@
      * to the server.
      */
     Proxy.prototype.toggleRecording = function () {
+      // need to switch the flag here because the template is not binded to a
+      // model
+      this._isRecording = !this._isRecording;
       webSocket.emit('toggleRecordingProxy', _.publicProperties(this));
+    };
+
+    /**
+     * Enable/disable the mock.
+     */
+    Proxy.prototype.toggleMock = function () {
+      webSocket.emit('toggleMockProxy', _.publicProperties(this));
     };
 
     /**

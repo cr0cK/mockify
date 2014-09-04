@@ -17,10 +17,12 @@
     "morgan": "^1.0.1",
     "nodemon": "^1.2.1",
     "orm": "^2.1.18",
+    "q": "^1.0.1",
     "socket.io": "^1.0.6",
     "sqlite3": "^2.2.7",
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
+    "sync": "^0.2.3",
     "underscore.string": "^2.3.3"
   },
   "devDependencies": {
