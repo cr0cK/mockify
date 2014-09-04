@@ -74,14 +74,13 @@
 
   // search proxy in DB
   db.whenReady().then(function () {
-    db.model('Proxy').get({id: proxyId}, function (err, Proxy_) {
+    if (!proxyId) {
+      console.log('The proxy has not been set.');
+    }
+
+    db.model('Proxy').get(proxyId, function (err, Proxy_) {
       if (err) {
         console.error('An error has occurred when fetching data.', err);
-        process.exit(1);
-      }
-
-      if (!Proxy_) {
-        console.error('The proxy ID:'+ proxyId + ' has not been found!');
         process.exit(1);
       }
 
