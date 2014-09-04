@@ -42,7 +42,6 @@ module.exports = (function () {
         ' "port" INTEGER NOT NULL,' +
         ' "target" VARCHAR NOT NULL,' +
         ' "isRecording" INTEGER NOT NULL, ' +
-        ' "isMocked" INTEGER NOT NULL, ' +
         ' "isDisabled" INTEGER NOT NULL)'
       ],
       guid      = require('./helper').guid,
@@ -162,6 +161,14 @@ module.exports = (function () {
         // module with a in-memory database mapped to the dump SQL
         return callback(undefined, self.create(dumpSql.toString('utf-8')));
       });
+    },
+
+    /**
+     * Log stuff on stdout.
+     * Used like that: Proxy.save(db.log);
+     */
+    log: function (err) {
+      err && !_.isNull(value) && console.log(err);
     }
   };
 })();

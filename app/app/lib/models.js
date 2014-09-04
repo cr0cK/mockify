@@ -38,7 +38,6 @@ module.exports = {
       port        : Number,
       target      : String,
       isRecording : Boolean,
-      isMocked    : Boolean,
       isDisabled  : Boolean
     }, {
       cache       : false,

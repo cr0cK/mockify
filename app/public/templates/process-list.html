@@ -38,13 +38,13 @@
           <span
             ng-class="{'on': proxy.isRecording() && !proxy._isDisabled, 'disabled': proxy._isDisabled}"
             class="glyphicon glyphicon-record"
-            ng-click="toggleRecordProxy(proxy)"></span>
+            ng-click="!proxy._isDisabled && toggleRecordProxy(proxy)"></span>
         </td>
 
         <td class="switch">
-          <div ng-click="toggleMockProxy(proxy)">
+          <div ng-click="!proxy._isDisabled && toggleMockProxy(proxy)">
             <toggle-switch
-              model="proxy._isMocked"
+              model="proxy._isRunning"
               class="switch-success switch-small"
               ng-disabled="proxy._isDisabled"
               on-label="proxy"
