@@ -20,6 +20,13 @@
       proxyId     = argv.proxyId,
       target      = argv.target || 'http://localhost';
 
+  /**
+   * Write log on stdout.
+   */
+  var log = function (message) {
+    console.log(message);
+  }
+
   // create proxy
   var proxy = httpProxy.createProxyServer({
     secure: false,
@@ -47,7 +54,7 @@
     // don't send the cookies of localhost
     proxyReq._headers.cookie = '';
 
-    var log = _s.sprintf('[%s] %s%s -> %s%s',
+    var message = _s.sprintf('[%s] %s%s -> %s%s',
       req.method,
       req.headers.host,
       req.url,
@@ -56,7 +63,7 @@
     );
 
     // stdout captured by the main app
-    console.log(log);
+    log(message);
 
     // set a header to identify the query in order to save its response
     var uuid = guid();
@@ -76,7 +83,7 @@
 
       db.model('Response').create([data], function (err) {
         if (err) {
-          console.log('An error has occurred', err);
+          log('An error has occurred', err);
         }
       });
     });
@@ -105,7 +112,7 @@
 
           response.save(function (err) {
             if (err) {
-              console.log('An error has occurred', err);
+              log('An error has occurred', err);
             }
           });
         }
@@ -119,7 +126,7 @@
     proxy.web(req, res, {target: target});
   });
 
-  console.log('Proxy listening on localhost:' + port + ' and proxying ' +
-    target);
+  log('Proxy listening on localhost:' + port + ' and proxying ' + target);
+
   server.listen(port);
 })();

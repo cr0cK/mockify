@@ -11,6 +11,13 @@
       proxyId     = argv.proxyId;
 
   /**
+   * Write log on stdout.
+   */
+  var log = function (message) {
+    console.log(message);
+  }
+
+  /**
    * Express app with an in-memory database which will be used to mock data.
    */
   var runApp = function (Proxy, db) {
@@ -24,7 +31,7 @@
           proxyId: Proxy.id
         }, function (err, responses) {
           if (err) {
-            console.error('An error has occurred when fetching data.', err);
+            log('An error has occurred when fetching data.', err);
             res.status(500).send(err);
           } else {
             var response = _.first(responses);
@@ -32,7 +39,7 @@
             if (!response) {
               res.status(404).send('No response has been found.');
             } else {
-              console.error(_s.sprintf('Mocking %s %s on localhost:%s',
+              log(_s.sprintf('Mocking %s %s on localhost:%s',
                 response.method, response.url, Proxy.port));
 
               // set headers
@@ -65,33 +72,33 @@
       }))
       .use(router)
       .listen(app.get('port'), function () {
-        var log = _s.sprintf('%s %d %s %s',
+        var message = _s.sprintf('%s %d %s %s',
           'Mock listening on port',
           app.get('port'),
           'and mockig the proxy ID:',
           proxyId
         );
 
-        console.log(log);
+        log(message);
       });
   };
 
   // search proxy in DB
   db.whenReady().then(function () {
     if (!proxyId) {
-      console.log('The proxy has not been set.');
+      log('The proxy has not been set.');
     }
 
     db.model('Proxy').get(proxyId, function (err, Proxy_) {
       if (err) {
-        console.error('An error has occurred when fetching data.', err);
+        log('An error has occurred when fetching data.', err);
         process.exit(1);
       }
 
       // dump the database in memory, used for this process
       db.toMemory(function (err, db_) {
         if (err) {
-          console.log('err', err);
+          log('err', err);
           return;
         }
 
