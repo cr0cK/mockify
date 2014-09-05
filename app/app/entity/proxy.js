@@ -71,9 +71,12 @@ module.exports = (function () {
   /**
    * Stop the child process.
    */
-  Proxy.prototype.stopProxy = function () {
+  Proxy.prototype.stopProxy = function (callback) {
     if (proxyChilds[this._id]) {
       proxyChilds[this._id].kill('SIGHUP');
+      if (callback) {
+        proxyChilds[this._id].on('exit', callback);
+      }
     }
   };
 
@@ -93,9 +96,12 @@ module.exports = (function () {
   /**
    * Stop the child process.
    */
-  Proxy.prototype.stopMock = function () {
+  Proxy.prototype.stopMock = function (callback) {
     if (mockChilds[this._id]) {
       mockChilds[this._id].kill('SIGHUP');
+      if (callback) {
+        mockChilds[this._id].on('exit', callback);
+      }
     }
   };
 
@@ -148,21 +154,19 @@ module.exports = (function () {
    * Disable/enable the mock for the proxy.
    */
   Proxy.prototype.toggleMock = function () {
-    // var self = this;
+    var self = this;
 
-    // if (this._isMocked) {
-    //   this.startProxy();
-    // }
-    // else {
-    //   this.stopProxy();
-    // }
+    if (this._isMocked) {
+      this.stopMock(function () {
+        self.startProxy();
+      });
+    }
 
-    // db.model('Proxy').get(this._id, function (err, Proxy) {
-    //   Proxy.isRecording = self._isRecording;
-    //   Proxy.save(function (err) {
-    //     callback(err);
-    //   });
-    // });
+    if (this._isRunning) {
+      this.stopProxy(function () {
+        self.startMock();
+      });
+    }
   };
 
   /**

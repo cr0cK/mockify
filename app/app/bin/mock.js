@@ -65,7 +65,14 @@
       }))
       .use(router)
       .listen(app.get('port'), function () {
-        console.log('Express server listening on port ' + app.get('port'));
+        var log = _s.sprintf('%s %d %s %s',
+          'Mock listening on port',
+          app.get('port'),
+          'and mockig the proxy ID:',
+          proxyId
+        );
+
+        console.log(log);
       });
   };
 
