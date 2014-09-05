@@ -1,8 +1,8 @@
 <p>
   <h3>Logs</h3>
-  <ul>
+  <ul class="logs">
     <li ng-repeat="log in proxyLogs track by $index">
-      <span ng-class="log.level">{{log.message}}</span>
+      <span ng-class="'log-' + log.type">{{log.message}}</span>
     </li>
   </ul>
 </p>

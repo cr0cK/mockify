@@ -11,7 +11,12 @@
 
       webSocket.on('proxyLog', function (data) {
         $scope.$apply(function () {
-          $scope.proxyLogs.push(data);
+          if (
+            data.type !== 'error' ||
+            data.type === 'error' && /Error/.test(data.message)
+          ) {
+            $scope.proxyLogs.push(data);
+          }
         });
       });
     }

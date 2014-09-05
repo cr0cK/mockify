@@ -130,10 +130,7 @@ module.exports = (function () {
 
     // log stderr
     child.stderr.on('data', function (data) {
-      var message = data.toString('utf8');
-
-      console.log(label + ' stderr', message);
-      self._log(message, 'error');
+      self._log(data, 'error');
     });
   };
 
