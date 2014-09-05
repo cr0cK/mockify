@@ -7,8 +7,7 @@ var settings = (function () {
     appName: 'mocKr',
     buildDir: './build/static',
     serverFiles: [
-      'app/controllers/**/*.js', 'app/routes/**/*.js',
-      'app.js', 'config.js'
+      'app/**/*.js'
     ],
     vendorFiles: [
       './public/vendor/jquery/dist/jquery.min.js',

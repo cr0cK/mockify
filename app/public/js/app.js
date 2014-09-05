@@ -17,17 +17,17 @@
       .state('app', {
         url: '/',
         views: {
-          'error': {
+          error: {
             templateUrl: 'error.html',
             controller: 'ErrorCtrl'
           },
-          'header': {
+          header: {
             templateUrl: 'header.html'
           },
-          'layout': {
+          layout: {
             templateUrl: '2columns.html'
           },
-          'footer': {
+          footer: {
             templateUrl: 'footer.html'
           }
         }
@@ -36,12 +36,12 @@
 
   .run(['$rootScope', '$state', function ($rootScope, $state) {
     // display route state for debug
-    $rootScope.$on('$stateChangeSuccess', function(e, current) {
+    $rootScope.$on('$stateChangeSuccess', function (e, current) {
       console.log('Current state:', current.name);
     });
 
     // go to the dashboard when loading the app
-    $rootScope.$on('$stateChangeStart', function(next, current) {
+    $rootScope.$on('$stateChangeStart', function (next, current) {
       if (current.name === 'app') {
         $state.go('app.dashboard');
       }
@@ -51,19 +51,18 @@
   /**
    * Handle errors sent by websockets.
    */
-  .controller('ErrorCtrl',
-    ['webSocketService', '$scope',
+  .controller('ErrorCtrl', ['webSocketService', '$scope',
     function (webSocket, $scope) {
+      $scope.showAlert = false;
 
-    $scope.showAlert = false;
-
-    webSocket.on('alert', function (data) {
-      $scope.$apply(function () {
-        $scope.type = data.type || 'danger';
-        $scope.strong = data.strong;
-        $scope.message = data.message;
-        $scope.showAlert = true;
+      webSocket.on('alert', function (data) {
+        $scope.$apply(function () {
+          $scope.type = data.type || 'danger';
+          $scope.strong = data.strong;
+          $scope.message = data.message;
+          $scope.showAlert = true;
+        });
       });
-    });
-  }]);
+    }
+  ]);
 })();

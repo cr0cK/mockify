@@ -77,7 +77,6 @@ module.exports = (function () {
     return deferred.promise;
   })();
 
-
   return {
     /**
      * Return the promise, resolved when models are ready.
@@ -168,7 +167,7 @@ module.exports = (function () {
      * Used like that: Proxy.save(db.log);
      */
     log: function (err) {
-      err && !_.isNull(value) && console.log(err);
+      err && !_.isNull(err) && console.log(err);
     }
   };
 })();

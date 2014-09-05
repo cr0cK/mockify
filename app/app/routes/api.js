@@ -1,6 +1,6 @@
-'use strict';
+module.exports = (function () {
+  'use strict';
 
-exports.apiRouter = (function () {
   var express = require('express'),
       controllers = require('../controllers/api');
 
@@ -9,5 +9,7 @@ exports.apiRouter = (function () {
   apiRouter.route('/').all(controllers.index);
   apiRouter.get('/proxy/list', controllers.proxy.list);
 
-  return apiRouter;
+  return {
+    apiRouter: apiRouter
+  };
 })();

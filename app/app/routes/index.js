@@ -1,6 +1,6 @@
-'use strict';
+module.exports = (function () {
+  'use strict';
 
-exports.indexRouter = (function () {
   var express = require('express'),
       controllers = require('../controllers');
 
@@ -16,5 +16,7 @@ exports.indexRouter = (function () {
   indexRouter.route('/')
     .all(controllers.index);
 
-  return indexRouter;
+  return {
+    indexRouter: indexRouter
+  };
 })();

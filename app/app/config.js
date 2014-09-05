@@ -1,15 +1,13 @@
-/* global module, process */
+module.exports = (function () {
+  'use strict';
 
-'use strict';
-
-var config = (function () {
-  return {
+  var config = {
     development: {
       server: {
-        port: 3000,
+        port: 3000
       },
       wsapp: {
-        port: 3334,
+        port: 3334
       }
     },
     testing: {
@@ -17,7 +15,7 @@ var config = (function () {
         port: 3001
       },
       wsapp: {
-        port: 3334,
+        port: 3334
       }
     },
     production: {
@@ -25,10 +23,10 @@ var config = (function () {
         port: 8080
       },
       wsapp: {
-        port: 3334,
+        port: 3334
       }
     }
   };
-})();
 
-module.exports = config[process.env.NODE_ENV || 'development'];
+  return config[process.env.NODE_ENV || 'development'];
+})();

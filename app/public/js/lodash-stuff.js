@@ -30,7 +30,7 @@
   }
 
   _.mixin({
-    'privateMerge': privateMerge,
-    'publicProperties': publicProperties
+    privateMerge: privateMerge,
+    publicProperties: publicProperties
   });
 })();

@@ -1,7 +1,6 @@
-'use strict';
-
-
 (function () {
+  'use strict';
+
   var argv        = require('minimist')(process.argv.slice(2)),
       _           = require('lodash'),
       _s          = require('underscore.string'),
@@ -27,14 +26,12 @@
           if (err) {
             console.error('An error has occurred when fetching data.', err);
             res.status(500).send(err);
-          }
-          else {
+          } else {
             var response = _.first(responses);
 
             if (!response) {
               res.status(404).send('No response has been found.');
-            }
-            else {
+            } else {
               console.error(_s.sprintf('Mocking %s %s on localhost:%s',
                 response.method, response.url, Proxy.port));
 

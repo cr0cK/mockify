@@ -58,8 +58,6 @@ module.exports = (function () {
    * Start the proxy.
    */
   Proxy.prototype.startProxy = function () {
-    var self = this;
-
     proxyChilds[this._id] = spawn('node', [
       path.join(binPath, 'proxy.js'),
       '--target=' + this._target,
@@ -74,8 +72,6 @@ module.exports = (function () {
    * Stop the child process.
    */
   Proxy.prototype.stopProxy = function () {
-    var self = this;
-
     if (proxyChilds[this._id]) {
       proxyChilds[this._id].kill('SIGHUP');
     }
@@ -85,8 +81,6 @@ module.exports = (function () {
    * Start the mock
    */
   Proxy.prototype.startMock = function () {
-    var self = this;
-
     mockChilds[this._id] = spawn('node', [
       path.join(binPath, 'mock.js'),
       '--port=' + this._port,
@@ -100,8 +94,6 @@ module.exports = (function () {
    * Stop the child process.
    */
   Proxy.prototype.stopMock = function () {
-    var self = this;
-
     if (mockChilds[this._id]) {
       mockChilds[this._id].kill('SIGHUP');
     }
@@ -137,7 +129,7 @@ module.exports = (function () {
       console.log(label + ' stderr', message);
       self._log(message, 'error');
     });
-  }
+  };
 
   /**
    * Disable/enable the recording for the proxy.
@@ -155,8 +147,8 @@ module.exports = (function () {
   /**
    * Disable/enable the mock for the proxy.
    */
-  Proxy.prototype.toggleMock = function (callback) {
-    var self = this;
+  Proxy.prototype.toggleMock = function () {
+    // var self = this;
 
     // if (this._isMocked) {
     //   this.startProxy();
@@ -186,9 +178,8 @@ module.exports = (function () {
       // we run the mock => the proxy is "mocked" by default.
       if (Proxy.isDisabled) {
         self.startMock();
-      }
-      // when disabling the Proxy, we stop all.
-      else {
+      } else {
+        // when disabling the Proxy, we stop all
         self.stopProxy();
         self.stopMock();
       }

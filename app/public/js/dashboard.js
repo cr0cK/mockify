@@ -11,11 +11,11 @@
       .state('app.dashboard', {
         url: 'dashboard',
         views: {
-          'primaryContainer': {
+          primaryContainer: {
             templateUrl: 'logs.html',
             controller: 'LogsCtrl'
           },
-          'secondaryContainer': {
+          secondaryContainer: {
             templateUrl: 'process-list.html',
             controller: 'ProcessListCtrl'
           }

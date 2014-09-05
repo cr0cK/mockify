@@ -36,8 +36,7 @@
         if (_.isArray(savedValue)) {
           savedValue.push(value);
           this.save(key, _.uniq(savedValue));
-        }
-        else {
+        } else {
           this.save(key, [value]);
         }
       },

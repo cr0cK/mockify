@@ -9,6 +9,7 @@ var rootDir = process.env.PWD,
     less = require('gulp-less-sourcemap'),
     clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
+    jscs = require('gulp-jscs'),
     inject = require('gulp-inject'),
     templateCache = require('gulp-angular-templatecache'),
     minifyCss = require('gulp-minify-css'),
@@ -89,7 +90,13 @@ gulp.task('_lintServer', function () {
   return gulp
     .src(settings.serverFiles)
     .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jscs({
+       preset: 'crockford',
+       validateIndentation: 2,
+       requireMultipleVarDecl: null,
+       disallowDanglingUnderscores: null
+     }));
 });
 
 /**
@@ -101,7 +108,13 @@ gulp.task('_lintPublic', function () {
   return gulp
     .src('./public/js/**/*.js')
     .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jscs({
+       preset: 'crockford',
+       validateIndentation: 2,
+       requireMultipleVarDecl: null,
+       disallowDanglingUnderscores: null
+     }));
 });
 
 /**
@@ -121,7 +134,7 @@ gulp.task('_buildTemplates', ['_clean'], function () {
 /**
  * Build JS files.
  */
-gulp.task('_buildJS', ['clean', '_lintPublic'], function () {
+gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
   startLog(':: Build public JS');
 
   return gulp
@@ -218,10 +231,13 @@ gulp.task('help', function() {
 gulp.task('default', ['help']);
 gulp.task('clean', ['_clean']);
 gulp.task('build', [
-  '_buildCSS', '_lintPublic', '_buildJS', '_copyImages', '_copyFonts',
+  '_lintServer', '_lintPublic',
+  '_buildCSS', '_buildJS',
+  '_copyImages', '_copyFonts',
   '_buildAssets']);
 gulp.task('compile', [
-  '_compileCSS', '_lintPublic', '_compileJS', '_copyImages', '_copyFonts',
+  '_compileCSS', '_compileJS',
+  '_copyImages', '_copyFonts',
   '_compileAssets']);
 gulp.task('watch', ['build', '_watch']);
 gulp.task('serve', ['_serve']);

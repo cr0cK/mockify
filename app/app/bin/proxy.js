@@ -34,7 +34,7 @@
   // you need to modify the proxy request before the proxy connection
   // is made to the target.
   //
-  proxy.on('proxyReq', function(proxyReq, req, res) {
+  proxy.on('proxyReq', function (proxyReq, req, res) {
     // hack the host in the header to be able to proxy a different host
     var parsedTarget = url.parse(target);
     proxyReq._headers.host = parsedTarget.host;
@@ -65,13 +65,13 @@
     // decode body to json
     jsonBody(req, res, function (__, json) {
       var data = {
-        uuid        : uuid,
-        dateCreated : moment().toDate(),
-        url         : req.url,
-        method      : req.method,
-        parameters  : (_.isObject(json) && json) || {},
-        reqHeaders  : req.headers,
-        proxyId     : proxyId
+        uuid: uuid,
+        dateCreated: moment().toDate(),
+        url: req.url,
+        method: req.method,
+        parameters: (_.isObject(json) && json) || {},
+        reqHeaders: req.headers,
+        proxyId: proxyId
       };
 
       db.model('Response').create([data], function (err) {
@@ -113,7 +113,7 @@
     });
   });
 
-  var server = require('http').createServer(function(req, res) {
+  var server = require('http').createServer(function (req, res) {
     // You can define here your custom logic to handle the request
     // and then proxy the request.
     proxy.web(req, res, {target: target});

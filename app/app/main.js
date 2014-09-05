@@ -1,6 +1,6 @@
-'use strict';
-
 module.exports = (function () {
+  'use strict';
+
   var express        = require('express'),
       path           = require('path'),
       swig           = require('swig'),
@@ -25,6 +25,8 @@ module.exports = (function () {
   var rootPath = process.env.PWD;
   var app = express();
   var isDevelopment = app.get('env') === 'development';
+
+  console.log(config);
 
   app.set('port', config.server.port);
   app.engine('html', swig.renderFile);

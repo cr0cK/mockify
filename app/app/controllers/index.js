@@ -1,9 +1,13 @@
-'use strict';
+module.exports = (function () {
+  'use strict';
 
-exports.index = (function () {
-  return function (req, res) {
+  var index = function (req, res) {
     res.render('index', {
       title: 'mockr'
     });
+  };
+
+  return {
+    index: index
   };
 })();

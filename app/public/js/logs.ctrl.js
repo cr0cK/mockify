@@ -5,16 +5,15 @@
     'mocKr.service.webSocket'
   ])
 
-  .controller('LogsCtrl', [
-    '$scope', 'webSocketService',
+  .controller('LogsCtrl', ['$scope', 'webSocketService',
     function ($scope, webSocket) {
+      $scope.proxyLogs = [];
 
-    $scope.proxyLogs = [];
-
-    webSocket.on('proxyLog', function (data) {
-      $scope.$apply(function () {
-        $scope.proxyLogs.push(data);
+      webSocket.on('proxyLog', function (data) {
+        $scope.$apply(function () {
+          $scope.proxyLogs.push(data);
+        });
       });
-    });
-  }]);
+    }
+  ]);
 })();

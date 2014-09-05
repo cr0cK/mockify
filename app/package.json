@@ -23,7 +23,8 @@
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
     "sync": "^0.2.3",
-    "underscore.string": "^2.3.3"
+    "underscore.string": "^2.3.3",
+    "gulp-jscs": "^1.1.2"
   },
   "devDependencies": {
     "gulp": "^3.6.2",

@@ -5,6 +5,7 @@ module.exports = {
    * Response model
    */
   Response: function (db) {
+    /* jscs:disable disallowSpaceAfterObjectKeys */
     return db.define('response', {
       uuid        : String,
       dateCreated : Date,
@@ -17,6 +18,7 @@ module.exports = {
       body        : Object,
       comment     : String,
       proxyId     : Number
+
     }, {
       cache       : false,
       methods     : {
@@ -28,12 +30,14 @@ module.exports = {
       //   age: orm.enforce.ranges.number(18, undefined, 'under-age')
       // }
     });
+    /* jscs:enable disallowSpaceAfterObjectKeys */
   },
 
   /**
    * Proxy model
    */
   Proxy: function (db) {
+    /* jscs:disable disallowSpaceAfterObjectKeys */
     return db.define('proxy', {
       port        : Number,
       target      : String,
@@ -50,5 +54,6 @@ module.exports = {
       //   age: orm.enforce.ranges.number(18, undefined, 'under-age')
       // }
     });
+    /* jscs:enable disallowSpaceAfterObjectKeys */
   }
 };
