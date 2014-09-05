@@ -25,7 +25,7 @@
    */
   var log = function (message) {
     console.log(message);
-  }
+  };
 
   // create proxy
   var proxy = httpProxy.createProxyServer({

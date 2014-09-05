@@ -15,7 +15,7 @@
    */
   var log = function (message) {
     console.log(message);
-  }
+  };
 
   /**
    * Express app with an in-memory database which will be used to mock data.
