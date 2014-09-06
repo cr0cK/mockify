@@ -13,12 +13,12 @@
         url: 'dashboard',
         views: {
           primaryContainer: {
-            templateUrl: 'process-list.html',
-            controller: 'ProcessListCtrl'
-          },
-          secondaryContainer: {
             templateUrl: 'responses.html',
             controller: 'ResponsesCtrl'
+          },
+          secondaryContainer: {
+            templateUrl: 'process-list.html',
+            controller: 'ProcessListCtrl'
           },
           logsContainer: {
             templateUrl: 'logs.html',
