@@ -31,8 +31,10 @@ module.exports = (function () {
 
     // update the disable flag in DB
     db.model('Proxy').get(this._id, function (err, Proxy) {
-      Proxy.isDisabled = self._isDisabled;
-      Proxy.save(db.log);
+      if (Proxy) {
+        Proxy.isDisabled = self._isDisabled;
+        Proxy.save(db.log);
+      }
     });
   };
 
