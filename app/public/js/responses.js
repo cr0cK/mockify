@@ -7,7 +7,7 @@
 
   .controller('ResponsesCtrl', ['$scope', 'webSocketService',
     function ($scope, webSocket) {
-      $scope.responsesLogs = [];
+      $scope.logs = [];
 
       var displayLog = function (data) {
         $scope.$apply(function () {
@@ -15,7 +15,7 @@
             data.type !== 'error' ||
             data.type === 'error' && /Error/.test(data.message)
           ) {
-            $scope.responsesLogs.push(data);
+            $scope.logs.push(data);
           }
         });
       };
