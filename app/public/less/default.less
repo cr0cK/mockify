@@ -5,6 +5,7 @@ body, h1, h2, h3, h4, h5, h6 {
 body {
   background: #272B30;
   color: #eee;
+  overflow: hidden;
 }
 
 .wrapper {
@@ -52,10 +53,18 @@ body {
 }
 
 .primary-container {
-  .make-lg-column(6);
+  .make-lg-column(5);
 }
 
 .secondary-container {
-  .make-lg-column(5);
+  .make-lg-column(6);
   .make-lg-column-offset(1);
+}
+
+.logs-container {
+  position: absolute !important;
+  bottom: 0;
+  max-height: 200px;
+  .make-lg-column(12);
+  background: #242429;
 }

@@ -2,8 +2,9 @@
   'use strict';
 
   angular.module('mocKr.dashboard', [
-    'mocKr.logs',
-    'mocKr.process'
+    'mocKr.process',
+    'mocKr.responses',
+    'mocKr.logs'
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {
@@ -12,12 +13,16 @@
         url: 'dashboard',
         views: {
           primaryContainer: {
-            templateUrl: 'logs.html',
-            controller: 'LogsCtrl'
-          },
-          secondaryContainer: {
             templateUrl: 'process-list.html',
             controller: 'ProcessListCtrl'
+          },
+          secondaryContainer: {
+            templateUrl: 'responses.html',
+            controller: 'ResponsesCtrl'
+          },
+          logsContainer: {
+            templateUrl: 'logs.html',
+            controller: 'LogsCtrl'
           }
         }
       });

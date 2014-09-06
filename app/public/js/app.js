@@ -26,9 +26,6 @@
           },
           layout: {
             templateUrl: '2columns.html'
-          },
-          footer: {
-            templateUrl: 'footer.html'
           }
         }
       });

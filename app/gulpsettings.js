@@ -1,4 +1,4 @@
-/* global module */
+/* jshint maxlen:100 */
 
 'use strict';
 
@@ -15,11 +15,13 @@ var settings = (function () {
       './public/vendor/socket.io-client/socket.io.js',
       './public/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
       './public/vendor/angular-ui-router/release/angular-ui-router.js',
+      './public/vendor/angular-bootstrap-toggle-switch/angular-toggle-switch.js',
+      './public/vendor/angular-perfect-scrollbar/src/angular-perfect-scrollbar.js',
+      './public/vendor/perfect-scrollbar/min/perfect-scrollbar.with-mousewheel.min.js',
       './public/vendor/moment.js',
       './public/vendor/lodash/dist/lodash.js',
       './public/vendor/lodash/dist/lodash.js',
-      './public/vendor/underscore.string/lib/underscore.string.js',
-      './public/vendor/angular-bootstrap-toggle-switch/angular-toggle-switch.js'
+      './public/vendor/underscore.string/lib/underscore.string.js'
     ]
   };
 
