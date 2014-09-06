@@ -42,7 +42,7 @@ module.exports = (function () {
         ' "port" INTEGER NOT NULL,' +
         ' "target" VARCHAR NOT NULL,' +
         ' "isRecording" INTEGER NOT NULL, ' +
-        ' "isDisabled" INTEGER NOT NULL)'
+        ' "isEnabled" INTEGER NOT NULL)'
       ],
       guid      = require('./helper').guid,
       models_   = {},

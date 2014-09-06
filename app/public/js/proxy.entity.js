@@ -16,7 +16,7 @@
       this._status =
       this._isRecording =
       this._isMocked =
-      this._isDisabled;
+      this._isEnabled;
 
       _.privateMerge(this, properties);
     };
@@ -74,11 +74,11 @@
     };
 
     /**
-     * Set the proxy to disabled false/true in the DB by emitting a websocket
+     * Set the proxy to enabled true/false in the DB by emitting a websocket
      * to the server.
      */
-    Proxy.prototype.toggleDisable = function () {
-      webSocket.emit('toggleDisableProxy', _.publicProperties(this));
+    Proxy.prototype.toggleEnable = function () {
+      webSocket.emit('toggleEnableProxy', _.publicProperties(this));
     };
 
     /**

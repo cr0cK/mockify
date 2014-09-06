@@ -26,13 +26,13 @@ module.exports = (function () {
     this._isRunning = _.has(proxyChilds, this._id);
     this._isMocked = _.has(mockChilds, this._id);
 
-    // disable the proxy if no proxy or mocked is running
-    this._isDisabled = !this._isRunning && !this._isMocked;
+    // enable the proxy if proxy or mocked is running
+    this._isEnabled = this._isRunning || this._isMocked;
 
     // update the disable flag in DB
     db.model('Proxy').get(this._id, function (err, Proxy) {
       if (Proxy) {
-        Proxy.isDisabled = self._isDisabled;
+        Proxy.isEnabled = self._isEnabled;
         Proxy.save(db.log);
       }
     });
@@ -169,17 +169,17 @@ module.exports = (function () {
   };
 
   /**
-   * Disable/enable the proxy.
+   * Enable/disable the proxy.
    */
-  Proxy.prototype.toggleDisable = function (callback) {
+  Proxy.prototype.toggleEnable = function (callback) {
     var self = this;
 
     db.model('Proxy').get(this._id, function (err, Proxy) {
-      Proxy.isDisabled = self._isDisabled;
+      Proxy.isEnabled = self._isEnabled;
 
-      // when enabling the Proxy, we don't run the proxy by default,
+      // when adding a proxy, we don't run the proxy by default,
       // we run the mock => the proxy is "mocked" by default.
-      if (Proxy.isDisabled) {
+      if (!Proxy.isEnabled) {
         self.startMock();
       } else {
         // when disabling the Proxy, we stop all

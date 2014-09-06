@@ -52,7 +52,7 @@
           port: port,
           target: target,
           status: status,
-          isDisabled: 0,
+          isEnabled: 0,
           isMocked: 0
         });
 
@@ -91,10 +91,10 @@
       };
 
       /**
-       * Disable or enable the proxy.
+       * Enable/disable the proxy.
        */
-      $scope.toggleDisableProxy = function (proxy) {
-        proxy.toggleDisable();
+      $scope.toggleEnableProxy = function (proxy) {
+        proxy.toggleEnable();
       };
 
       // $scope.$watch('proxiesList', function (a, b) {

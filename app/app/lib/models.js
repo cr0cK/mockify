@@ -42,7 +42,7 @@ module.exports = {
       port        : Number,
       target      : String,
       isRecording : Boolean,
-      isDisabled  : Boolean
+      isEnabled  : Boolean
     }, {
       cache       : false,
       methods     : {

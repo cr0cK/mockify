@@ -136,11 +136,11 @@ module.exports = (function () {
     });
 
     /**
-     * Disable/enable a proxy.
+     * Enable/disable a proxy.
      */
-    socket.on('toggleDisableProxy', function (proxy) {
+    socket.on('toggleEnableProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
-      proxyEntity.toggleDisable(function (err) {
+      proxyEntity.toggleEnable(function (err) {
         if (err) {
           socket.emit('alert', {
             strong: 'Can\'t update the proxy!',

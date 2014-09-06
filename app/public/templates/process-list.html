@@ -9,7 +9,7 @@
         <th>Rec.</th>
         <th>Status</th>
         <th>ID</th>
-        <th>Disabled</th>
+        <th>Enable</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -22,31 +22,31 @@
       <tr ng-repeat="proxy in proxiesList track by $index">
         <td>
           <span
-            ng-class="{'disabled': proxy._isDisabled}">
+            ng-class="{'disabled': !proxy._isEnabled}">
             {{proxy.port()}}
           </span>
         </td>
 
         <td>
           <span
-            ng-class="{'disabled': proxy._isDisabled}">
+            ng-class="{'disabled': !proxy._isEnabled}">
             {{proxy.target()}}
           </span>
         </td>
 
         <td>
           <span
-            ng-class="{'on': proxy.isRecording() && !proxy._isDisabled, 'disabled': proxy._isDisabled}"
+            ng-class="{'on': proxy.isRecording() && proxy._isEnabled, 'disabled': !proxy._isEnabled}"
             class="glyphicon glyphicon-record"
-            ng-click="!proxy._isDisabled && toggleRecordProxy(proxy)"></span>
+            ng-click="proxy._isEnabled && toggleRecordProxy(proxy)"></span>
         </td>
 
         <td class="switch">
-          <div ng-click="!proxy._isDisabled && toggleMockProxy(proxy)">
+          <div ng-click="proxy._isEnabled && toggleMockProxy(proxy)">
             <toggle-switch
               model="proxy._isRunning"
               class="switch-success switch-small"
-              ng-disabled="proxy._isDisabled"
+              ng-disabled="!proxy._isEnabled"
               on-label="proxy"
               off-label="mock">
             <toggle-switch>
@@ -61,7 +61,7 @@
         </td>
 
         <td>
-          <input type="checkbox" ng-model="proxy._isDisabled" ng-change="toggleDisableProxy(proxy)" />
+          <input type="checkbox" ng-model="proxy._isEnabled" ng-change="toggleEnableProxy(proxy)" />
         </td>
 
         <td>
