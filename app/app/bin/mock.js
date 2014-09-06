@@ -38,9 +38,12 @@
 
             if (!response) {
               res.status(404).send('No response has been found.');
+
+              log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
+                404, req.method, req.url, Proxy.port));
             } else {
-              log(_s.sprintf('[mockLog]Mocking %s %s on localhost:%s',
-                response.method, response.url, Proxy.port));
+              log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
+                response.status, response.method, response.url, Proxy.port));
 
               // set headers
               _.forEach(response.resHeaders, function (value, key) {
