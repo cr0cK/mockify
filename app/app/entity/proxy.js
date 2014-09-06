@@ -67,7 +67,7 @@ module.exports = (function () {
       '--proxyId=' + this._id
     ]);
 
-    this.bindEvent('Proxy', proxyChilds[this._id], proxyChilds);
+    this.bindEvent('Proxy', proxyChilds, this._id);
   };
 
   /**
@@ -92,7 +92,7 @@ module.exports = (function () {
       '--proxyId=' + this._id
     ]);
 
-    this.bindEvent('Mock', mockChilds[this._id], mockChilds);
+    this.bindEvent('Mock', mockChilds, this._id);
   };
 
   /**
@@ -110,15 +110,15 @@ module.exports = (function () {
   /**
    * Bind child events to websocket / logging.
    */
-  Proxy.prototype.bindEvent = function (label, child, store) {
-    var self = this;
+  Proxy.prototype.bindEvent = function (label, childs, id) {
+    var self = this,
+        child = childs[id];
 
     console.log(label + ' PID', child.pid);
 
     child.on('exit', function () {
-      console.log('exit', arguments);
-      delete store[self._id];
-      self._log(label + ' has been stopped.');
+      delete childs[self._id];
+      self['_log' + label](label + ' has been stopped.');
     });
 
     child.on('error', function () {
@@ -127,12 +127,12 @@ module.exports = (function () {
 
     // log stdout
     child.stdout.on('data', function (data) {
-      self._log(data);
+      self['_log' + label](data);
     });
 
     // log stderr
     child.stderr.on('data', function (data) {
-      self._log(data, 'error');
+      self['_log' + label](data, 'error');
     });
   };
 
@@ -194,9 +194,23 @@ module.exports = (function () {
   };
 
   /**
-   * Emit an event for logging.
-   * @param  {String|Buffer} message   Message
-   * @param  {String} type      A choice between ['info', 'error']
+   * Log proxy event.
+   */
+  Proxy.prototype._logProxy = function (message, type) {
+    this._log(message, type || 'infoProxy');
+  };
+
+  /**
+   * Log mock event.
+   */
+  Proxy.prototype._logMock = function (message, type) {
+    this._log(message, type || 'infoMock');
+  };
+
+  /**
+   * Emit an event for mock logging.
+   * @param  {String|Buffer}  message   Message
+   * @param  {String}         type      A choice between ['info', 'error']
    */
   Proxy.prototype._log = function (message, type) {
     if (message instanceof Buffer) {

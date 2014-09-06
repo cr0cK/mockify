@@ -2,11 +2,11 @@
 
 <perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="5" refresh-on-change="proxyLogs" update-scroll>
   <ul class="logs">
-    <li ng-repeat="log in proxyLogs track by $index">
+    <li ng-repeat="log in logs track by $index">
       <span ng-class="'log-' + log.type">{{log.message}}</span>
     </li>
 
-    <li ng-show="!proxyLogs.length">
+    <li ng-show="!logs.length">
       No log yet.
     </li>
   </ul>

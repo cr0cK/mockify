@@ -1,1 +1,11 @@
-responses.tpl.html
+<h3>Responses</h3>
+
+<ul class="responses">
+  <li ng-repeat="log in responsesLogs track by $index">
+    <span ng-class="'log-' + log.type">{{log.message}}</span>
+  </li>
+
+  <li ng-show="!responsesLogs.length">
+    No response yet.
+  </li>
+</ul>

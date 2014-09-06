@@ -39,7 +39,7 @@
             if (!response) {
               res.status(404).send('No response has been found.');
             } else {
-              log(_s.sprintf('Mocking %s %s on localhost:%s',
+              log(_s.sprintf('[mockLog]Mocking %s %s on localhost:%s',
                 response.method, response.url, Proxy.port));
 
               // set headers

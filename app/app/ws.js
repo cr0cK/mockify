@@ -7,7 +7,8 @@
 module.exports = (function () {
   'use strict';
 
-  var app     = require('express')(),
+  var _       = require('lodash'),
+      app     = require('express')(),
       server  = require('http').Server(app),
       io      = require('socket.io')(server),
       Proxy   = require('./entity/proxy'),
@@ -48,7 +49,17 @@ module.exports = (function () {
     // Remove listeners before binding to avoid to have as much as listeners
     // as the user has reloaded its interface...
     Proxy.eventEmitter().removeAllListeners('log').on('log', function (data) {
-      socket.emit('proxyLog', data);
+      var event_ = 'log';
+
+      // search a tag between brackets
+      var matches = data.message.match(/^\[([^\]]+)\]/);
+      if (_.isArray(matches) && matches.length) {
+        event_ = matches[1];
+        // remove tag
+        data.message = data.message.replace(/^\[.+\]/, '');
+      }
+
+      socket.emit(event_, data);
     });
 
     /* Listeners */

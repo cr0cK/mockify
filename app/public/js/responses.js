@@ -9,7 +9,7 @@
     function ($scope, webSocket) {
       $scope.responsesLogs = [];
 
-      webSocket.on('proxyLog', function (data) {
+      var displayLog = function (data) {
         $scope.$apply(function () {
           if (
             data.type !== 'error' ||
@@ -18,7 +18,10 @@
             $scope.responsesLogs.push(data);
           }
         });
-      });
+      };
+
+      webSocket.on('mockLog', displayLog);
+      webSocket.on('proxyLog', displayLog);
     }
   ]);
 })();

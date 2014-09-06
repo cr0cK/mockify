@@ -54,7 +54,7 @@
     // don't send the cookies of localhost
     proxyReq._headers.cookie = '';
 
-    var message = _s.sprintf('[%s] %s%s -> %s%s',
+    var message = _s.sprintf('[proxyLog][%s] %s%s -> %s%s',
       req.method,
       req.headers.host,
       req.url,

@@ -1,6 +1,16 @@
-ul.logs {
-  span.log-error {
-    color: red;
+ul.logs, ul.responses {
+  span {
+    &.log-error {
+      color: red;
+    }
+
+    &.log-infoMock {
+      color: silver;
+    }
+
+    &.log-infoProxy {
+      color: #62C462;
+    }
   }
 
   // no margin to fix the perfect-scrollbar height
