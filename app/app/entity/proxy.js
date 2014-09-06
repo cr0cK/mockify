@@ -2,6 +2,7 @@
 
 module.exports = (function () {
   var _             = require('../lib/helper')._,
+      Q             = require('q'),
       path          = require('path'),
       spawn         = require('child_process').spawn,
       // running       = require('is-running'),
@@ -42,17 +43,22 @@ module.exports = (function () {
    * Add a proxy in DB.
    */
   Proxy.prototype.add = function (callback) {
-    db.model('Proxy').create([_.publicProperties(this)], function (err) {
-      callback(err);
-    });
+    db.model('Proxy').create([_.publicProperties(this)], callback);
   };
 
   /**
-   * Remove a proxy from DB.
+   * Stop all child processes and remove a proxy from DB.
    */
   Proxy.prototype.remove = function (callback) {
-    db.model('Proxy').find({id: this._id}).remove(function (err) {
-      callback(err);
+    var self = this;
+
+    this.stopAll().then(function () {
+      db.model('Proxy').find({id: self._id}).remove(function (err) {
+        callback(err);
+      });
+    })
+    .catch(function (error) {
+      this._logError(error);
     });
   };
 
@@ -73,13 +79,17 @@ module.exports = (function () {
   /**
    * Stop the child process.
    */
-  Proxy.prototype.stopProxy = function (callback) {
+  Proxy.prototype.stopProxy = function () {
+    var deferred = Q.defer();
+
     if (proxyChilds[this._id]) {
       proxyChilds[this._id].kill('SIGHUP');
-      if (callback) {
-        proxyChilds[this._id].on('exit', callback);
-      }
+      proxyChilds[this._id].on('exit', function () {
+        deferred.resolve();
+      });
     }
+
+    return deferred.promise;
   };
 
   /**
@@ -98,13 +108,34 @@ module.exports = (function () {
   /**
    * Stop the child process.
    */
-  Proxy.prototype.stopMock = function (callback) {
+  Proxy.prototype.stopMock = function () {
+    var deferred = Q.defer();
+
     if (mockChilds[this._id]) {
       mockChilds[this._id].kill('SIGHUP');
-      if (callback) {
-        mockChilds[this._id].on('exit', callback);
-      }
+      mockChilds[this._id].on('exit', function () {
+        deferred.resolve();
+      });
     }
+
+    return deferred.promise;
+  };
+
+  /**
+   * Stop all processes.
+   */
+  Proxy.prototype.stopAll = function () {
+    var promises = [];
+
+    if (this._isMocked) {
+      promises.push(this.stopMock());
+    }
+
+    if (this._isRunning) {
+      promises.push(this.stopProxy());
+    }
+
+    return Q.all(promises);
   };
 
   /**
@@ -156,13 +187,13 @@ module.exports = (function () {
     var self = this;
 
     if (this._isMocked) {
-      this.stopMock(function () {
+      this.stopMock().then(function () {
         self.startProxy();
       });
     }
 
     if (this._isRunning) {
-      this.stopProxy(function () {
+      this.stopProxy().then(function () {
         self.startMock();
       });
     }
@@ -183,8 +214,7 @@ module.exports = (function () {
         self.startMock();
       } else {
         // when disabling the Proxy, we stop all
-        self.stopProxy();
-        self.stopMock();
+        self.stopAll();
       }
 
       Proxy.save(function (err) {
@@ -205,6 +235,15 @@ module.exports = (function () {
    */
   Proxy.prototype._logMock = function (message, type) {
     this._log(message, type || 'infoMock');
+  };
+
+  /**
+   * Log error.
+   * Prefix the message by "Error:" to pass the filter in Angular.
+   * See LogsCtrl.
+   */
+  Proxy.prototype._logError = function (message) {
+    this._log('Error: ' + message, 'error');
   };
 
   /**
