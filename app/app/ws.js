@@ -89,22 +89,6 @@ module.exports = (function () {
       });
     });
 
-    // /**
-    //  * Start a proxy.
-    //  */
-    // socket.on('startProxy', function (proxy) {
-    //   var proxyEntity = new Proxy(proxy);
-    //   proxyEntity.start();
-    // });
-
-    // /**
-    //  * Stop a proxy.
-    //  */
-    // socket.on('stopProxy', function (proxy) {
-    //   var proxyEntity = new Proxy(proxy);
-    //   proxyEntity.stop();
-    // });
-
     /**
      * Mock a proxy.
      */
