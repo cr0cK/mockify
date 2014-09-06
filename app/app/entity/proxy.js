@@ -26,7 +26,7 @@ module.exports = (function () {
     this._isRunning = _.has(proxyChilds, this._id);
     this._isMocked = _.has(mockChilds, this._id);
 
-    // enable the proxy if proxy or mocked is running
+    // enable the proxy if proxy or mock is running
     this._isEnabled = this._isRunning || this._isMocked;
 
     // update the disable flag in DB

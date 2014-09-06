@@ -78,7 +78,7 @@
         var message = _s.sprintf('%s %d %s %s',
           'Mock listening on port',
           app.get('port'),
-          'and mockig the proxy ID:',
+          'and mocking the proxy ID:',
           proxyId
         );
 
@@ -105,7 +105,7 @@
           return;
         }
 
-        // run the Express app with the Proxy raw and the in-memory database
+        // run the Express app with the Proxy row and the in-memory database
         runApp(Proxy_, db_);
       });
     });
