@@ -26,8 +26,6 @@ module.exports = (function () {
   var app = express();
   var isDevelopment = app.get('env') === 'development';
 
-  console.log(config);
-
   app.set('port', config.server.port);
   app.engine('html', swig.renderFile);
   app.set('views', path.join(rootPath, 'app', 'views'));
