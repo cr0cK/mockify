@@ -53,12 +53,7 @@ module.exports = (function () {
     var self = this;
 
     this.stopAll().then(function () {
-      db.model('Proxy').find({id: self._id}).remove(function (err) {
-        callback(err);
-      });
-    })
-    .catch(function (error) {
-      this._logError(error);
+      db.model('Proxy').find({id: self._id}).remove(callback);
     });
   };
 
@@ -184,19 +179,26 @@ module.exports = (function () {
    * Disable/enable the mock for the proxy.
    */
   Proxy.prototype.toggleMock = function () {
-    var self = this;
+    var self = this,
+        promises = [];
 
     if (this._isMocked) {
-      this.stopMock().then(function () {
-        self.startProxy();
-      });
+      promises.push(
+        this.stopMock().then(function () {
+          self.startProxy();
+        })
+      );
     }
 
     if (this._isRunning) {
-      this.stopProxy().then(function () {
-        self.startMock();
-      });
+      promises.push(
+        this.stopProxy().then(function () {
+          self.startMock();
+        })
+      );
     }
+
+    return Q.all(promises);
   };
 
   /**

@@ -8,6 +8,7 @@ module.exports = (function () {
   'use strict';
 
   var _       = require('lodash'),
+      Q       = require('q'),
       app     = require('express')(),
       server  = require('http').Server(app),
       io      = require('socket.io')(server),
@@ -22,19 +23,21 @@ module.exports = (function () {
   io.on('connection', function (socket) {
     console.log('Web socket connected.');
 
+    var emitAlert = function (title, message) {
+      socket.emit('alert', {
+        strong: message,
+        message: message
+      });
+    };
+
     /* Emitters */
 
     // refresh the list of proxies
     var emitListProxies = function () {
-      Proxy.list(function (err, proxies) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t list the proxies!',
-            message: err
-          });
-        }
-
+      Q.ninvoke(Proxy.list).then(function (proxies) {
         socket.emit('listProxies', proxies);
+      }).catch(function (err) {
+        emitAlert('Can\'t list the proxies!', err);
       });
     };
 
@@ -70,15 +73,10 @@ module.exports = (function () {
     socket.on('addProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
 
-      proxyEntity.add(function (err) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t add the proxy!',
-            message: err
-          });
-        }
-
+      Q.ninvoke(proxyEntity, 'add').then(function () {
         emitListProxies();
+      }).catch(function (err) {
+        emitAlert('Can\'t add the proxy!', err);
       });
     });
 
@@ -88,15 +86,10 @@ module.exports = (function () {
     socket.on('removeProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
 
-      proxyEntity.remove(function (err) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t remove the proxy!',
-            message: err
-          });
-        }
-
+      Q.ninvoke(proxyEntity, 'remove').then(function () {
         emitListProxies();
+      }).catch(function (err) {
+        emitAlert('Can\'t remove the proxy!', err);
       });
     });
 
@@ -105,13 +98,9 @@ module.exports = (function () {
      */
     socket.on('toggleMockProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
-      proxyEntity.toggleMock(function (err) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t mock the proxy!',
-            message: err
-          });
-        }
+
+      proxyEntity.toggleMock().catch(function (err) {
+        emitAlert('Can\'t toggle mock/proxy!', err);
       });
     });
 
@@ -120,13 +109,9 @@ module.exports = (function () {
      */
     socket.on('toggleRecordingProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
-      proxyEntity.toggleRecording(function (err) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t update the proxy!',
-            message: err
-          });
-        }
+
+      Q.ninvoke(proxyEntity, 'toggleRecording').catch(function (err) {
+        emitAlert('Can\'t toggle recording!', err);
       });
     });
 
@@ -135,13 +120,9 @@ module.exports = (function () {
      */
     socket.on('toggleEnableProxy', function (proxy) {
       var proxyEntity = new Proxy(proxy);
-      proxyEntity.toggleEnable(function (err) {
-        if (err) {
-          socket.emit('alert', {
-            strong: 'Can\'t update the proxy!',
-            message: err
-          });
-        }
+
+      Q.ninvoke(proxyEntity, 'toggleEnable').catch(function (err) {
+        emitAlert('Can\'t enable the proxy!', err);
       });
     });
   });
