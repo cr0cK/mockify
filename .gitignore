@@ -1,6 +1,6 @@
-app/node_modules
-app/public/vendor
-app/build
-app/db.sqlite
+node_modules
+public/vendor
+build
+db.sqlite
 
 npm-debug.log
