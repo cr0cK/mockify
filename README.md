@@ -25,7 +25,7 @@ mocKr uses a SQLite database to store data and spawn in-memory databases for moc
 * clone this repository
 * cd app
 * npm install
-* gulp install
+* bower install
 * ./gulp build
 * ./gulp serve
 
