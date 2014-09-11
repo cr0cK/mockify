@@ -20,7 +20,7 @@ module.exports = (function () {
     },
     production: {
       server: {
-        port: process.env.PORT || 8080
+        port: 8080
       },
       wsapp: {
         port: 3334
