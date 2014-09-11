@@ -44,5 +44,26 @@
     "gulp-watch": "~0.6.4",
     "jshint-stylish": "^0.2.0",
     "node-inspector": "^0.7.4"
-  }
+  },
+  "description": "A tool to easily proxy and mock an existing API.",
+  "main": "app.js",
+  "scripts": {
+    "test": "./gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cr0cK/procKr.git"
+  },
+  "keywords": [
+    "Proxy",
+    "Mock",
+    "API",
+    "REST"
+  ],
+  "author": "Alexis Mineaud",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cr0cK/procKr/issues"
+  },
+  "homepage": "https://github.com/cr0cK/procKr"
 }
