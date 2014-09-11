@@ -23,7 +23,6 @@ procKr uses a SQLite database to store data and spawn in-memory databases for mo
 ## Installation
 
 * clone this repository
-* cd app
 * npm install
 * bower install
 * ./gulp build
