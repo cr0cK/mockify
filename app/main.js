@@ -1,4 +1,4 @@
-module.exports = (function () {
+module.exports = function () {
   'use strict';
 
   var express        = require('express'),
@@ -10,7 +10,6 @@ module.exports = (function () {
       methodOverride = require('method-override'),
       errorHandler   = require('errorhandler'),
       db             = require('./lib/db'),
-      config         = require('./config'),
       indexRoutes    = require('./routes/index'),
       apiRoutes      = require('./routes/api');
 
@@ -26,7 +25,6 @@ module.exports = (function () {
   var app = express();
   var isDevelopment = app.get('env') === 'development';
 
-  app.set('port', config.server.port);
   app.engine('html', swig.renderFile);
   app.set('views', path.join(rootPath, 'app', 'views'));
   app.set('view engine', 'html');
@@ -52,16 +50,5 @@ module.exports = (function () {
     swig.setDefaults({cache: false});
   }
 
-  /**
-   * Public interface.
-   */
-  return {
-    run: function () {
-      db.whenReady().then(function () {
-        app.listen(app.get('port'), function () {
-          console.log('Express server listening on port ' + app.get('port'));
-        });
-      });
-    }
-  };
-})();
+  return app;
+};

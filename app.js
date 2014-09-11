@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
-  var mainApp = require('./app/main'),
-      wsApp = require('./app/ws');
+  var mainApp = require('./app/main')(),
+      server  = require('http').Server(mainApp),
+      port = process.env.PORT || require('./app/config').server.port;
 
-  mainApp.run();
-  wsApp.run();
+  require('./app/ws')(server);
+
+  server.listen(port);
+  console.log('application listening on port %s', port);
 })();

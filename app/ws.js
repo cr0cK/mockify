@@ -4,16 +4,13 @@
  * via Websockets.
  */
 
-module.exports = (function () {
+module.exports = function (server) {
   'use strict';
 
   var _       = require('lodash'),
       Q       = require('q'),
-      app     = require('express')(),
-      server  = require('http').Server(app),
       io      = require('socket.io')(server),
-      Proxy   = require('./entity/proxy'),
-      config  = require('./config');
+      Proxy   = require('./entity/proxy');
 
   var listProxiesLoop;
 
@@ -127,14 +124,5 @@ module.exports = (function () {
     });
   });
 
-  return {
-    /**
-     * Start the Express server.
-     */
-    run: function () {
-      server.listen(config.wsapp.port);
-      console.log('Express server for websockets listening on port ' +
-        config.wsapp.port);
-    }
-  };
-})();
+  return io;
+};
