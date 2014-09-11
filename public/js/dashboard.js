@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.dashboard', [
-    'mocKr.process',
-    'mocKr.responses',
-    'mocKr.logs'
+  angular.module('procKr.dashboard', [
+    'procKr.process',
+    'procKr.responses',
+    'procKr.logs'
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {

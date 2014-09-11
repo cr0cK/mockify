@@ -4,7 +4,7 @@ module.exports = (function () {
   var exp = (function () {
     var index = (function () {
       return function (req, res) {
-        res.json({ message: 'Welcome to the mocKr api!' });
+        res.json({ message: 'Welcome to the procKr api!' });
       };
     })();
 
@@ -14,7 +14,7 @@ module.exports = (function () {
          * Return the list of proxy childs.
          */
         list: function (req, res) {
-          res.json({ message: 'Welcome to the mocKr api!' });
+          res.json({ message: 'Welcome to the procKr api!' });
         }
       };
     })();

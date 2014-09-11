@@ -50,7 +50,7 @@
                 res.setHeader(key, value);
               });
 
-              res.setHeader('X-MocKr-rowuuid', response.uuid);
+              res.setHeader('X-procKr-rowuuid', response.uuid);
 
               res
                 .status(response.status || 500)

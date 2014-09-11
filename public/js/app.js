@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr', [
+  angular.module('procKr', [
     'ui.router',
     'ui.bootstrap',
 
     'templates',
 
-    'mocKr.dashboard'
+    'procKr.dashboard'
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {

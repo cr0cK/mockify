@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.logs', [
-    'mocKr.service.webSocket',
-    'mocKr.logs.directives',
+  angular.module('procKr.logs', [
+    'procKr.service.webSocket',
+    'procKr.logs.directives',
 
     'perfect_scrollbar'
   ])

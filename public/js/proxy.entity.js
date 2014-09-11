@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.entity.proxy', [
-    'mocKr.service.webSocket'
+  angular.module('procKr.entity.proxy', [
+    'procKr.service.webSocket'
   ])
 
   /**

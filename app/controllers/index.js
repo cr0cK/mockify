@@ -3,7 +3,7 @@ module.exports = (function () {
 
   var index = function (req, res) {
     res.render('index', {
-      title: 'mocKr'
+      title: 'procKr'
     });
   };
 

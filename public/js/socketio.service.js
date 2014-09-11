@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.service.webSocket', [
+  angular.module('procKr.service.webSocket', [
   ])
 
   .factory('webSocketService', [function () {

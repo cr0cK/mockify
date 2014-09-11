@@ -67,7 +67,7 @@
 
     // set a header to identify the query in order to save its response
     var uuid = guid();
-    proxyReq.setHeader('X-MocKr-rowuuid', uuid);
+    proxyReq.setHeader('X-procKr-rowuuid', uuid);
 
     // decode body to json
     jsonBody(req, res, function (__, json) {
@@ -97,7 +97,7 @@
 
     res.on('end', function () {
       var res_ = this.req.res;
-      var uuid = this.req._headers['x-mockr-rowuuid'];
+      var uuid = this.req._headers['x-prockr-rowuuid'];
 
       var megaBuffer = Buffer.concat(buffers);
 

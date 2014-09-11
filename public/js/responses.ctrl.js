@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.responses', [
-    'mocKr.service.webSocket'
+  angular.module('procKr.responses', [
+    'procKr.service.webSocket'
   ])
 
   .controller('ResponsesCtrl', ['$scope', 'webSocketService',

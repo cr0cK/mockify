@@ -4,7 +4,7 @@
 
 var settings = (function () {
   return {
-    appName: 'mocKr',
+    appName: 'procKr',
     buildDir: './build/static',
     serverFiles: [
       'app/**/*.js'

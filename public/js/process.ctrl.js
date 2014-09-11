@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('mocKr.process', [
-    'mocKr.service.webSocket',
-    'mocKr.service.localStorage',
-    'mocKr.entity.proxy',
+  angular.module('procKr.process', [
+    'procKr.service.webSocket',
+    'procKr.service.localStorage',
+    'procKr.entity.proxy',
 
     'toggle-switch'
   ])
