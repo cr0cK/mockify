@@ -7,7 +7,7 @@
   ])
 
   .factory('webSocketService', [function () {
-    var socket = io('http://localhost:3334');
+    var socket = io();
 
     return {
       on: function (event_, callback) {
