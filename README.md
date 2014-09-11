@@ -1,10 +1,32 @@
 # procKr
 
-A tool to easily proxy and mock an existing API. It's an experimental tool not yet ready to be used. We are working for that!
+procKr is the API mocking made easy.
+
+Record and replay your API calls for test or development.
+
+Warning: procKr is still experimental not ready for production. I'm working on it!
+
+## Installation
+
+``` bash
+git clone https://github.com/cr0cK/procKr.git && cd mocker
+npm install
+bower install
+gulp build
+gulp serve
+```
+
+Open your browser at [localhost:3000](http://localhost:3000)
 
 ## How does it work?
 
-procKr is a webapp which is able to run some child processes to proxy or mock an existing API.
+procKr is basicly a proxy manager, just follow those simple steps:
+
+1. Create a proxy toward the service to mock
+1. Turn **record** mode on
+1. Make a bunch of api calls through the proxy
+1. Turn **mock** mode on
+1. Proxy now returns recorded requests
 
 The proxy will record everything which passing through it and the mock will use this data to return exactly the same results, according HTTP verb, status, query parameters, etc.
 
@@ -13,19 +35,12 @@ procKr uses a SQLite database to store data and spawn in-memory databases for mo
 ## Features
 
 * Save query and response of API(s)
-* Mock them exactly with the same results
+* Mock the exact same request with exact same results
 
-## Features in the pipe
-* Customize queries by updating the response, the status code, the delay, etc. in order to test your app with some unexpected scenarios
-* Use the webapp to have nicer logs and to keep track of the history
-* Use the procKr own api to manipule it in your code
+## Roadmap
 
-## Installation
+* Customize recorded sessions (edit response and request content, status code, headers)
+* Add delay for proxy responses to test unexpected scenarios
+* Enhance webapp logs to keep track of history
+* Use procKr own api to manipule it in your code
 
-* clone this repository
-* npm install
-* bower install
-* ./gulp build
-* ./gulp serve
-
-Go to localhost:3000
