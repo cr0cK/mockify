@@ -1,6 +1,9 @@
 {
   "name": "prockr",
   "version": "0.0.1",
+  "scripts": {
+    "start": "./node_modules/.bin/nodemon app.js"
+  },
   "dependencies": {
     "body": "^4.5.0",
     "body-parser": "^1.0.2",
@@ -27,7 +30,6 @@
     "gulp-jscs": "^1.1.2"
   },
   "devDependencies": {
-    "gulp": "^3.6.2",
     "gulp-angular-templatecache": "^1.2.1",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.2.0",
@@ -44,6 +46,10 @@
     "gulp-watch": "~0.6.4",
     "jshint-stylish": "^0.2.0",
     "node-inspector": "^0.7.4"
+  },
+  "optionalDependencies": {
+    "bower": "^1.3.9",
+    "gulp": "^3.6.2"
   },
   "description": "A tool to easily proxy and mock an existing API.",
   "main": "app.js",
