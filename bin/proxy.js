@@ -14,8 +14,8 @@
       _s          = require('underscore.string'),
       moment      = require('moment'),
       url         = require('url'),
-      db          = require('./../lib/db'),
-      guid        = require('./../lib/helper').guid,
+      db          = require('../app/lib/db'),
+      guid        = require('../app/lib/helper').guid,
       port        = argv.port || 4000,
       proxyId     = argv.proxyId,
       target      = argv.target || 'http://localhost';
