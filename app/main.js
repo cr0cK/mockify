@@ -34,7 +34,7 @@ module.exports = function () {
     .use(favicon())
     .use(methodOverride())
     .use(express.static(path.join(rootPath, 'build')))
-    .use(indexRoutes.indexRouter)
+    .use(indexRoutes)
     .use('/api', apiRoutes.apiRouter)
     .use(function (req, res) {
       res.status(404).render('404', {title: 'Not Found :('});
