@@ -9,11 +9,11 @@ Warning: procKr is still experimental not ready for production. I'm working on i
 ## Installation
 
 ``` bash
-git clone https://github.com/cr0cK/procKr.git && cd mocker
+git clone https://github.com/cr0cK/procKr.git && cd prockr
 npm install
 bower install
-gulp build
-gulp serve
+./gulp build
+./gulp serve
 ```
 
 Open your browser at [localhost:3000](http://localhost:3000)
