@@ -6,19 +6,32 @@
   angular.module('procKr.service.webSocket', [
   ])
 
-  .factory('webSocketService', [function () {
-    var socket = io();
+  .factory('webSocketService', ['$rootScope', '$interval',
+    function ($rootScope, $interval) {
+      var socket = io();
 
-    return {
-      on: function (event_, callback) {
-        socket.on(event_, function (data) {
-          callback(data);
-        });
-      },
+      // check that the websocket server is up every X secs
+      $interval(function () {
+        if (!socket.connected) {
+          $rootScope.$emit('alert', {
+            message: 'Websocket server has gone away!'
+          });
+        } else {
+          $rootScope.$emit('hideAlert');
+        }
+      }, 3000);
 
-      emit: function (event_, data) {
-        socket.emit(event_, data);
-      }
-    };
-  }]);
+      return {
+        on: function (event_, callback) {
+          socket.on(event_, function (data) {
+            callback(data);
+          });
+        },
+
+        emit: function (event_, data) {
+          socket.emit(event_, data);
+        }
+      };
+    }
+  ]);
 })();
