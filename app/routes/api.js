@@ -6,7 +6,7 @@ function notImplementedYet(res) {
   res.json({ message: 'Not implemented yet' });
 }
 
-function index (req, res) {
+function index(req, res) {
   res.json({
     message: 'Welcome to the procKr api!\nAPI is reachable.'
   });
