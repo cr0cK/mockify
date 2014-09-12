@@ -7,7 +7,7 @@
       express     = require('express'),
       bodyParser  = require('body-parser'),
       router      = express.Router(),
-      db          = require('./../lib/db'),
+      db          = require('../app/lib/db'),
       proxyId     = argv.proxyId;
 
   /**

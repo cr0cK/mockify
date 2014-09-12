@@ -10,8 +10,8 @@ module.exports = function () {
       methodOverride = require('method-override'),
       errorHandler   = require('errorhandler'),
       db             = require('./lib/db'),
-      indexRoutes    = require('./routes/index'),
-      apiRoutes      = require('./routes/api');
+      indexRouter    = require('./routes/index'),
+      apiRouter      = require('./routes/api');
 
   /**
    * Create Dabase if it not exists
@@ -34,8 +34,8 @@ module.exports = function () {
     .use(favicon())
     .use(methodOverride())
     .use(express.static(path.join(rootPath, 'build')))
-    .use(indexRoutes.indexRouter)
-    .use('/api', apiRoutes.apiRouter)
+    .use(indexRouter)
+    .use('/api', apiRouter)
     .use(function (req, res) {
       res.status(404).render('404', {title: 'Not Found :('});
     })

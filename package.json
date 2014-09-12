@@ -2,7 +2,8 @@
   "name": "prockr",
   "version": "0.0.1",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon app.js"
+    "start": "./node_modules/.bin/nodemon app.js",
+    "test": "./gulp test"
   },
   "dependencies": {
     "body": "^4.5.0",
@@ -53,9 +54,6 @@
   },
   "description": "A tool to easily proxy and mock an existing API.",
   "main": "app.js",
-  "scripts": {
-    "test": "./gulp test"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cr0cK/procKr.git"

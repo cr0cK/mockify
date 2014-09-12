@@ -1,22 +1,13 @@
-module.exports = (function () {
-  'use strict';
+'use strict';
 
-  var express = require('express'),
-      controllers = require('../controllers');
+var indexRouter = require('express').Router();
 
-  /**
-   * the new Router exposed in express 4
-   * the indexRouter handles all requests to the `/` path
-   */
-  var indexRouter = express.Router();
+function index(req, res) {
+  res.render('index', { title: 'procKr' });
+}
 
-  /**
-   * this accepts all request methods to the `/` path
-   */
-  indexRouter.route('/')
-    .all(controllers.index);
+// register controllers
+indexRouter.route('/').get(index);
 
-  return {
-    indexRouter: indexRouter
-  };
-})();
+// exports router
+module.exports = indexRouter;
