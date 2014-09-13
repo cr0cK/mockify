@@ -18,7 +18,7 @@ module.exports = (function () {
       }
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
              s4() + '-' + s4() + s4() + s4();
-    };
+    }
 
     /**
      * Merge properties as private attributes in obj.
