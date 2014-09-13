@@ -1,7 +1,7 @@
 module.exports = (function () {
   'use strict';
 
-  var _         = require('lodash'),
+  var _         = require('./helper')._,
       _s        = require('underscore.string'),
       fs        = require('fs'),
       path      = require('path'),
@@ -44,7 +44,6 @@ module.exports = (function () {
         ' "isRecording" INTEGER NOT NULL, ' +
         ' "isEnabled" INTEGER NOT NULL)'
       ],
-      guid      = require('./helper').guid,
       models_   = {},
       promise   ;
 
@@ -128,7 +127,7 @@ module.exports = (function () {
      */
     toMemory: function (callback) {
       var self = this;
-      var file = 'procKr_dump_' + guid() + '.sql';
+      var file = 'procKr_dump_' + _.uuid() + '.sql';
       var destFile = path.join(os.tmpDir(), file);
       var cmdLind = 'sqlite3 ' + absFile + ' .dump > ' + destFile;
 

@@ -14,7 +14,6 @@ var httpProxy   = require('http-proxy'),
     moment      = require('moment'),
     url         = require('url'),
     db          = require('../app/lib/db'),
-    guid        = require('../app/lib/helper').guid,
     port        = argv.port || 4000,
     proxyId     = argv.proxyId,
     target      = argv.target || 'http://localhost';
@@ -48,7 +47,7 @@ proxy.on('proxyReq', function handleProxyRequest(proxyReq, req, res) {
   // generate a random uuid to not match Etag and avoid "304 not modified"
   // (304 responses will not trigger the 'data' event from the response object
   // and therefore we can't save body in database)
-  proxyReq._headers['if-none-match'] = guid();
+  proxyReq._headers['if-none-match'] = _.uuid();
 
   // don't send the cookies of localhost
   proxyReq._headers.cookie = '';
@@ -65,7 +64,7 @@ proxy.on('proxyReq', function handleProxyRequest(proxyReq, req, res) {
   log(message);
 
   // set a header to identify the query in order to save its response
-  var uuid = guid();
+  var uuid = _.uuid();
   proxyReq.setHeader('X-procKr-rowuuid', uuid);
 
   // decode body to json

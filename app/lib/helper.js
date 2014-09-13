@@ -2,23 +2,23 @@ module.exports = (function () {
   'use strict';
 
   /**
-   * Return an UUID
-   */
-  var guid = function () {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-                 .toString(16)
-                 .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-           s4() + '-' + s4() + s4() + s4();
-  };
-
-  /**
    * Return lodash extended with custom methods.
    */
   var lodashExtended = function () {
     var _ = require('lodash');
+
+    /**
+     * Return an UUID
+     */
+    function uuid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+                   .toString(16)
+                   .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+             s4() + '-' + s4() + s4() + s4();
+    };
 
     /**
      * Merge properties as private attributes in obj.
@@ -50,6 +50,7 @@ module.exports = (function () {
     }
 
     _.mixin({
+      uuid: uuid,
       privateMerge: privateMerge,
       publicProperties: publicProperties
     });
@@ -58,7 +59,6 @@ module.exports = (function () {
   };
 
   return {
-    guid: guid,
     _: lodashExtended()
   };
 })();

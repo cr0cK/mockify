@@ -7,7 +7,7 @@
 module.exports = function (server) {
   'use strict';
 
-  var _       = require('lodash'),
+  var _       = require('./lib/helper')._,
       Q       = require('q'),
       io      = require('socket.io')(server),
       Proxy   = require('./entity/proxy');
