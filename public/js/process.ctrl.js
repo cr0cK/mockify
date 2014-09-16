@@ -22,7 +22,7 @@
     ) {
 
       var initDefaultTarget = function () {
-        $scope.targetsStored = localStorage.get('targets');
+        $scope.targetsStored = localStorage.get('targets', 10);
         return localStorage.last('targets') ||
           'http://jsonplaceholder.typicode.com';
       };

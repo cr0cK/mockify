@@ -11,9 +11,22 @@
       /**
        * Parse and return a value from the localStorage.
        */
-      get: function (key) {
-        return _.has(lS, key) &&
-          JSON.parse(lS[key]);
+      get: function (key, limit) {
+        limit = limit || 10;
+
+        var results = [];
+        var list = _.has(lS, key) && JSON.parse(lS[key]);
+
+        if (_.isArray(list)) {
+          var sliceIndex = list.length - limit;
+          if (sliceIndex < 0) {
+            sliceIndex = 0;
+          }
+
+          results = list.slice(sliceIndex);
+        }
+
+        return results;
       },
 
       /**
