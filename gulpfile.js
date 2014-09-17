@@ -192,7 +192,7 @@ gulp.task('_watch', function () {
  * Start a local server.
  */
 gulp.task('_serve', shell.task([
-  'nodemon -L --watch app --debug app.js'
+  'nodemon -L --watch app --debug procKr.js'
 ]));
 
 /**

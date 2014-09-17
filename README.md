@@ -37,10 +37,34 @@ procKr uses a SQLite database to store data and spawn in-memory databases for mo
 * Save query and response of API(s)
 * Mock the exact same request with exact same results
 
+## Cli
+
+``` bash
+$ procKr start
+procKr webapp is listening on localhost:3000.
+
+$ procKr proxy-list
+
+List of proxies:
+port    target    rec   status  id  enable
+4000    http://jsonplaceholder.typicode.com
+
+$ procKr add proxy 4000 http://jsonplaceholder.typicode.com
+Proxy has been added (ID:1).
+
+$ procKr delete proxy 1
+Proxy ID:1 has been deleted.
+
+$ procKr start proxy 1
+...
+
+$ procKr start mock 1
+...
+```
+
 ## Roadmap
 
 * Customize recorded sessions (edit response and request content, status code, headers)
 * Add delay for proxy responses to test unexpected scenarios
 * Enhance webapp logs to keep track of history
 * Use procKr own api to manipule it in your code
-

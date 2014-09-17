@@ -2,8 +2,11 @@
   "name": "prockr",
   "version": "0.0.1",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon app.js",
+    "start": "./node_modules/.bin/nodemon procKr.js start",
     "test": "./gulp test"
+  },
+  "bin": {
+    "procKr": "./bin/procKr"
   },
   "dependencies": {
     "body": "^4.5.0",
@@ -28,7 +31,9 @@
     "swig": "^1.4.1",
     "sync": "^0.2.3",
     "underscore.string": "^2.3.3",
-    "gulp-jscs": "^1.1.2"
+    "gulp-jscs": "^1.1.2",
+    "commander": "^2.3.0",
+    "cli-table": "^0.3.0"
   },
   "devDependencies": {
     "gulp-angular-templatecache": "^1.2.1",
