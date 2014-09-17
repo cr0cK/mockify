@@ -2,8 +2,9 @@
   "name": "prockr",
   "version": "0.0.1",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon procKr.js start",
-    "test": "./gulp test"
+    "start": "./node_modules/.bin/forever start daemon/app.js",
+    "stop": "./node_modules/.bin/forever stop daemon/app.js",
+    "status": "./node_modules/.bin/forever list"
   },
   "bin": {
     "procKr": "./bin/procKr"
@@ -30,6 +31,7 @@
     "orm": "^2.1.18",
     "q": "^1.0.1",
     "socket.io": "^1.0.6",
+    "socket.io-client": "^1.1.0",
     "sqlite3": "^2.2.7",
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
