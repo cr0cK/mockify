@@ -18,7 +18,6 @@ module.exports = (function () {
     this._id =
     this._port =
     this._target =
-    this._status =
     this._isRecording;
 
     _.privateMerge(this, properties);
