@@ -43,7 +43,7 @@ gulp.task('_buildCSS', ['clean'], function () {
   startLog(':: Build CSS files');
 
   return gulp
-    .src('./public/less/**/main.less')
+    .src('./www/less/**/main.less')
     .pipe(less({
       sourceMap: true
     }))
@@ -57,7 +57,7 @@ gulp.task('_compileCSS', ['clean'], function () {
   startLog(':: Compile CSS files');
 
   return gulp
-    .src('./public/less/**/main.less')
+    .src('./www/less/**/main.less')
     .pipe(less())
     .pipe(minifyCss())
     .pipe(gulp.dest(settings.buildDir + '/css'));
@@ -70,7 +70,7 @@ gulp.task('_copyImages', ['clean'], function () {
   startLog(':: Copy images');
 
   return gulp
-    .src('./public/images/**/*')
+    .src('./www/images/**/*')
     .pipe(gulp.dest(settings.buildDir + '/images'));
 });
 
@@ -81,7 +81,7 @@ gulp.task('_copyFonts', ['clean'], function () {
   startLog(':: Copy fonts');
 
   return gulp
-    .src('./public/fonts/**/*')
+    .src('./www/fonts/**/*')
     .pipe(gulp.dest(settings.buildDir + '/fonts'));
 });
 
@@ -110,7 +110,7 @@ gulp.task('_lintPublic', function () {
   startLog(':: Lint public files');
 
   return gulp
-    .src('./public/js/**/*.js')
+    .src('./www/js/**/*.js')
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jscs({
@@ -127,7 +127,7 @@ gulp.task('_lintPublic', function () {
 gulp.task('_buildTemplates', ['_clean'], function () {
   startLog(':: Build templates');
   return gulp
-    .src('./public/templates/**/*.html')
+    .src('./www/templates/**/*.html')
     .pipe(templateCache({
       module: 'templates',
       standalone: true
@@ -144,7 +144,7 @@ gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
   return gulp
     .src([].concat(
       settings.vendorFiles,
-      './public/js/**/*.js'
+      './www/js/**/*.js'
     ))
     .pipe(gulp.dest(function (file) {
       return file.path
@@ -186,9 +186,9 @@ gulp.task('_watch', function () {
   gulp.watch(settings.serverFiles, ['_lintServer']);
   gulp.watch(settings.buildDir + '/../../views/_layout.html', ['build']);
   gulp.watch([
-    'public/less/**/*.less',
-    'public/templates/**/*.html',
-    'public/js/**/*.js'
+    'www/less/**/*.less',
+    'www/templates/**/*.html',
+    'www/js/**/*.js'
   ], ['build']);
 });
 
