@@ -43,7 +43,7 @@ procKr uses a SQLite database to store data and spawn in-memory databases for mo
 $ procKr start
 procKr is running. PID: 12345
 
-$ procKr web start
+$ procKr start-web
 procKr webapp is listening on localhost:3000.
 
 $ procKr add-target 4000 http://jsonplaceholder.typicode.com
