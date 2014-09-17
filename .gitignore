@@ -1,6 +1,8 @@
 node_modules
-public/vendor
-build
-db.sqlite
+
+www/vendor
+www/build
+
+daemon/db.sqlite
 
 npm-debug.log

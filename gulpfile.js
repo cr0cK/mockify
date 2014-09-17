@@ -21,6 +21,10 @@ var rootDir = process.env.PWD,
       return gutil.log(gutil.colors.bold(log));
     };
 
+gutil.log('');
+gutil.log(gutil.colors.bold('Build dir: ' + settings.buildDir));
+gutil.log('');
+
 /**
  * Clean the build dir.
  */

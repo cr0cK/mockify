@@ -12,9 +12,13 @@
     "body": "^4.5.0",
     "body-parser": "^1.0.2",
     "cli-color": "^0.3.2",
+    "cli-table": "^0.3.0",
+    "commander": "^2.3.0",
     "compression": "^1.0.1",
     "errorhandler": "^1.0.2",
     "express": "^4.0.0",
+    "forever": "^0.11.1",
+    "gulp-jscs": "^1.1.2",
     "http-proxy": "^1.1.6",
     "is-running": "^1.0.5",
     "lodash": "^2.4.1",
@@ -30,10 +34,7 @@
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
     "sync": "^0.2.3",
-    "underscore.string": "^2.3.3",
-    "gulp-jscs": "^1.1.2",
-    "commander": "^2.3.0",
-    "cli-table": "^0.3.0"
+    "underscore.string": "^2.3.3"
   },
   "devDependencies": {
     "gulp-angular-templatecache": "^1.2.1",
