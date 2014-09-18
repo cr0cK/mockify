@@ -6,4 +6,4 @@ var mainApp = require('./main')(),
 
 server.listen(port);
 
-console.log('Webapp listening on port %s', port);
+console.log('The http server is listening on port %s.', port);

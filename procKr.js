@@ -67,21 +67,32 @@ module.exports = (function () {
     }, 1000);
 
     socket.on('connect', function () {
-      socket.on('hello', function (data) {
-        console.log('Receiving hello', data);
+      socket.emit('hello');
+      socket.on('hello', function (hello) {
+        console.log('Receiving hello', hello);
         exit();
       });
     });
   };
 
   /**
-   * Start the web interface.
+   * Start the web app.
    */
   var startWeb = function () {
-    socket.emit('web', 'start');
+    socket.emit('startWeb');
+    socket.on('startWeb', function (stdout) {
+      log(stdout);
+      exit();
+    });
+  };
 
-    socket.on('webResponse', function () {
-      console.log('webResponse', arguments);
+  /**
+   * Stop the web app.
+   */
+  var stopWeb = function () {
+    socket.emit('stopWeb');
+    socket.on('stopWeb', function (stdout) {
+      log(stdout);
       exit();
     });
   };
@@ -91,6 +102,7 @@ module.exports = (function () {
     stop: stop,
     status: status,
     hello: hello,
-    startWeb: startWeb
+    startWeb: startWeb,
+    stopWeb: stopWeb
   };
 })();

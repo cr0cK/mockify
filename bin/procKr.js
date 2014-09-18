@@ -18,7 +18,7 @@ var program   = require('commander');
 
 var //fs        = require('fs'),
     program   = require('commander'),
-    procKr    = require('procKr'),
+    procKr    = require('../procKr'),
     log       = function () { console.log.apply(this, arguments); };
 
 // @FIxME
@@ -49,6 +49,11 @@ program
   .command('start-web')
   .description('Start the procKr web interface.')
   .action(procKr.startWeb);
+
+program
+  .command('stop-web')
+  .description('Stop the procKr web interface.')
+  .action(procKr.stopWeb);
 
 program.parse(process.argv);
 
