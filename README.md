@@ -77,7 +77,7 @@ $ procKr disable-target 1
 The proxy of the target ID:1 has been stopped.
 The target ID:1 has been disabled.
 
-$ procKr delete target 1
+$ procKr delete-target 1
 The target ID:1 has been deleted.
 ```
 
