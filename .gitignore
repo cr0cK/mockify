@@ -4,5 +4,8 @@ www/vendor
 www/build
 
 daemon/db.sqlite
+daemon/log
+
+express/build
 
 npm-debug.log

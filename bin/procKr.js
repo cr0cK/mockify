@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * The file is the procKr cli.
+ * This file is the procKr cli.
  *
  * Usage examples:
  * $ procKr start
@@ -19,21 +19,15 @@ var program   = require('commander');
 var //fs        = require('fs'),
     program   = require('commander'),
     procKr    = require('procKr'),
-    log       = function () {
-      console.log.apply(this, arguments);
-    };
+    log       = function () { console.log.apply(this, arguments); };
 
-
-/**
- * Handle argv options.
- */
 // @FIxME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
 program.version('0.0.1');
 
 program
-  .command('start [port]')
-  .description('Start the daemon. Use the port 5555 by default.')
+  .command('start')
+  .description('Start the daemon.')
   .action(procKr.start);
 
 program
@@ -45,6 +39,16 @@ program
   .command('status')
   .description('Check procKr status.')
   .action(procKr.status);
+
+program
+  .command('hello')
+  .description('Say hello to procKr to test websocket connexion.')
+  .action(procKr.hello);
+
+program
+  .command('start-web')
+  .description('Start the procKr web interface.')
+  .action(procKr.startWeb);
 
 program.parse(process.argv);
 

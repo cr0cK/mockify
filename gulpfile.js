@@ -4,6 +4,7 @@
 
 var rootDir = process.env.PWD,
     settings = require('./gulpsettings.js'),
+    path = require('path'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
     less = require('gulp-less-sourcemap'),
@@ -147,9 +148,14 @@ gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
       './www/js/**/*.js'
     ))
     .pipe(gulp.dest(function (file) {
-      return file.path
-        .replace(__dirname + '/public', settings.buildDir)
+      var p = file.path
+        .replace(
+          path.join(__dirname, 'www'),
+          path.join(__dirname, settings.buildDir)
+        )
         .split('/').slice(0, -1).join('/');
+
+      return p;
     }));
 });
 

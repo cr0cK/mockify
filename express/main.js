@@ -9,9 +9,9 @@ module.exports = function () {
       favicon        = require('static-favicon'),
       methodOverride = require('method-override'),
       errorHandler   = require('errorhandler'),
-      db             = require('./lib/db'),
-      indexRouter    = require('./routes/index'),
-      apiRouter      = require('./routes/api');
+      db             = require('../daemon/lib/db'),
+      indexRouter    = require('./routes/index');
+      // apiRouter      = require('./routes/api');
 
   /**
    * Create Dabase if it not exists
@@ -21,21 +21,20 @@ module.exports = function () {
   /**
    * Express configuration.
    */
-  var rootPath = process.env.PWD;
   var app = express();
   var isDevelopment = app.get('env') === 'development';
 
   app.engine('html', swig.renderFile);
-  app.set('views', path.join(rootPath, 'app', 'views'));
+  app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'html');
 
   app
     .use(compress())
     .use(favicon())
     .use(methodOverride())
-    .use(express.static(path.join(rootPath, 'build')))
+    .use(express.static(path.join(__dirname, 'build')))
     .use(indexRouter)
-    .use('/api', apiRouter)
+    // .use('/api', apiRouter)
     .use(function (req, res) {
       res.status(404).render('404', {title: 'Not Found :('});
     })

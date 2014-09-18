@@ -3,30 +3,31 @@
 module.exports = (function () {
   var forever   = require('forever'),
       path      = require('path'),
-      config    = require('./config/daemon'),
-      log       = function () { console.log.apply(this, arguments); };
+      config    = require('./config/config'),
+      wsPort    = config.wsServer.port,
+      socket    = require('socket.io-client')('http://localhost:' + wsPort),
+      log       = function () { console.log.apply(this, arguments); },
+      exit      = function () { process.exit(1); };
 
   /**
    * Start the procKr daemon.
-   * @param  {int}  port  procKr port
    */
-  var start = function (port) {
-    port = port || config.daemon.port;
-
+  var start = function () {
     var runDir = path.join(__dirname, 'daemon'),
-        binPath = path.join(runDir, 'app.js');
+        binPath = path.join(runDir, 'procKr.js');
 
     forever.startDaemon(binPath, {
-      silent              : false,
-      watch               : true,
-      watchDirectory      : runDir,
-      cwd                 : runDir
-      // logFile             : '/var/log/botker/forever-www.log',
-      // outFile             : '/var/log/botker/forever-www-stdout.log',
-      // errFile             : '/var/log/botker/forever-www-stderr.log',
+      silent          : false,
+      watch           : true,
+      watchDirectory  : runDir,
+      cwd             : runDir,
+      logFile         : path.join(runDir, 'log', 'procKr.log'),
+      outFile         : path.join(runDir, 'log', 'procKr.out.log'),
+      errFile         : path.join(runDir, 'log', 'procKr.err.log')
     });
 
     log('procKr daemon has been started.');
+    exit();
   };
 
   /**
@@ -35,6 +36,7 @@ module.exports = (function () {
   var stop = function () {
     forever.stopAll().on('stopAll', function () {
       log('procKr daemon has been stopped.');
+      exit();
     });
   };
 
@@ -44,12 +46,51 @@ module.exports = (function () {
   var status = function () {
     forever.list(true, function (err, daemons) {
       log((err === null && !daemons && 'procKr is not running.') || daemons);
+      exit();
+    });
+  };
+
+  /**
+   * Say hello to the procKr websocket server.
+   */
+  var hello = function () {
+    var attempts = 0;
+
+    setInterval(function () {
+      process.stdout.write('.');
+      attempts++;
+
+      if (attempts > 5) {
+        console.log('\nCan\'t connect to procKr :(');
+        exit();
+      }
+    }, 1000);
+
+    socket.on('connect', function () {
+      socket.on('hello', function (data) {
+        console.log('Receiving hello', data);
+        exit();
+      });
+    });
+  };
+
+  /**
+   * Start the web interface.
+   */
+  var startWeb = function () {
+    socket.emit('web', 'start');
+
+    socket.on('webResponse', function () {
+      console.log('webResponse', arguments);
+      exit();
     });
   };
 
   return {
     start: start,
     stop: stop,
-    status: status
+    status: status,
+    hello: hello,
+    startWeb: startWeb
   };
 })();

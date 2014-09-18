@@ -1,10 +1,8 @@
-#!/usr/bin/env node
-
 'use strict';
 
 var fs        = require('fs'),
     program   = require('commander'),
-    config    = require('../config/daemon'),
+    config    = require('../config/config'),
     db        = require('../daemon/lib/db'),
     proxy     = require('../daemon/entity/proxy'),
     socket    = require('socket.io-client')('http://localhost:8124'),

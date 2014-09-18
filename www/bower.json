@@ -16,7 +16,7 @@
     "underscore.string": "~2.3.3",
     "angular-bootstrap": "~0.11.0",
     "angular-bootstrap-toggle-switch": "~0.5.1",
-    "angular-perfect-scrollbar": "~0.1.4"
+    "angular-perfect-scrollbar": ""
   },
   "devDependencies": {
     "angular-mocks": "~1.2.19"
