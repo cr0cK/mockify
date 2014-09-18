@@ -1,96 +1,55 @@
-#!/usr/bin/env node
-
 'use strict';
 
-var fs        = require('fs'),
-    program   = require('commander'),
-    config    = require('./app/config'),
-    db        = require('./app/lib/db'),
-    proxy     = require('./app/entity/proxy'),
-    log       = function () {
-      console.log.apply(this, arguments);
-    };
+module.exports = (function () {
+  var forever   = require('forever'),
+      path      = require('path'),
+      config    = require('./config/daemon'),
+      log       = function () { console.log.apply(this, arguments); };
 
-/**
- * Start the procKr webapp.
- */
-var start = function (port) {
-  var mainApp = require('./app/main')(),
-      server  = require('http').Server(mainApp);
+  /**
+   * Start the procKr daemon.
+   * @param  {int}  port  procKr port
+   */
+  var start = function (port) {
+    port = port || config.daemon.port;
 
-  require('./app/ws')(server);
+    var runDir = path.join(__dirname, 'daemon'),
+        binPath = path.join(runDir, 'app.js');
 
-  port = port || config.server.port;
-  server.listen(port);
-
-  log('procKr webapp is listening on port %s.', port);
-};
-
-/**
- * Handle argv options.
- */
-program
-  .version(JSON.parse(fs.readFileSync('package.json')).version);
-
-program
-  .command('start [port]')
-  .description('Start the webapp. Use the port 3000 by default.')
-  .action(start);
-
-program
-  .command('proxy-list')
-  .description('List registered proxies.')
-  .action(function () {
-    db.whenReady().then(function () {
-      proxy.list(function (err, proxies) {
-        // console.log(proxies);
-        //
-        // var io = require('socket.io');
-
-        // io.emit()
-
-        //
-        //
-        // var Table   = require('cli-table');
-        // var _       = require('./app/lib/helper')._;
-
-        // if (!proxies.length) {
-        //   return;
-        // }
-
-        // var table = new Table({
-        //   head: _.keys(_.publicProperties(_.first(proxies))),
-        //   style: {head: ['cyan']}
-        // });
-
-        // console.log(proxies[0]._isRecording);
-
-        // _.forEach(proxies, function (proxy) {
-        //   proxy = _.publicProperties(proxy);
-
-        //   var values = _.map(_.values(proxy), function (value) {
-        //     // console.log(value);
-        //     return value || false;
-        //   });
-
-        //   table.push(values);
-        // });
-
-        // log(table.toString());
-      });
+    forever.startDaemon(binPath, {
+      silent              : false,
+      watch               : true,
+      watchDirectory      : runDir,
+      cwd                 : runDir
+      // logFile             : '/var/log/botker/forever-www.log',
+      // outFile             : '/var/log/botker/forever-www-stdout.log',
+      // errFile             : '/var/log/botker/forever-www-stderr.log',
     });
-  });
 
-program.command('proxy-add <port> <target>')
-  .description('Add a proxy which will listen on the port <port> and will ' +
-    'serve the target <target>.')
-  .action(function () {
-    console.log('add proxy', arguments);
-  });
+    log('procKr daemon has been started.');
+  };
 
-program.parse(process.argv);
+  /**
+   * Stop the procKr daemon.
+   */
+  var stop = function () {
+    forever.stopAll().on('stopAll', function () {
+      log('procKr daemon has been stopped.');
+    });
+  };
 
-if (!program.args.length) {
-  log( program.helpInformation() );
-  process.exit();
-}
+  /**
+   * Display a nice output with forever current running daemons.
+   */
+  var status = function () {
+    forever.list(true, function (err, daemons) {
+      log((err === null && !daemons && 'procKr is not running.') || daemons);
+    });
+  };
+
+  return {
+    start: start,
+    stop: stop,
+    status: status
+  };
+})();

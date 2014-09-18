@@ -7,7 +7,7 @@
     "status": "./node_modules/.bin/forever list"
   },
   "bin": {
-    "procKr": "./bin/procKr"
+    "procKr": "./bin/procKr.js"
   },
   "dependencies": {
     "body": "^4.5.0",
@@ -36,7 +36,8 @@
     "static-favicon": "^1.0.2",
     "swig": "^1.4.1",
     "sync": "^0.2.3",
-    "underscore.string": "^2.3.3"
+    "underscore.string": "^2.3.3",
+    "debug": "^2.0.0"
   },
   "devDependencies": {
     "gulp-angular-templatecache": "^1.2.1",

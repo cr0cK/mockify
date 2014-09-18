@@ -3,24 +3,24 @@ module.exports = (function () {
 
   var config = {
     development: {
-      server: {
-        port: 3000
+      daemon: {
+        port: 5555
       },
       wsapp: {
         port: 3334
       }
     },
     testing: {
-      server: {
-        port: 3001
+      daemon: {
+        port: 5556
       },
       wsapp: {
         port: 3334
       }
     },
     production: {
-      server: {
-        port: 8080
+      daemon: {
+        port: 8055
       },
       wsapp: {
         port: 3334
