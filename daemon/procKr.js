@@ -6,13 +6,16 @@
 
 module.exports = (function () {
   var io    = require('./ws/io'),
-      web   = require('./action/web'),
+      http  = require('./action/http'),
       db    = require('./lib/db');
 
-  /**
-   * Create the database if it not exists.
-   */
+  // create the database if it not exists.
   db.create();
+
+  // start the http server
+  http.start().then(function (msgLog) {
+    console.log(msgLog);
+  });
 
   io.on('connection', function (socket) {
     socket.on('hello', function () {
@@ -20,15 +23,19 @@ module.exports = (function () {
     });
 
     socket.on('startHttp', function () {
-      web.start().then(function (msgLog) {
+      http.start().then(function (msgLog) {
         socket.emit('startHttp', msgLog);
       });
     });
 
     socket.on('stopHttp', function () {
-      web.stop().then(function (msgLog) {
+      http.stop().then(function (msgLog) {
         socket.emit('stopHttp', msgLog);
       });
+    });
+
+    socket.on('addProxy', function (proxy) {
+      console.log('add proxy', proxy);
     });
   });
 })();
