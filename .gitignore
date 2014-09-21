@@ -6,6 +6,7 @@ www/build
 daemon/db.sqlite
 daemon/log
 
-express/build
+http/build
+http/views/layout.html
 
 npm-debug.log
