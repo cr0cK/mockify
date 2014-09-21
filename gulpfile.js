@@ -12,6 +12,7 @@ var rootDir = process.env.PWD,
     jshint = require('gulp-jshint'),
     jscs = require('gulp-jscs'),
     inject = require('gulp-inject'),
+    expect = require('gulp-expect-file'),
     templateCache = require('gulp-angular-templatecache'),
     minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
@@ -142,6 +143,10 @@ gulp.task('_buildTemplates', ['_clean'], function () {
 gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
   startLog(':: Build public JS');
 
+  gulp
+    .src(settings.vendorFiles)
+    .pipe(expect(settings.vendorFiles));
+
   return gulp
     .src([].concat(
       settings.vendorFiles,
@@ -167,7 +172,7 @@ gulp.task('_buildAssets',
   startLog(':: Inject assets in the layout');
 
   return gulp
-    .src(rootDir + '/app/views/_layout.html')
+    .src(rootDir + '/http/views/_layout.html')
     .pipe(
       inject(gulp
         .src([].concat(
@@ -176,13 +181,13 @@ gulp.task('_buildAssets',
           settings.buildDir + '/css/main.css'
         ), { read: false }),
         {
-          ignorePath: ['/build/static', '/public'],
+          ignorePath: ['/http/build/static', '/www'],
           addPrefix: '/static'
         }
       )
     )
     .pipe(rename('layout.html'))
-    .pipe(gulp.dest(rootDir + '/app/views'));
+    .pipe(gulp.dest(rootDir + '/http/views'));
 });
 
 /**
@@ -190,7 +195,7 @@ gulp.task('_buildAssets',
  */
 gulp.task('_watch', function () {
   gulp.watch(settings.serverFiles, ['_lintServer']);
-  gulp.watch(settings.buildDir + '/../../views/_layout.html', ['build']);
+  gulp.watch(rootDir + '/http/views/_layout.html', ['build']);
   gulp.watch([
     'www/less/**/*.less',
     'www/templates/**/*.html',
