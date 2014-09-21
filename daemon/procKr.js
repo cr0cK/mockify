@@ -19,15 +19,15 @@ module.exports = (function () {
       socket.emit('hello', 'Hi! This is procKr daemon.');
     });
 
-    socket.on('startWeb', function () {
+    socket.on('startHttp', function () {
       web.start().then(function (msgLog) {
-        socket.emit('startWeb', msgLog);
+        socket.emit('startHttp', msgLog);
       });
     });
 
-    socket.on('stopWeb', function () {
+    socket.on('stopHttp', function () {
       web.stop().then(function (msgLog) {
-        socket.emit('stopWeb', msgLog);
+        socket.emit('stopHttp', msgLog);
       });
     });
   });

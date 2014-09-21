@@ -46,14 +46,14 @@ program
   .action(procKr.hello);
 
 program
-  .command('start-web')
-  .description('Start the procKr web interface.')
-  .action(procKr.startWeb);
+  .command('start-http')
+  .description('Start the procKr http server.')
+  .action(procKr.startHttp);
 
 program
-  .command('stop-web')
-  .description('Stop the procKr web interface.')
-  .action(procKr.stopWeb);
+  .command('stop-http')
+  .description('Stop the procKr http server.')
+  .action(procKr.stopHttp);
 
 program.parse(process.argv);
 

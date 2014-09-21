@@ -81,9 +81,9 @@ module.exports = (function () {
   /**
    * Start the web app.
    */
-  var startWeb = function () {
-    socket.emit('startWeb');
-    socket.on('startWeb', function (stdout) {
+  var startHttp = function () {
+    socket.emit('startHttp');
+    socket.on('startHttp', function (stdout) {
       log(stdout);
       exit();
     });
@@ -92,9 +92,9 @@ module.exports = (function () {
   /**
    * Stop the web app.
    */
-  var stopWeb = function () {
-    socket.emit('stopWeb');
-    socket.on('stopWeb', function (stdout) {
+  var stopHttp = function () {
+    socket.emit('stopHttp');
+    socket.on('stopHttp', function (stdout) {
       log(stdout);
       exit();
     });
@@ -105,7 +105,7 @@ module.exports = (function () {
     stop: stop,
     status: status,
     hello: hello,
-    startWeb: startWeb,
-    stopWeb: stopWeb
+    startHttp: startHttp,
+    stopHttp: stopHttp
   };
 })();
