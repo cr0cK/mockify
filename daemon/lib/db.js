@@ -12,9 +12,9 @@ module.exports = (function () {
       Q         = require('q');
 
   var file      = 'db.sqlite',
-      absFile   = path.join(process.env.PWD, file),
+      absFile   = path.join(process.env.PWD, 'daemon', file),
       conStr    = 'sqlite://' + absFile,
-      exists    = fs.existsSync(file),
+      exists    = fs.existsSync(absFile),
       models    = require('./models'),
       schemas   = [
         'CREATE  TABLE "main"."response"' +

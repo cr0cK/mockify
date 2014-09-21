@@ -9,14 +9,8 @@ module.exports = function () {
       favicon        = require('static-favicon'),
       methodOverride = require('method-override'),
       errorHandler   = require('errorhandler'),
-      db             = require('../daemon/lib/db'),
       indexRouter    = require('./routes/index');
       // apiRouter      = require('./routes/api');
-
-  /**
-   * Create Dabase if it not exists
-   */
-  db.create();
 
   /**
    * Express configuration.
