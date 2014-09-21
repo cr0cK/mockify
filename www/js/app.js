@@ -7,6 +7,7 @@
 
     'templates',
 
+    'procKr.alert',
     'procKr.dashboard'
   ])
 
@@ -17,9 +18,9 @@
       .state('app', {
         url: '/',
         views: {
-          error: {
-            templateUrl: 'error.html',
-            controller: 'ErrorCtrl'
+          alert: {
+            templateUrl: 'alert.html',
+            controller: 'AlertCtrl'
           },
           header: {
             templateUrl: 'header.html'
@@ -43,35 +44,5 @@
         $state.go('app.dashboard');
       }
     });
-  }])
-
-  /**
-   * Handle errors sent by websockets.
-   */
-  .controller('ErrorCtrl', ['$scope', 'webSocketService',
-    function ($scope, webSocket) {
-      $scope.showAlert = false;
-
-      var saveDataToScope = function (data) {
-        $scope.type = data.type || 'danger';
-        $scope.strong = data.strong;
-        $scope.message = data.message;
-        $scope.showAlert = true;
-      };
-
-      $scope.$root.$on('alert', function (e, data) {
-        saveDataToScope(data);
-      });
-
-      $scope.$root.$on('hideAlert', function () {
-        $scope.showAlert = false;
-      });
-
-      webSocket.on('alert', function (data) {
-        $scope.$apply(function () {
-          saveDataToScope(data);
-        });
-      });
-    }
-  ]);
+  }]);
 })();

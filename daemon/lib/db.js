@@ -37,10 +37,10 @@ module.exports = (function () {
         // replace if the query is the same than a previous one
         ' UNIQUE (status, url, method, parameters) ON CONFLICT REPLACE)',
 
-        'CREATE  TABLE "main"."proxy"' +
+        'CREATE  TABLE "main"."target"' +
         ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL,' +
         ' "port" INTEGER NOT NULL,' +
-        ' "target" VARCHAR NOT NULL,' +
+        ' "url" VARCHAR NOT NULL,' +
         ' "isRecording" INTEGER NOT NULL, ' +
         ' "isEnabled" INTEGER NOT NULL)'
       ],

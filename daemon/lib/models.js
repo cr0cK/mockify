@@ -35,13 +35,13 @@ module.exports = (function () {
     },
 
     /**
-     * Proxy model
+     * Target model
      */
-    Proxy: function (db) {
+    Target: function (db) {
       /* jscs:disable disallowSpaceAfterObjectKeys */
-      return db.define('proxy', {
+      return db.define('target', {
         port        : Number,
-        target      : String,
+        url         : String,
         isRecording : Boolean,
         isEnabled   : Boolean
       }, {

@@ -207,13 +207,20 @@ gulp.task('_watch', function () {
  * Start procKr.
  */
 gulp.task('_start', shell.task([
-  'nodemon -L --watch . --debug daemon/procKr.js'
+  'nodemon -L --watch daemon --debug daemon/procKr.js'
 ]));
 
 /**
- * Start the debugger
+ * Start procKr with a breakpoint at loading.
  */
-gulp.task('_debug', shell.task(['node-inspector --web-port=8081']));
+gulp.task('_debug', shell.task([
+  'nodemon -L --watch daemon --debug --debug-brk daemon/procKr.js'
+]));
+
+/**
+ * Start the node-inspector.
+ */
+gulp.task('_inspector', shell.task(['node-inspector --web-port=8081']));
 
 /**
  * Display some help.
@@ -233,10 +240,12 @@ gulp.task('help', function() {
   gutil.log(' - ' + green('watch') + ': watch JS and less files and trigger' +
     ' the build task on modifications');
   gutil.log(' - ' + green('build') + ': build less and JS files.');
-  gutil.log(' - ' + green('compile') + ': compile (minify) less and JS files.');
-  gutil.log(' - ' + green('watch') + ': watch files and build on updates.');
-  gutil.log(' - ' + green('serve') + ': start the apps.');
-  gutil.log(' - ' + green('debug') + ': launch node-inspector.');
+  // gutil.log(' - ' + green('compile') + ': compile (minify) less and JS
+  // files.');
+  gutil.log(' - ' + green('start') + ': start procKr.');
+  gutil.log(' - ' + green('debug') + ': start procKr with a breakpoint at ' +
+    'loading.');
+  gutil.log(' - ' + green('inspector') + ': start node-inspector.');
   gutil.log('');
 });
 
@@ -257,3 +266,4 @@ gulp.task('compile', [
 gulp.task('watch', ['build', '_watch']);
 gulp.task('start', ['_start']);
 gulp.task('debug', ['_debug']);
+gulp.task('inspector', ['_inspector']);

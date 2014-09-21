@@ -5,9 +5,10 @@
 'use strict';
 
 module.exports = (function () {
-  var io    = require('./ws/io'),
-      http  = require('./action/http'),
-      db    = require('./lib/db');
+  var io      = require('./ws/io').io,
+      http    = require('./ws/http'),
+      target  = require('./ws/target'),
+      db      = require('./lib/db');
 
   // create the database if it not exists.
   db.create();
@@ -17,7 +18,7 @@ module.exports = (function () {
     console.log(msgLog);
   });
 
-  io.on('connection', function (socket) {
+  io.sockets.on('connection', function (socket) {
     socket.on('hello', function () {
       socket.emit('hello', 'Hi! This is procKr daemon.');
     });
@@ -34,8 +35,6 @@ module.exports = (function () {
       });
     });
 
-    socket.on('addProxy', function (proxy) {
-      console.log('add proxy', proxy);
-    });
+    socket.on('addTarget', target.add);
   });
 })();

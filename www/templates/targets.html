@@ -1,0 +1,92 @@
+<p>
+  <h3>Targets</h3>
+
+  <table class="targets table table-striped">
+    <thead>
+      <tr>
+        <th>Port</th>
+        <th>Url</th>
+        <th>Rec.</th>
+        <th>Status</th>
+        <th>ID</th>
+        <th>Enable</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-show="!targetsList.length">
+        <td colspan="7">No process is running.</td>
+      </tr>
+
+      <tr ng-repeat="target in targetsList track by $index">
+        <td>
+          <span
+            ng-class="{'disabled': !target._isEnabled}">
+            {{target.port()}}
+          </span>
+        </td>
+
+        <td>
+          <span
+            ng-class="{'disabled': !target._isEnabled}">
+            {{target.url()}}
+          </span>
+        </td>
+
+        <td>
+          <span
+            ng-class="{'on': target.isRecording() && target._isEnabled, 'disabled': !target._isEnabled}"
+            class="glyphicon glyphicon-record"
+            ng-click="target._isEnabled && toggleRecordTarget(target)"></span>
+        </td>
+
+        <td class="switch">
+          <div ng-click="target._isEnabled && toggleMockTarget(target)">
+            <toggle-switch
+              model="target._isRunning"
+              class="switch-success switch-small"
+              ng-disabled="!target._isEnabled"
+              on-label="target"
+              off-label="mock">
+            <toggle-switch>
+          </div>
+        </td>
+
+        <td>
+          <span
+            class="label label-primary">
+            {{target.id()}}
+          </span>
+        </td>
+
+        <td>
+          <input type="checkbox" ng-model="target._isEnabled" ng-change="toggleEnableTarget(target)" />
+        </td>
+
+        <td>
+          <span
+            class="glyphicon glyphicon-remove"
+            ng-click="removeTarget(target)"
+            title="Delete target"></span>
+        </td>
+      </tr>
+
+      <tr class="fields" ng-show="showTargetFields">
+        <td colspan="7">
+          <input type="text" class="form-control" placeholder="{{defaultValues.port}}" ng-model="port" />
+          <input type="text" class="form-control" placeholder="{{defaultValues.url}}" ng-model="url"
+            typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
+          <span class="pull-right">
+            <button type="button" class="btn btn-success" ng-click="addAndStartTarget(port, url, 'inactive'); showTargetFields = false">OK</button>
+            <button type="button" class="btn btn-default" ng-click="showTargetFields = false">Cancel</button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="pull-right">
+    <button type="button" class="btn btn-default" ng-click="showTargetFields = true">Add</button>
+  </p>
+</p>

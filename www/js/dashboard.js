@@ -17,8 +17,8 @@
             controller: 'ResponsesCtrl'
           },
           secondaryContainer: {
-            templateUrl: 'process-list.html',
-            controller: 'ProcessListCtrl'
+            templateUrl: 'targets.html',
+            controller: 'TargetCtrl'
           },
           logsContainer: {
             templateUrl: 'logs.html',
