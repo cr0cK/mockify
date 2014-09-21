@@ -204,10 +204,10 @@ gulp.task('_watch', function () {
 });
 
 /**
- * Start a local server.
+ * Start procKr.
  */
-gulp.task('_serve', shell.task([
-  'nodemon -L --watch app --debug procKr.js'
+gulp.task('_start', shell.task([
+  'nodemon -L --watch . --debug daemon/procKr.js'
 ]));
 
 /**
@@ -255,5 +255,5 @@ gulp.task('compile', [
   '_copyImages', '_copyFonts',
   '_compileAssets']);
 gulp.task('watch', ['build', '_watch']);
-gulp.task('serve', ['_serve']);
+gulp.task('start', ['_start']);
 gulp.task('debug', ['_debug']);
