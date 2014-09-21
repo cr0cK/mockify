@@ -26,6 +26,7 @@ module.exports = (function () {
       errFile         : path.join(runDir, 'log', 'procKr.err.log')
     });
 
+    // @FIXME Handle daemon errors
     log('procKr daemon has been started.');
     exit();
   };
@@ -34,6 +35,7 @@ module.exports = (function () {
    * Stop the procKr daemon.
    */
   var stop = function () {
+    // @FIXME Handle error if stopping when procKr is not started
     forever.stopAll().on('stopAll', function () {
       log('procKr daemon has been stopped.');
       exit();

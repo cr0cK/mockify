@@ -1,9 +1,10 @@
+/**
+ * This is the proxy binary which allows to proxy and save queries in the
+ * procKr database?
+ */
+
 /* global Buffer */
 
-/**
- * Standalone proxy.
- * Started as a child process of the Express app.
- */
 'use strict';
 
 var httpProxy   = require('http-proxy'),

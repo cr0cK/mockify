@@ -1,3 +1,8 @@
+/**
+ * This is the mock binary which allows to 'start' fake APIs by serving the
+ * data in the procKr database.
+ */
+
 (function () {
   'use strict';
 

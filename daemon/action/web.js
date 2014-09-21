@@ -1,3 +1,7 @@
+/**
+ * Handle the web interface process.
+ */
+
 'use strict';
 
 module.exports = (function () {
