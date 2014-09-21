@@ -58,6 +58,6 @@ program
 program.parse(process.argv);
 
 if (!program.args.length) {
-  log( program.helpInformation() );
+  log(program.helpInformation());
   process.exit();
 }
