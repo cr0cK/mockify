@@ -5,9 +5,11 @@
 var settings = (function () {
   return {
     appName: 'procKr',
-    buildDir: 'http/build/static',
+    buildDir: 'http-build/static',
     serverFiles: [
-      'app/**/*.js'
+      'bin/**/*.js',
+      'daemon/**/*.js',
+      'http/**/*.js'
     ],
     vendorFiles: [
       'www/vendor/jquery/dist/jquery.min.js',
