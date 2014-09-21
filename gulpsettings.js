@@ -5,7 +5,7 @@
 var settings = (function () {
   return {
     appName: 'procKr',
-    buildDir: 'express/build/static',
+    buildDir: 'http/build/static',
     serverFiles: [
       'app/**/*.js'
     ],

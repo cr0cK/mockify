@@ -14,7 +14,7 @@ module.exports = (function () {
     var deferred = Q.defer();
 
     httpChild = spawn('node', [
-      path.join(process.env.PWD, 'express', 'app.js')
+      path.join(process.env.PWD, 'http', 'app.js')
     ]);
 
     httpChild.stdout.on('data', function (data) {
