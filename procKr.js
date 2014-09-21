@@ -18,6 +18,7 @@ module.exports = (function () {
 
     forever.startDaemon(binPath, {
       silent          : false,
+      max             : 10,
       watch           : true,
       watchDirectory  : runDir,
       cwd             : runDir,
