@@ -8,7 +8,8 @@
 
   .factory('webSocketService', ['$rootScope', '$interval',
     function ($rootScope, $interval) {
-      var socket = io();
+      // @FIXME The port should be read from the config
+      var socket = io('http://localhost:5001');
 
       // check that the websocket server is up every X secs
       $interval(function () {
