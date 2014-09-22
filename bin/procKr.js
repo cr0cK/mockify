@@ -48,7 +48,9 @@ program
 program
   .command('hello')
   .description('Say hello to procKr to test websocket connexion.')
-  .action(procKr.hello);
+  .action(function () {
+    procKr.sayHello().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('start-http')

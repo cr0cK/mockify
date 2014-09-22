@@ -11,6 +11,7 @@ module.exports = (function () {
       log       = function () { console.log.apply(this, arguments); },
       exit      = function () { process.exit(1); },
 
+      hello     = require('./lib/hello')(socket),
       http      = require('./lib/http')(socket),
       target    = require('./lib/target')(socket);
 
@@ -60,41 +61,15 @@ module.exports = (function () {
     });
   };
 
-  /**
-   * Say hello to the procKr websocket server.
-   */
-  var hello = function () {
-    var attempts = 0;
-
-    setInterval(function () {
-      process.stdout.write('.');
-      attempts++;
-
-      if (attempts > 5) {
-        console.log('\nCan\'t connect to procKr :(');
-        exit();
-      }
-    }, 1000);
-
-    socket.on('connect', function () {
-      socket.emit('hello');
-      socket.on('hello', function (hello) {
-        console.log('Receiving hello', hello);
-        exit();
-      });
-    });
-  };
-
   return {
     start: start,
     stop: stop,
     status: status,
-    hello: hello,
 
 
+    sayHello: hello.say,
     startHttp: http.start,
     stopHttp: http.stop,
-
     listTargets: target.list
   };
 })();
