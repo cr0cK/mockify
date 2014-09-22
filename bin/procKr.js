@@ -24,7 +24,9 @@ var //fs        = require('fs'),
     targetHdlr   = require('./handler/target')(),
     log          = function () { console.log.apply(this, arguments); },
     exit         = function () { process.exit(1); },
-    logExit      = function () { log.apply(this, arguments); exit(); };
+    logExit      = function () {
+      log.apply(this, arguments); exit();
+    };
 
 // @FIxME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
