@@ -45,7 +45,9 @@ program
 program
   .command('status')
   .description('Check procKr status.')
-  .action(procKr.status);
+  .action(function () {
+    procKr.status().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('hello')

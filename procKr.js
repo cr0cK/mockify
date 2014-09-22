@@ -11,6 +11,7 @@ module.exports = (function () {
       log       = function () { console.log.apply(this, arguments); },
       exit      = function () { process.exit(1); },
 
+      status    = require('./lib/status')(),
       hello     = require('./lib/hello')(socket),
       http      = require('./lib/http')(socket),
       target    = require('./lib/target')(socket);
@@ -51,22 +52,11 @@ module.exports = (function () {
     });
   };
 
-  /**
-   * Display a nice output with forever current running daemons.
-   */
-  var status = function () {
-    forever.list(true, function (err, daemons) {
-      log((err === null && !daemons && 'procKr is not running.') || daemons);
-      exit();
-    });
-  };
-
   return {
     start: start,
     stop: stop,
-    status: status,
 
-
+    status: status.get,
     sayHello: hello.say,
     startHttp: http.start,
     stopHttp: http.stop,
