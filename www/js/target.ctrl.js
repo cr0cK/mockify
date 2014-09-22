@@ -11,11 +11,14 @@
 
   .controller('TargetCtrl', [
     '$scope',
+    '$interval',
     'webSocketService',
     'localStorageFactory',
     'targetFactory',
+
     function (
       $scope,
+      $interval,
       webSocket,
       localStorage,
       Target
@@ -100,14 +103,25 @@
        * Websockets events
        */
 
-      // add proxies in the scope
-      webSocket.on('listProxies', function (proxies) {
-        $scope.$apply(function () {
-          $scope.targetsList = _.map(proxies, function (targetProperties) {
-            return new Target(targetProperties);
+      /**
+       * Get the list of targets.
+       */
+      var listTargets = function () {
+        webSocket.emit('listTargets');
+
+        webSocket.on('listTargets', function (targets) {
+          $scope.$apply(function () {
+            $scope.targetsList = _.map(targets, function (targetProperties) {
+              return new Target(targetProperties);
+            });
           });
         });
-      });
+      };
+
+      listTargets();
+
+      // refresh targets every X seconds
+      $interval(listTargets, 3000);
     }
   ]);
 })();

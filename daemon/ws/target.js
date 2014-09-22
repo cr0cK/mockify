@@ -1,33 +1,33 @@
 'use strict';
 
-module.exports = (function () {
-  var //Q               = require('q'),
-      Target          = require('./../entity/target'),
+module.exports = function (socket) {
+  var Target          = require('./../entity/target'),
       targetStorage   = require('./../storage/target'),
-      alert           = require('./alert');
+      alert           = require('./alert')(socket);
 
   /**
-   * Add a target.
+   * Add a target and emit a ws with the list of targets.
    */
   var add = function (targetData) {
     var target = new Target(targetData);
 
-    targetStorage.create(target, function (err, record) {
-      alert.error('ceci est un test');
-      console.log(err, record);
+    targetStorage.create(target, function (err) {
+      err && alert.error(err);
     });
+  };
 
-    // console.log(target, targetStorage);
-
-    // Q.nfcall(targetStorage, 'create', target).then(function (record) {
-    //   console.log('recorded!', record);
-    //   // emitListProxies();
-    // }).catch(function (err) {
-    //   console.log('not recorded', err);
-    // });
+  /**
+   * Emit a ws with the list of targets.
+   */
+  var list = function () {
+    targetStorage.list(function (err, targets) {
+      err && alert.error(err);
+      socket.emit('listTargets', targets);
+    });
   };
 
   return {
-    add: add
+    add: add,
+    list: list
   };
-})();
+};
