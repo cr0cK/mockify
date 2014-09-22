@@ -35,12 +35,16 @@ program.version('0.0.1');
 program
   .command('start')
   .description('Start the daemon.')
-  .action(procKr.start);
+  .action(function () {
+    procKr.start().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('stop')
   .description('Stop procKr daemon.')
-  .action(procKr.stop);
+  .action(function () {
+    procKr.stop().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('status')
