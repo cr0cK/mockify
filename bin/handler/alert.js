@@ -10,8 +10,7 @@ module.exports = function () {
       exit      = function () { process.exit(1); };
 
   /**
-   * List targets saved in database and display them in a ASCII table.
-   * @param  {Array}  targets   Target entities.
+   * Display the alert on stdout and exit the process.
    */
   var error = function (obj) {
     var str = _.has(obj, 'message') ?

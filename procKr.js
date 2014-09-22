@@ -11,6 +11,7 @@ module.exports = (function () {
       log       = function () { console.log.apply(this, arguments); },
       exit      = function () { process.exit(1); },
 
+      http      = require('./lib/http')(socket),
       target    = require('./lib/target')(socket);
 
 
@@ -84,36 +85,15 @@ module.exports = (function () {
     });
   };
 
-  /**
-   * Start the web app.
-   */
-  var startHttp = function () {
-    socket.emit('startHttp');
-    socket.on('startHttp', function (stdout) {
-      log(stdout);
-      exit();
-    });
-  };
-
-  /**
-   * Stop the web app.
-   */
-  var stopHttp = function () {
-    socket.emit('stopHttp');
-    socket.on('stopHttp', function (stdout) {
-      log(stdout);
-      exit();
-    });
-  };
-
   return {
     start: start,
     stop: stop,
     status: status,
     hello: hello,
-    startHttp: startHttp,
-    stopHttp: stopHttp,
 
+
+    startHttp: http.start,
+    stopHttp: http.stop,
 
     listTargets: target.list
   };

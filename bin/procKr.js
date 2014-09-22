@@ -6,6 +6,7 @@
  * Usage examples:
  * $ procKr start
  * $ procKr add-target 4000 http://jsonplaceholder.typicode.com jsonplaceholder
+ * $ procKr list-targets
  * $ procKr enable-target jsonplaceholder
  * $ procKr mock-target jsonplaceholder
  *
@@ -17,11 +18,13 @@
 var program   = require('commander');
 
 var //fs        = require('fs'),
-    program     = require('commander'),
-    procKr      = require('../procKr'),
-    alertHdlr   = require('./handler/alert')(),
-    targetHdlr  = require('./handler/target')(),
-    log         = function () { console.log.apply(this, arguments); };
+    program      = require('commander'),
+    procKr       = require('../procKr'),
+    alertHdlr    = require('./handler/alert')(),
+    targetHdlr   = require('./handler/target')(),
+    log          = function () { console.log.apply(this, arguments); },
+    exit         = function () { process.exit(1); },
+    logExit      = function () { log.apply(this, arguments); exit(); };
 
 // @FIxME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
@@ -50,12 +53,16 @@ program
 program
   .command('start-http')
   .description('Start the procKr http server.')
-  .action(procKr.startHttp);
+  .action(function () {
+    procKr.startHttp().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('stop-http')
   .description('Stop the procKr http server.')
-  .action(procKr.stopHttp);
+  .action(function () {
+    procKr.stopHttp().then(logExit, alertHdlr.error);
+  });
 
 program
   .command('list-targets')
