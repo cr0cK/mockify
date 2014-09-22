@@ -6,8 +6,14 @@ module.exports = (function () {
       config    = require('./config/config'),
       wsPort    = config.wsServer.port,
       socket    = require('socket.io-client')('http://localhost:' + wsPort),
+
+      // to remove
       log       = function () { console.log.apply(this, arguments); },
-      exit      = function () { process.exit(1); };
+      exit      = function () { process.exit(1); },
+
+      target    = require('./lib/target')(socket);
+
+
 
   /**
    * Start the procKr daemon.
@@ -106,6 +112,9 @@ module.exports = (function () {
     status: status,
     hello: hello,
     startHttp: startHttp,
-    stopHttp: stopHttp
+    stopHttp: stopHttp,
+
+
+    listTargets: target.list
   };
 })();

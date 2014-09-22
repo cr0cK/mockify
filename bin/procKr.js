@@ -17,9 +17,11 @@
 var program   = require('commander');
 
 var //fs        = require('fs'),
-    program   = require('commander'),
-    procKr    = require('../procKr'),
-    log       = function () { console.log.apply(this, arguments); };
+    program     = require('commander'),
+    procKr      = require('../procKr'),
+    alertHdlr   = require('./handler/alert')(),
+    targetHdlr  = require('./handler/target')(),
+    log         = function () { console.log.apply(this, arguments); };
 
 // @FIxME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
@@ -54,6 +56,13 @@ program
   .command('stop-http')
   .description('Stop the procKr http server.')
   .action(procKr.stopHttp);
+
+program
+  .command('list-targets')
+  .description('List the targets.')
+  .action(function () {
+    procKr.listTargets().then(targetHdlr.list, alertHdlr.error);
+  });
 
 program.parse(process.argv);
 

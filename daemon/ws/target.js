@@ -21,8 +21,11 @@ module.exports = function (socket) {
    */
   var list = function () {
     targetStorage.list(function (err, targets) {
-      err && alert.error(err);
-      socket.emit('listTargets', targets);
+      if (err) {
+        alert.error(err);
+      } else {
+        socket.emit('listTargets', targets);
+      }
     });
   };
 
