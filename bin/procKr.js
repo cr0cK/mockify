@@ -80,7 +80,7 @@ program
 
 program
   .command('add-target <port> <url>')
-  .description('Add a target.')
+  .description('Add a target. Port is a number between 1 and 9999.')
   .action(function (port, url) {
     procKr.addTarget(port, url).then(targetHdlr.list, alertHdlr.error);
   });

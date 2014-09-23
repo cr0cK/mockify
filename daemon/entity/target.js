@@ -27,10 +27,24 @@ module.exports = (function () {
     //     Proxy.save(db.log);
     //   }
     // });
+    //
   };
 
   Target.prototype.id = function () {
     return this._id;
+  };
+
+  /**
+   * Properties validation.
+   * Return a boolean.
+   */
+  Target.prototype.isValid = function () {
+    var rules = [
+      /\d+/.test(this._port) && this._port > 1 && this._port < 9999,
+      /^(https?:\/\/)?([\w\.-\/]+)(:\d{0,4})?$/.test(this._url)
+    ];
+
+    return _.all(rules);
   };
 
   return Target;

@@ -21,9 +21,15 @@ module.exports = function (socket) {
    * Add a target and emit a ws with the list of targets.
    */
   var add = function (targetProperties) {
-    targetStorage.create(new Target(targetProperties), function (err) {
-      err && alert.error(err) || list('The target has been added.');
-    });
+    var target = new Target(targetProperties);
+
+    if (target.isValid()) {
+      targetStorage.create(target, function (err) {
+        err && alert.error(err) || list('The target has been added.');
+      });
+    } else {
+      alert.error('The format of the target is invalid.');
+    }
   };
 
   /**
