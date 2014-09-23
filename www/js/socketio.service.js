@@ -20,7 +20,7 @@
         } else {
           $rootScope.$emit('hideAlert');
         }
-      }, 3000);
+      }, 10000);
 
       return {
         on: function (event_, callback) {
