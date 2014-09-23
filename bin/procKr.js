@@ -92,6 +92,13 @@ program
     procKr.removeTarget(id).then(targetHdlr.list, alertHdlr.error);
   });
 
+program
+  .command('enable-target <id>')
+  .description('Enable a target (activate the mock)')
+  .action(function (id) {
+    procKr.enableTarget(id).then(logHdlr.log, alertHdlr.error);
+  });
+
 program.parse(process.argv);
 
 if (!program.args.length) {

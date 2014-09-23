@@ -6,6 +6,17 @@ module.exports = (function () {
       Target  = require('./../entity/target');
 
   /**
+   * Retrieve a target.
+   * @param  {object}   properties
+   * @param  {Function} callback
+   */
+  var get = function (id, callback) {
+    db.model('Target').get(id, function (err, row) {
+      callback(err, new Target(row));
+    });
+  }
+
+  /**
    * List targets.
    * @param  {Function} callback
    */
@@ -36,6 +47,7 @@ module.exports = (function () {
   };
 
   return {
+    get: get,
     list: list,
     create: create,
     remove: remove

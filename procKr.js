@@ -19,6 +19,7 @@ module.exports = (function () {
     stopHttp: http.stop,
     listTargets: target.list,
     addTarget: target.add,
-    removeTarget: target.remove
+    removeTarget: target.remove,
+    enableTarget: target.enable
   };
 })();
