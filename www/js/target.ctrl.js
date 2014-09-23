@@ -109,10 +109,10 @@
       var listTargets = function () {
         webSocket.emit('listTargets');
 
-        webSocket.on('listTargets', function (targets) {
+        webSocket.on('listTargets', function (data) {
           $scope.$apply(function () {
-            $scope.targetsList = _.map(targets, function (targetProperties) {
-              return new Target(targetProperties);
+            $scope.targetsList = _.map(data.targets, function (targetProps) {
+              return new Target(targetProps);
             });
           });
         });
