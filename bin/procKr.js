@@ -81,6 +81,13 @@ program
     procKr.listTargets().then(targetHdlr.list, alertHdlr.error);
   });
 
+program
+  .command('add-target <port> <url>')
+  .description('Add a target.')
+  .action(function (port, url) {
+    procKr.addTarget(port, url).then(targetHdlr.list, alertHdlr.error);
+  });
+
 program.parse(process.argv);
 
 if (!program.args.length) {

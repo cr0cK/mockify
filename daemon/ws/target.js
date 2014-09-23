@@ -6,17 +6,6 @@ module.exports = function (socket) {
       alert           = require('./alert')(socket);
 
   /**
-   * Add a target and emit a ws with the list of targets.
-   */
-  var add = function (targetData) {
-    var target = new Target(targetData);
-
-    targetStorage.create(target, function (err) {
-      err && alert.error(err);
-    });
-  };
-
-  /**
    * Emit a ws with the list of targets.
    */
   var list = function () {
@@ -25,8 +14,17 @@ module.exports = function (socket) {
     });
   };
 
+  /**
+   * Add a target and emit a ws with the list of targets.
+   */
+  var add = function (targetProperties) {
+    targetStorage.create(new Target(targetProperties), function (err) {
+      err && alert.error(err) || list();
+    });
+  };
+
   return {
-    add: add,
-    list: list
+    list: list,
+    add: add
   };
 };

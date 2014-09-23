@@ -36,7 +36,7 @@ module.exports = (function () {
       });
     });
 
-    socket.on('addTarget', target.add);
     socket.on('listTargets', target.list);
+    socket.on('addTarget', target.add);
   });
 })();

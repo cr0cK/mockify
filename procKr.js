@@ -17,6 +17,7 @@ module.exports = (function () {
     sayHello: hello.say,
     startHttp: http.start,
     stopHttp: http.stop,
-    listTargets: target.list
+    listTargets: target.list,
+    addTarget: target.add
   };
 })();
