@@ -18,6 +18,7 @@ module.exports = (function () {
     startHttp: http.start,
     stopHttp: http.stop,
     listTargets: target.list,
-    addTarget: target.add
+    addTarget: target.add,
+    removeTarget: target.remove
   };
 })();

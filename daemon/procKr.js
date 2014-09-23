@@ -38,5 +38,6 @@ module.exports = (function () {
 
     socket.on('listTargets', target.list);
     socket.on('addTarget', target.add);
+    socket.on('removeTarget', target.remove);
   });
 })();

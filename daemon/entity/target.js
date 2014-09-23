@@ -29,6 +29,10 @@ module.exports = (function () {
     // });
   };
 
+  Target.prototype.id = function () {
+    return this._id;
+  };
+
   return Target;
 
 })();

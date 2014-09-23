@@ -20,13 +20,10 @@ var program   = require('commander');
 var //fs        = require('fs'),
     program      = require('commander'),
     procKr       = require('../procKr'),
+    logHdlr      = require('./handler/log')(),
     alertHdlr    = require('./handler/alert')(),
     targetHdlr   = require('./handler/target')(),
-    log          = function () { console.log.apply(this, arguments); },
-    exit         = function () { process.exit(1); },
-    logExit      = function () {
-      log.apply(this, arguments); exit();
-    };
+    log          = function () { console.log.apply(this, arguments); };
 
 // @FIxME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
@@ -36,42 +33,42 @@ program
   .command('start')
   .description('Start the daemon.')
   .action(function () {
-    procKr.start().then(logExit, alertHdlr.error);
+    procKr.start().then(logHdlr.log, alertHdlr.error);
   });
 
 program
   .command('stop')
   .description('Stop procKr daemon.')
   .action(function () {
-    procKr.stop().then(logExit, alertHdlr.error);
+    procKr.stop().then(logHdlr.log, alertHdlr.error);
   });
 
 program
   .command('status')
   .description('Check procKr status.')
   .action(function () {
-    procKr.status().then(logExit, alertHdlr.error);
+    procKr.status().then(logHdlr.log, alertHdlr.error);
   });
 
 program
   .command('hello')
   .description('Say hello to procKr to test websocket connexion.')
   .action(function () {
-    procKr.sayHello().then(logExit, alertHdlr.error);
+    procKr.sayHello().then(logHdlr.log, alertHdlr.error);
   });
 
 program
   .command('start-http')
   .description('Start the procKr http server.')
   .action(function () {
-    procKr.startHttp().then(logExit, alertHdlr.error);
+    procKr.startHttp().then(logHdlr.log, alertHdlr.error);
   });
 
 program
   .command('stop-http')
   .description('Stop the procKr http server.')
   .action(function () {
-    procKr.stopHttp().then(logExit, alertHdlr.error);
+    procKr.stopHttp().then(logHdlr.log, alertHdlr.error);
   });
 
 program
@@ -86,6 +83,13 @@ program
   .description('Add a target.')
   .action(function (port, url) {
     procKr.addTarget(port, url).then(targetHdlr.list, alertHdlr.error);
+  });
+
+program
+  .command('remove-target <id>')
+  .description('Remove a target.')
+  .action(function (id) {
+    procKr.removeTarget(id).then(targetHdlr.list, alertHdlr.error);
   });
 
 program.parse(process.argv);

@@ -1,12 +1,12 @@
 /**
- * Handler to display errors.
+ * Handler to display alerts.
  */
 
 'use strict';
 
 module.exports = function () {
   var _         = require('lodash'),
-      log       = function () { console.log.apply(this, arguments); },
+      logHdlr   = require('./log')(),
       exit      = function () { process.exit(1); };
 
   /**
@@ -16,7 +16,7 @@ module.exports = function () {
     var str = _.has(obj, 'message') ?
       obj.message : 'An unknown error has occurred.';
 
-    log(str);
+    logHdlr.errorn(str);
     exit();
   };
 

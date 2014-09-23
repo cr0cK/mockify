@@ -19,7 +19,7 @@
         $scope.showAlert = true;
       };
 
-      $scope.$root.$on('alert', function (e, data) {
+      $scope.$root.$on('alertError', function (e, data) {
         saveDataToScope(data);
       });
 
@@ -27,7 +27,7 @@
         $scope.showAlert = false;
       });
 
-      webSocket.on('alert', function (data) {
+      webSocket.on('alertError', function (data) {
         $scope.$apply(function () {
           saveDataToScope(data);
         });

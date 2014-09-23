@@ -6,14 +6,8 @@ module.exports = (function () {
       Target  = require('./../entity/target');
 
   /**
-   * Create a target in database.
-   */
-  var create = function (target, callback) {
-    db.model('Target').create([_.publicProperties(target)], callback);
-  };
-
-  /**
    * List targets.
+   * @param  {Function} callback
    */
   var list = function (callback) {
     db.model('Target').find({}, function (err, targets) {
@@ -23,8 +17,27 @@ module.exports = (function () {
     });
   };
 
+  /**
+   * Create a target in database.
+   * @param  {Target}   target
+   * @param  {Function} callback
+   */
+  var create = function (target, callback) {
+    db.model('Target').create([_.publicProperties(target)], callback);
+  };
+
+  /**
+   * Remove a target in database.
+   * @param  {Target}   target
+   * @param  {Function} callback
+   */
+  var remove = function (target, callback) {
+    db.model('Target').find({id: target.id()}).remove(callback);
+  };
+
   return {
+    list: list,
     create: create,
-    list: list
+    remove: remove
   };
 })();
