@@ -54,8 +54,9 @@
           port: port,
           url: url,
           status: status,
-          isEnabled: 0,
-          isMocked: 0
+          proxying: 0,
+          mocking: 0,
+          enabled: 0
         });
 
         // send websockets

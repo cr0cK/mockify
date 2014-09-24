@@ -8,7 +8,8 @@ module.exports = (function () {
   var io              = require('./ws/io'),
       http            = require('./ws/http'),
       db              = require('./lib/db'),
-      daemonRootDir   = __dirname;
+      daemonRootDir   = __dirname,
+      target          = require('./ws/target')(daemonRootDir);
 
   // create the database if it not exists.
   db.create();
@@ -19,7 +20,7 @@ module.exports = (function () {
   });
 
   io.sockets.on('connection', function (socket) {
-    var target  = new (require('./ws/target'))(socket, daemonRootDir);
+    target.socket(socket);
 
     socket.on('hello', function () {
       socket.emit('hello', 'Hi! This is procKr daemon.');

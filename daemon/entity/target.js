@@ -9,7 +9,10 @@ module.exports = (function () {
     this._id =
     this._port =
     this._url =
-    this._isRecording;
+    this._recording = false,
+    this._mocking = false,
+    this._proxying = false,
+    this._enabled = false;
 
     _.privateMerge(this, properties);
 
@@ -34,6 +37,36 @@ module.exports = (function () {
     return this._id;
   };
 
+  Target.prototype.recording = function (boolean_) {
+    if (boolean_) {
+      this._recording = boolean_;
+      return this;
+    }
+    return this._recording;
+  };
+
+  Target.prototype.mocking = function (boolean_) {
+    if (boolean_) {
+      this._mocking = boolean_;
+      this._enabled = this._mocking || this._proxying;
+      return this;
+    }
+    return this._mocking;
+  };
+
+  Target.prototype.proxying = function (boolean_) {
+    if (boolean_) {
+      this._proxying = boolean_;
+      this._enabled = this._mocking || this._proxying;
+      return this;
+    }
+    return this._proxying;
+  };
+
+  // Target.prototype.enabled = function (boolean_) {
+  //   this._enabled = boolean_;
+  // };
+
   /**
    * Properties validation.
    * Return a boolean.
@@ -47,6 +80,15 @@ module.exports = (function () {
     return _.all(rules);
   };
 
-  return Target;
+  /**
+   * Return the keys ordered for cli output.
+   */
+  Target.prototype.orderedKeys = function () {
+    return [
+      '_id', '_port', '_url',
+      '_recording', '_proxying', '_mocking', '_enabled'
+    ];
+  };
 
+  return Target;
 })();

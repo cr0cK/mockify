@@ -14,7 +14,7 @@ module.exports = (function () {
     db.model('Target').get(id, function (err, row) {
       callback(err, new Target(row));
     });
-  }
+  };
 
   /**
    * List targets.
@@ -46,10 +46,29 @@ module.exports = (function () {
     db.model('Target').find({id: target.id()}).remove(callback);
   };
 
+  /**
+   * Update a target in database.
+   * @param  {Target}   target
+   * @param  {Object}   properties
+   * @param  {Function} callback
+   */
+  var update = function (target, properties, callback) {
+    db.model('Target').get(target.id(), function (err, proxy) {
+      if (proxy) {
+        _.privateMerge(proxy, properties);
+
+        proxy.save(function (err, row) {
+          callback(err, !err && new Target(row));
+        });
+      }
+    });
+  };
+
   return {
     get: get,
     list: list,
     create: create,
-    remove: remove
+    remove: remove,
+    update: update
   };
 })();

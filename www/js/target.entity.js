@@ -13,10 +13,10 @@
       this._id =
       this._port =
       this._url =
-      this._status =
-      this._isRecording =
-      this._isMocked =
-      this._isEnabled;
+      this._recording =
+      this._proxying =
+      this._mocking =
+      this._enabled;
 
       _.privateMerge(this, properties);
     };
@@ -33,12 +33,20 @@
       return this._url;
     };
 
-    Target.prototype.isMocked = function () {
+    Target.prototype.proxying = function () {
+      return this._proxying;
+    };
+
+    Target.prototype.mocking = function () {
       return this._isMocked;
     };
 
-    Target.prototype.isRecording = function () {
-      return this._isRecording;
+    Target.prototype.recording = function () {
+      return this._mocking;
+    };
+
+    Target.prototype.enabled = function () {
+      return this._enabled;
     };
 
     /**
@@ -62,7 +70,7 @@
     Target.prototype.toggleRecording = function () {
       // need to switch the flag here because the template is not binded to a
       // model
-      this._isRecording = !this._isRecording;
+      this._recording = !this._recording;
       webSocket.emit('toggleRecordingTarget', _.publicProperties(this));
     };
 
@@ -78,7 +86,8 @@
      * to the server.
      */
     Target.prototype.toggleEnable = function () {
-      webSocket.emit('toggleEnableTarget', _.publicProperties(this));
+      var event_ = this._isEnabled ? 'enableTarget' : 'disableTarget';
+      webSocket.emit(event_, {id: this._id});
     };
 
     /**

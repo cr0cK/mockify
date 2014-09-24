@@ -22,31 +22,31 @@
       <tr ng-repeat="target in targetsList track by $index">
         <td>
           <span
-            ng-class="{'disabled': !target._isEnabled}">
+            ng-class="{'disabled': !target._enabled}">
             {{target.port()}}
           </span>
         </td>
 
         <td>
           <span
-            ng-class="{'disabled': !target._isEnabled}">
+            ng-class="{'disabled': !target._enabled}">
             {{target.url()}}
           </span>
         </td>
 
         <td>
           <span
-            ng-class="{'on': target.isRecording() && target._isEnabled, 'disabled': !target._isEnabled}"
+            ng-class="{'on': target.recording() && target._enabled, 'disabled': !target._enabled}"
             class="glyphicon glyphicon-record"
-            ng-click="target._isEnabled && toggleRecordTarget(target)"></span>
+            ng-click="target._enabled && toggleRecordTarget(target)"></span>
         </td>
 
         <td class="switch">
-          <div ng-click="target._isEnabled && toggleMockTarget(target)">
+          <div ng-click="target._enabled && toggleMockTarget(target)">
             <toggle-switch
-              model="target._isRunning"
+              model="target._enabled"
               class="switch-success switch-small"
-              ng-disabled="!target._isEnabled"
+              ng-disabled="!target._enabled"
               on-label="mock"
               off-label="proxy">
             <toggle-switch>
@@ -61,7 +61,7 @@
         </td>
 
         <td>
-          <input type="checkbox" ng-model="target._isEnabled" ng-change="toggleEnableTarget(target)" />
+          <input type="checkbox" ng-model="target._enabled" ng-change="toggleEnableTarget(target)" />
         </td>
 
         <td>
@@ -85,6 +85,8 @@
       </tr>
     </tbody>
   </table>
+
+  {{targetsList}}
 
   <p class="pull-right">
     <button type="button" class="btn btn-default" ng-click="showTargetFields = true">Add</button>

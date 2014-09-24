@@ -40,8 +40,8 @@ module.exports = function () {
   /**
    * Print message and exit the process.
    */
-  var logExit = function (message) {
-    log(message);
+  var lognExit = function (message) {
+    logn(message);
     exit();
   };
 
@@ -50,6 +50,6 @@ module.exports = function () {
     logn: logn,
     error: error,
     errorn: errorn,
-    logExit: logExit
+    lognExit: lognExit
   };
 };

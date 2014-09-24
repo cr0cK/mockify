@@ -25,7 +25,7 @@ var //fs        = require('fs'),
     targetHdlr   = require('./handler/target')(),
     log          = function () { console.log.apply(this, arguments); };
 
-// @FIxME
+// @FIXME
 // program.version(JSON.parse(fs.readFileSync('package.json')).version);
 program.version('0.0.1');
 
@@ -33,70 +33,90 @@ program
   .command('start')
   .description('Start the daemon.')
   .action(function () {
-    procKr.start().then(logHdlr.log, alertHdlr.error);
+    procKr.start()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('stop')
   .description('Stop procKr daemon.')
   .action(function () {
-    procKr.stop().then(logHdlr.log, alertHdlr.error);
+    procKr.stop()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('status')
   .description('Check procKr status.')
   .action(function () {
-    procKr.status().then(logHdlr.log, alertHdlr.error);
+    procKr.status()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('hello')
   .description('Say hello to procKr to test websocket connexion.')
   .action(function () {
-    procKr.sayHello().then(logHdlr.log, alertHdlr.error);
+    procKr.sayHello()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('start-http')
   .description('Start the procKr http server.')
   .action(function () {
-    procKr.startHttp().then(logHdlr.log, alertHdlr.error);
+    procKr.startHttp()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('stop-http')
   .description('Stop the procKr http server.')
   .action(function () {
-    procKr.stopHttp().then(logHdlr.log, alertHdlr.error);
+    procKr.stopHttp()
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('list-targets')
   .description('List the targets.')
   .action(function () {
-    procKr.listTargets().then(targetHdlr.list, alertHdlr.error);
+    procKr.listTargets()
+      .then(targetHdlr.list, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('add-target <port> <url>')
   .description('Add a target. Port is a number between 1 and 9999.')
   .action(function (port, url) {
-    procKr.addTarget(port, url).then(targetHdlr.list, alertHdlr.error);
+    procKr.addTarget(port, url)
+      .then(targetHdlr.list, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('remove-target <id>')
   .description('Remove a target.')
   .action(function (id) {
-    procKr.removeTarget(id).then(targetHdlr.list, alertHdlr.error);
+    procKr.removeTarget(id)
+      .then(targetHdlr.list, alertHdlr.error)
+      .catch(log);
   });
 
 program
   .command('enable-target <id>')
   .description('Enable a target (activate the mock)')
   .action(function (id) {
-    procKr.enableTarget(id).then(logHdlr.log, alertHdlr.error);
+    procKr.enableTarget(id)
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
   });
 
 program.parse(process.argv);

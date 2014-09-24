@@ -7,19 +7,27 @@
 module.exports = function () {
   var CliTable  = require('cli-table'),
       _         = require('./../../daemon/lib/helper')._,
+      _s        = require('underscore.string'),
       cliColor  = require('cli-color'),
       logHldr   = require('./log')(),
+      Target    = require('./../../daemon/entity/target'),
       exit      = function () { process.exit(1); };
 
   /**
-   * List targets saved in database and display them in a ASCII table.
+   * List targets and display them in a ASCII table.
    * @param  {Object}  response   Struct with the message and targets
    */
   var list = function (response) {
     if (_.isArray(response.targets) && response.targets.length) {
-      logHldr.logn(cliColor.bold(response.message));
+      // get Target objects
+      response.targets = _.map(response.targets, function (properties) {
+        return new Target(properties);
+      });
 
-      var heads = _.keys(_.publicProperties(response.targets[0]));
+      // humanize heads of columns
+      var heads = _.map(response.targets[0].orderedKeys(), function (k) {
+        return _s.humanize(k.substr(1));
+      });
 
       var table = new CliTable({
         head: heads,
@@ -28,11 +36,18 @@ module.exports = function () {
         }
       });
 
+      // retrieve values of Target objects
       _.forEach(response.targets, function (target) {
-        table.push(_.values(target));
+        var values = _.map(target.orderedKeys(), function (k) {
+          return target[k];
+        });
+        table.push(values);
       });
 
+      // output
+      logHldr.logn(cliColor.bold(response.message));
       logHldr.log(table.toString());
+
     } else {
       logHldr.logn('No target found.');
     }
