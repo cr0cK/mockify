@@ -33,15 +33,15 @@
       return this._url;
     };
 
+    Target.prototype.recording = function () {
+      return this._recording;
+    };
+
     Target.prototype.proxying = function () {
       return this._proxying;
     };
 
     Target.prototype.mocking = function () {
-      return this._isMocked;
-    };
-
-    Target.prototype.recording = function () {
       return this._mocking;
     };
 
@@ -86,7 +86,7 @@
      * to the server.
      */
     Target.prototype.toggleEnable = function () {
-      var event_ = this._isEnabled ? 'enableTarget' : 'disableTarget';
+      var event_ = this._enabled ? 'enableTarget' : 'disableTarget';
       webSocket.emit(event_, {id: this._id});
     };
 
