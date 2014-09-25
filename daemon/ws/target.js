@@ -2,24 +2,14 @@
 
 module.exports = function (rootDir) {
   var _               = require('lodash'),
+      io              = require('./io'),
       spawn           = require('child_process').spawn,
       path            = require('path'),
+      alert           = require('./alert')(),
       Target          = require('./../entity/target'),
       targetStorage   = require('./../storage/target'),
       proxyChilds     = {},
-      mockChilds      = {},
-      // variables initialized in the 'socket' method
-      currentSocket,
-      alert;
-
-  /**
-   * Save the socket of the current web socket connexion and requires modules
-   * which need a socket.
-   */
-  var socket = function (socket_) {
-    currentSocket = socket_;
-    alert = require('./alert')(socket_);
-  };
+      mockChilds      = {};
 
   /**
    * Emit a ws with the list of targets.
@@ -44,7 +34,7 @@ module.exports = function (rootDir) {
         }
       });
 
-      currentSocket.emit('listTargets', {
+      io.emit('listTargets', {
         message: (message || 'List of saved targets:'),
         targets: targets
       });
@@ -100,7 +90,7 @@ module.exports = function (rootDir) {
       ]);
 
       proxyChilds[target.id()].stdout.on('data', function (data) {
-        currentSocket.emit('enableTarget', data.toString('utf8'));
+        io.emit('enableTarget', data.toString('utf8'));
 
         // _log(data, typeChild, 'info');
       });
@@ -147,7 +137,7 @@ module.exports = function (rootDir) {
   //     message = message.toString('utf8');
   //   }
 
-  //   currentSocket.emit('enableTarget', {
+  //   io.emit('enableTarget', {
   //     message: message,
   //     typeChild: typeChild,
   //     type: type
@@ -155,7 +145,6 @@ module.exports = function (rootDir) {
   // };
 
   return {
-    socket: socket,
     list: list,
     add: add,
     remove: remove,

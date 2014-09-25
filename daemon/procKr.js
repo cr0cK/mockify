@@ -20,21 +20,19 @@ module.exports = (function () {
   });
 
   io.sockets.on('connection', function (socket) {
-    target.socket(socket);
-
     socket.on('hello', function () {
-      socket.emit('hello', 'Hi! This is procKr daemon.');
+      io.emit('hello', 'Hi! This is procKr daemon.');
     });
 
     socket.on('startHttp', function () {
       http.start().then(function (msgLog) {
-        socket.emit('startHttp', msgLog);
+        io.emit('startHttp', msgLog);
       });
     });
 
     socket.on('stopHttp', function () {
       http.stop().then(function (msgLog) {
-        socket.emit('stopHttp', msgLog);
+        io.emit('stopHttp', msgLog);
       });
     });
 

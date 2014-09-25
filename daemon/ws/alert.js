@@ -1,12 +1,13 @@
 'use strict';
 
-module.exports = function (socket) {
+module.exports = function () {
+  var io              = require('./io');
 
   /**
    * Emit an info.
    */
   var info = function (message) {
-    socket.emit('alertInfo', {message: message});
+    io.emit('alertInfo', {message: message});
   };
 
   /**
@@ -14,7 +15,7 @@ module.exports = function (socket) {
    */
   var error = function (message) {
     message = message || 'An unknown error has occurred :(';
-    socket.emit('alertError', {message: message});
+    io.emit('alertError', {message: message});
   };
 
   return {
