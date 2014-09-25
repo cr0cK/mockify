@@ -19,7 +19,7 @@
         <td colspan="7">No target found.<td>
       </tr>
 
-      <tr ng-repeat="target in targetsList track by $index">
+      <tr ng-repeat="target in targetsList | filter: {hidden: false}">
         <td>
           <span
             ng-class="{'disabled': !target._enabled}">

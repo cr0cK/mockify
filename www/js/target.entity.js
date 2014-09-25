@@ -10,6 +10,10 @@
    */
   .factory('targetFactory', ['webSocketService', function (webSocket) {
     var Target = function (properties) {
+      // in order to not have to wait the websocket remove event,
+      // when hide the target when clicking on the remove icon.
+      this.hidden = false,
+
       this._id =
       this._port =
       this._url =

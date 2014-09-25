@@ -73,6 +73,7 @@
        * @param  {Target}  target  Target entity
        */
       $scope.removeTarget = function (target) {
+        target.hidden = true;
         target.remove();
       };
 
