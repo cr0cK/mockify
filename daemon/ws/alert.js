@@ -14,9 +14,6 @@ module.exports = function () {
    * Emit an error.
    */
   var error = function (message) {
-    var util = require('util');
-    util.debug(message);
-
     message = message || 'An unknown error has occurred :(';
     io.emit('alertError', {message: message});
   };

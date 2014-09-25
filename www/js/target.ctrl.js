@@ -41,8 +41,6 @@
        * Register a target in the DB and start it.
        */
       $scope.addAndStartTarget = function (port, url) {
-        // @TODO check format
-        // see https://gist.github.com/jlong/2428561
         port = port || $scope.defaultValues.port;
         url = url || $scope.defaultValues.url;
 
