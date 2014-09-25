@@ -56,9 +56,7 @@
           enabled: 0
         });
 
-        // send websockets
         target.add();
-        target.toggleEnable();
 
         delete $scope.target;
         delete $scope.port;
