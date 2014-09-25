@@ -68,7 +68,7 @@ module.exports = function (rootDir) {
       }
 
       err && alert.error(err) ||
-        list(message || 'The target has been removed.');
+        io.emit('removeTarget', message || 'The target has been removed.');
     });
   };
 

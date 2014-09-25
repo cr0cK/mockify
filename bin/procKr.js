@@ -106,7 +106,7 @@ program
   .description('Remove a target.')
   .action(function (id) {
     procKr.removeTarget(id)
-      .then(targetHdlr.list, alertHdlr.error)
+      .then(logHdlr.lognExit, alertHdlr.error)
       .catch(log);
   });
 
