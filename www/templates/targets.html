@@ -10,7 +10,7 @@
         <th>Status</th>
         <th>ID</th>
         <th>Enable</th>
-        <th>Delete</th>
+        <th>Remove</th>
       </tr>
     </thead>
 
@@ -68,7 +68,7 @@
           <span
             class="glyphicon glyphicon-remove"
             ng-click="removeTarget(target)"
-            title="Delete target"></span>
+            title="Remove target"></span>
         </td>
       </tr>
 
@@ -78,7 +78,7 @@
           <input type="text" class="form-control" placeholder="{{defaultValues.url}}" ng-model="url"
             typeahead="target_ for target_ in targetsStored | filter:$viewValue | limitTo:8" />
           <span class="pull-right">
-            <button type="button" class="btn btn-success" ng-click="addAndStartTarget(port, url, 'inactive'); showTargetFields = false">OK</button>
+            <button type="button" class="btn btn-success" ng-click="addAndStartTarget(port, url); showTargetFields = false">OK</button>
             <button type="button" class="btn btn-default" ng-click="showTargetFields = false">Cancel</button>
           </span>
         </td>

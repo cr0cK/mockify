@@ -34,7 +34,10 @@ module.exports = (function () {
    * @param  {Function} callback
    */
   var create = function (target, callback) {
-    db.model('Target').create([_.publicProperties(target)], callback);
+    db.model('Target').create(
+      [_.publicProperties(target, ['_port', '_url'])],
+      callback
+    );
   };
 
   /**

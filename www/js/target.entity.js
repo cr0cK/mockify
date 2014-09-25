@@ -53,7 +53,7 @@
      * Add the target by emitting a websocket to the server.
      */
     Target.prototype.add = function () {
-      webSocket.emit('addTarget', _.publicProperties(this));
+      webSocket.emit('addTarget', _.publicProperties(this, ['_port', '_url']));
     };
 
     /**
@@ -88,20 +88,6 @@
     Target.prototype.toggleEnable = function () {
       var event_ = this._enabled ? 'enableTarget' : 'disableTarget';
       webSocket.emit(event_, {id: this._id});
-    };
-
-    /**
-     * Start the target by emitting a websocket to the server.
-     */
-    Target.prototype.start = function () {
-      webSocket.emit('startTarget', _.publicProperties(this));
-    };
-
-    /**
-     * Stop the target by emitting a websocket to the server.
-     */
-    Target.prototype.stop = function () {
-      webSocket.emit('stopTarget', _.publicProperties(this));
     };
 
     /**

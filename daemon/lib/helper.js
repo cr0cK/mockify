@@ -38,10 +38,11 @@ module.exports = (function () {
      * Return an object with the public/private attributes of obj.
      * The lodash character of private properties is removed.
      */
-    function publicProperties(obj) {
+    function publicProperties(obj, keys) {
       var properties = {};
       _.forIn(obj, function (value, key) {
-        if (!_.isFunction(obj[key])) {
+        if (!_.isFunction(obj[key]) &&
+          (!_.isArray(keys) || _.isArray(keys) && _.contains(keys, key))) {
           key = key.replace(/^_/, '');
           properties[key] = value;
         }

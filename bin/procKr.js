@@ -112,9 +112,18 @@ program
 
 program
   .command('enable-target <id>')
-  .description('Enable a target (activate the mock)')
+  .description('Enable a target (activate the proxy for this target)')
   .action(function (id) {
     procKr.enableTarget(id)
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
+  });
+
+program
+  .command('disable-target <id>')
+  .description('Disable a target (stop all processes for this target)')
+  .action(function (id) {
+    procKr.disableTarget(id)
       .then(logHdlr.lognExit, alertHdlr.error)
       .catch(log);
   });

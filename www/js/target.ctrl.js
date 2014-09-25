@@ -40,7 +40,7 @@
       /**
        * Register a target in the DB and start it.
        */
-      $scope.addAndStartTarget = function (port, url, status) {
+      $scope.addAndStartTarget = function (port, url) {
         // @TODO check format
         // see https://gist.github.com/jlong/2428561
         port = port || $scope.defaultValues.port;
@@ -53,7 +53,6 @@
         var target = new Target({
           port: port,
           url: url,
-          status: status,
           proxying: 0,
           mocking: 0,
           enabled: 0
@@ -61,7 +60,7 @@
 
         // send websockets
         target.add();
-        target.start();
+        target.toggleEnable();
 
         delete $scope.target;
         delete $scope.port;
@@ -74,7 +73,6 @@
        * @param  {Target}  target  Target entity
        */
       $scope.removeTarget = function (target) {
-        target.stop();
         target.remove();
       };
 

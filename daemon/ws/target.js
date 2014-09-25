@@ -2,10 +2,9 @@
 
 module.exports = function (rootDir) {
   var _               = require('lodash'),
-      io              = require('./io'),
+      Q               = require('q'),
       spawn           = require('child_process').spawn,
       path            = require('path'),
-      alert           = require('./alert')(),
       Target          = require('./../entity/target'),
       targetStorage   = require('./../storage/target'),
       proxyChilds     = {},
@@ -14,73 +13,70 @@ module.exports = function (rootDir) {
   /**
    * Emit a ws with the list of targets.
    */
-  var list = function (message) {
+  var list = function () {
+    var deferred = Q.defer();
+
     targetStorage.list(function (err, targets) {
       if (err) {
-        alert.error(err);
+        deferred.reject(err);
         return;
       }
 
       // set the state of the target according to the current process childs
       _.forEach(targets, function (target) {
         var id = target.id();
-
-        if (proxyChilds[id]) {
-          target.proxying(true);
-        }
-
-        if (mockChilds[id]) {
-          target.mocking(true);
-        }
+        target.proxying(_.has(proxyChilds, id));
+        target.mocking(_.has(mockChilds, id));
       });
 
-      io.emit('listTargets', {
-        message: (message || 'List of saved targets:'),
-        targets: targets
-      });
+      deferred.resolve(targets);
     });
+
+    return deferred.promise;
   };
 
   /**
    * Add a target and emit a ws with the list of targets.
    */
   var add = function (targetProperties) {
-    var target = new Target(targetProperties);
+    var deferred = Q.defer(),
+        target = new Target(targetProperties);
 
     if (target.isValid()) {
       targetStorage.create(target, function (err) {
-        err && alert.error(err) || list('The target has been added.');
+        err && deferred.reject(err) || deferred.resolve(list());
       });
     } else {
-      alert.error('The format of the target is invalid.');
+      deferred.reject('The format of the target is invalid.');
     }
+
+    return deferred.promise;
   };
 
   /**
-   * Remove a target and emit a ws with the list of targets.
+   * Disable the target, remove it and emit a ws with the message status
    */
   var remove = function (targetProperties) {
-    targetStorage.remove(new Target(targetProperties), function (err, target) {
-      var message;
+    var deferred = Q.defer();
 
-      if (!err && target === undefined) {
-        message = 'The target has not been found, no target has been removed.';
-      }
-
-      err && alert.error(err) ||
-        io.emit('removeTarget', message || 'The target has been removed.');
+    targetStorage.remove(new Target(targetProperties), function (err) {
+      err && deferred.reject(err) ||
+        deferred.resolve('The target has been removed.');
     });
+
+    return deferred.promise;
   };
 
   /**
-   * Enable the target.
+   * Enable the target (start the proxy).
    */
   var enable = function (targetProperties) {
-    var proxyBinPath = path.join(rootDir, 'bin', 'proxy.js');
+    var deferred = Q.defer(),
+        proxyBinPath = path.join(rootDir, 'bin', 'proxy.js');
 
     targetStorage.get(targetProperties.id, function (err, target) {
       if (err) {
-        alert.error('This target has not been found.');
+        deferred.reject('This target has not been found.');
         return;
       }
 
@@ -90,64 +86,57 @@ module.exports = function (rootDir) {
       ]);
 
       proxyChilds[target.id()].stdout.on('data', function (data) {
-        io.emit('enableTarget', data.toString('utf8'));
-
-        // _log(data, typeChild, 'info');
+        deferred.resolve(data.toString('utf8'));
       });
 
       proxyChilds[target.id()].stderr.on('data', function (data) {
-        alert.error(data.toString('utf8'));
+        deferred.reject(data.toString('utf8'));
       });
-
-      // _bindEvent('proxy', proxyChilds);
     });
+
+    return deferred.promise;
   };
 
   /**
-   * ...
+   * Disable a target (stop all child processes for this target)
+   * @param  {Integer}   targetId
    */
-  // var _bindEvent = function (typeChild, childs) {
-  //   var child = childs[targetEnt.id()];
+  var disable = function (targetProperties) {
+    var deferred = Q.defer();
 
-  //   console.log(typeChild + ' PID', child.pid);
+    targetStorage.get(targetProperties.id, function (err, target) {
+      if (err) {
+        deferred.reject('This target has not been found.');
+        return;
+      }
 
-  //   child.on('exit', function () {
-  //     delete childs[targetEnt.id()];
-  //     _log(typeChild + ' has been stopped.', typeChild, 'info');
-  //   });
+      var childs = [proxyChilds[target.id()], mockChilds[target.id()]],
+          resolve = function (target) {
+            delete proxyChilds[target.id()];
+            delete mockChilds[target.id()];
+            deferred.resolve('The target has been disabled.');
+          };
 
-  //   child.stdout.on('data', function (data) {
-  //     _log(data, typeChild, 'info');
-  //   });
+      _.forEach(childs, function (child) {
+        if (child && !child.killed) {
+          child.kill('SIGHUP');
+          child.on('exit', function () {
+            resolve(target);
+          });
+        } else {
+          resolve(target);
+        }
+      });
+    });
 
-  //   child.stderr.on('data', function (data) {
-  //     _log(data, typeChild, 'error');
-  //   });
-
-  //   child.on('error', function () {
-  //     _log(arguments, typeChild, 'error');
-  //   });
-  // };
-
-  /**
-   * ...
-   */
-  // var _log = function (message, typeChild, type) {
-  //   if (message instanceof Buffer) {
-  //     message = message.toString('utf8');
-  //   }
-
-  //   io.emit('enableTarget', {
-  //     message: message,
-  //     typeChild: typeChild,
-  //     type: type
-  //   });
-  // };
+    return deferred.promise;
+  };
 
   return {
     list: list,
     add: add,
     remove: remove,
-    enable: enable
+    enable: enable,
+    disable: disable
   };
 };

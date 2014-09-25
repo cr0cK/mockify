@@ -20,6 +20,7 @@ module.exports = (function () {
     listTargets: target.list,
     addTarget: target.add,
     removeTarget: target.remove,
-    enableTarget: target.enable
+    enableTarget: target.enable,
+    disableTarget: target.disable
   };
 })();
