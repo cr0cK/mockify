@@ -39,6 +39,10 @@ module.exports = function () {
       // retrieve values of Target objects
       _.forEach(response.targets, function (target) {
         var values = _.map(target.orderedKeys(), function (k) {
+          if (target[k] === undefined || target[k] === null) {
+            target[k] = 'undefined (?)';
+          }
+
           return target[k];
         });
         table.push(values);
