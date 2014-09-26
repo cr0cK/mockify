@@ -41,7 +41,8 @@ module.exports = (function () {
       /* jscs:disable disallowSpaceAfterObjectKeys */
       return db.define('target', {
         port        : Number,
-        url         : String
+        url         : String,
+        recording   : Number
       }, {
         cache       : false,
         methods     : {

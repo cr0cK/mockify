@@ -112,7 +112,7 @@ program
 
 program
   .command('enable-target <id>')
-  .description('Enable a target (activate the proxy for this target)')
+  .description('Enable a target (activate the proxy for this target).')
   .action(function (id) {
     procKr.enableTarget(id)
       .then(logHdlr.lognExit, alertHdlr.error)
@@ -121,9 +121,19 @@ program
 
 program
   .command('disable-target <id>')
-  .description('Disable a target (stop all processes for this target)')
+  .description('Disable a target (stop all processes for this target).')
   .action(function (id) {
     procKr.disableTarget(id)
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
+  });
+
+program
+  .command('recording <id> <boolean>')
+  .description(
+    'Enable/disable the recording of data passing through the proxy.')
+  .action(function (id, bool) {
+    procKr.recordingTarget(id, (bool === 'true' || bool === '1'))
       .then(logHdlr.lognExit, alertHdlr.error)
       .catch(log);
   });

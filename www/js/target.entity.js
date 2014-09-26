@@ -75,7 +75,10 @@
       // need to switch the flag here because the template is not binded to a
       // model
       this._recording = !this._recording;
-      webSocket.emit('toggleRecordingTarget', _.publicProperties(this));
+      webSocket.emit('recordingTarget', {
+        targetProperties: {id: this._id},
+        status: this._recording
+      });
     };
 
     /**

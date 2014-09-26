@@ -76,5 +76,12 @@ module.exports = (function () {
         io.emit('disableTarget', msgLog);
       }, alert.error);
     });
+
+    socket.on('recordingTarget', function (data) {
+      target.recording(data)
+        .then(function (msgLog) {
+          io.emit('recordingTarget', msgLog);
+        }, alert.error);
+    });
   });
 })();

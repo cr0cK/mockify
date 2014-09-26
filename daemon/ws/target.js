@@ -132,11 +132,39 @@ module.exports = function (rootDir) {
     return deferred.promise;
   };
 
+  /**
+   * Enable / disable the recording state of the target.
+   * @param  {Integer}   targetId
+   */
+  var recording = function (data) {
+    var deferred = Q.defer();
+
+    targetStorage.get(data.targetProperties.id, function (err, target) {
+      if (err) {
+        deferred.reject('This target has not been found.');
+        return;
+      }
+
+      targetStorage.update(target, {recording: data.status},
+        function (err, target_) {
+          err && deferred.reject(err);
+          var msg = target_.recording() ?
+            'The proxy is recording data right now.' :
+            'The proxy has stopped recording data.';
+          deferred.resolve(msg);
+        }
+      );
+    });
+
+    return deferred.promise;
+  };
+
   return {
     list: list,
     add: add,
     remove: remove,
     enable: enable,
-    disable: disable
+    disable: disable,
+    recording: recording
   };
 };

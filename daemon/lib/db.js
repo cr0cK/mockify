@@ -40,7 +40,8 @@ module.exports = (function () {
         'CREATE  TABLE "main"."target"' +
         ' ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL,' +
         ' "port" INTEGER NOT NULL,' +
-        ' "url" VARCHAR NOT NULL)'
+        ' "url" VARCHAR NOT NULL,' +
+        ' "recording" INTEGER)'
       ],
       models_   = {},
       promise   ;

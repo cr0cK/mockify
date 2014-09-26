@@ -9,7 +9,7 @@ module.exports = (function () {
     this._id =
     this._port =
     this._url =
-    this._recording = false,
+    this._recording = true,
     this._mocking = false,
     this._proxying = false,
     this._enabled = false;
@@ -62,10 +62,6 @@ module.exports = (function () {
     }
     return this._proxying;
   };
-
-  // Target.prototype.enabled = function (boolean_) {
-  //   this._enabled = boolean_;
-  // };
 
   /**
    * Properties validation.

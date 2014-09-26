@@ -35,7 +35,7 @@ module.exports = (function () {
    */
   var create = function (target, callback) {
     db.model('Target').create(
-      [_.publicProperties(target, ['_port', '_url'])],
+      [_.publicProperties(target, ['_port', '_url', '_recording'])],
       callback
     );
   };
@@ -56,11 +56,11 @@ module.exports = (function () {
    * @param  {Function} callback
    */
   var update = function (target, properties, callback) {
-    db.model('Target').get(target.id(), function (err, proxy) {
-      if (proxy) {
-        _.privateMerge(proxy, properties);
+    db.model('Target').get(target.id(), function (err, target_) {
+      if (target_) {
+        _.merge(target_, properties);
 
-        proxy.save(function (err, row) {
+        target_.save(function (err, row) {
           callback(err, !err && new Target(row));
         });
       }

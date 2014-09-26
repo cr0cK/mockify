@@ -36,7 +36,7 @@
 
         <td>
           <span
-            ng-class="{'on': target.recording() && target._enabled, 'disabled': !target._enabled}"
+            ng-class="{'on': target._recording && target._enabled, 'disabled': !target._enabled}"
             class="glyphicon glyphicon-record"
             ng-click="target._enabled && toggleRecordTarget(target)"></span>
         </td>
