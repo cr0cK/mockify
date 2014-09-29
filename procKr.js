@@ -20,8 +20,8 @@ module.exports = (function () {
     listTargets: target.list,
     addTarget: target.add,
     removeTarget: target.remove,
-    enableTarget: target.enable,
     disableTarget: target.disable,
     recordingTarget: target.recording,
+    startProxy: target.startProxy
   };
 })();

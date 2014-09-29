@@ -37,6 +37,7 @@ module.exports = function (rootDir) {
 
   /**
    * Add a target and emit a ws with the list of targets.
+   * @param  {Object} targetProperties
    */
   var add = function (targetProperties) {
     var deferred = Q.defer(),
@@ -55,6 +56,7 @@ module.exports = function (rootDir) {
 
   /**
    * Disable the target, remove it and emit a ws with the message status
+   * @param  {Object} targetProperties
    */
   var remove = function (targetProperties) {
     var deferred = Q.defer();
@@ -68,38 +70,8 @@ module.exports = function (rootDir) {
   };
 
   /**
-   * Enable the target (start the proxy).
-   */
-  var enable = function (targetProperties) {
-    var deferred = Q.defer(),
-        proxyBinPath = path.join(rootDir, 'bin', 'proxy.js');
-
-    targetStorage.get(targetProperties.id, function (err, target) {
-      if (err) {
-        deferred.reject('This target has not been found.');
-        return;
-      }
-
-      proxyChilds[target.id()] = spawn('node', [
-        path.join(proxyBinPath),
-        '--targetId=' + target.id()
-      ]);
-
-      proxyChilds[target.id()].stdout.on('data', function (data) {
-        deferred.resolve(data.toString('utf8'));
-      });
-
-      proxyChilds[target.id()].stderr.on('data', function (data) {
-        deferred.reject(data.toString('utf8'));
-      });
-    });
-
-    return deferred.promise;
-  };
-
-  /**
    * Disable a target (stop all child processes for this target)
-   * @param  {Integer}   targetId
+   * @param  {Object} targetProperties
    */
   var disable = function (targetProperties) {
     var deferred = Q.defer();
@@ -110,23 +82,9 @@ module.exports = function (rootDir) {
         return;
       }
 
-      var childs = [proxyChilds[target.id()], mockChilds[target.id()]],
-          resolve = function (target) {
-            delete proxyChilds[target.id()];
-            delete mockChilds[target.id()];
-            deferred.resolve('The target has been disabled.');
-          };
-
-      _.forEach(childs, function (child) {
-        if (child && !child.killed) {
-          child.kill('SIGHUP');
-          child.on('exit', function () {
-            resolve(target);
-          });
-        } else {
-          resolve(target);
-        }
-      });
+      return _stopChilds(target).then(function () {
+        deferred.resolve('The target has been disabled.');
+      }, deferred.reject);
     });
 
     return deferred.promise;
@@ -134,7 +92,7 @@ module.exports = function (rootDir) {
 
   /**
    * Enable / disable the recording state of the target.
-   * @param  {Integer}   targetId
+   * @param  {Object}   Target properties + status (true/false)
    */
   var recording = function (data) {
     var deferred = Q.defer();
@@ -159,12 +117,89 @@ module.exports = function (rootDir) {
     return deferred.promise;
   };
 
+  /**
+   * Start a proxy for a target.
+   * @param  {Object} targetProperties
+   */
+  var startProxy = function (targetProperties) {
+    var deferred = Q.defer();
+
+    targetStorage.get(targetProperties.id, function (err, target) {
+      if (err) {
+        deferred.reject('This target has not been found.');
+        return;
+      }
+
+      _stopChilds(target)
+        .then(_startProxy)
+        .then(deferred.resolve, deferred.reject);
+    });
+
+    return deferred.promise;
+  };
+
+  /**
+   * Stop all childs (mocks or proxies).
+   * @param  {Target} Target
+   */
+  var _stopChilds = function (target) {
+    var deferred = Q.defer();
+
+    var childs = [proxyChilds[target.id()], mockChilds[target.id()]],
+        resolve = function (target) {
+          delete proxyChilds[target.id()];
+          delete mockChilds[target.id()];
+          deferred.resolve(target);
+        };
+
+    if (!childs.length) {
+      deferred.resolve(target);
+    }
+
+    _.forEach(childs, function (child) {
+      if (child && !child.killed) {
+        child.kill('SIGHUP');
+        child.on('exit', function () {
+          resolve(target);
+        });
+      } else {
+        resolve(target);
+      }
+    });
+
+    return deferred.promise;
+  };
+
+  /**
+   * Start a proxy for a target.
+   * @param  {Target} Target
+   */
+  var _startProxy = function (target) {
+    var deferred = Q.defer(),
+        proxyBinPath = path.join(rootDir, 'bin', 'proxy.js');
+
+    proxyChilds[target.id()] = spawn('node', [
+      path.join(proxyBinPath),
+      '--targetId=' + target.id()
+    ]);
+
+    proxyChilds[target.id()].stdout.on('data', function (data) {
+      deferred.resolve(data.toString('utf8'));
+    });
+
+    proxyChilds[target.id()].stderr.on('data', function (data) {
+      deferred.reject(data.toString('utf8'));
+    });
+
+    return deferred.promise;
+  };
+
   return {
     list: list,
     add: add,
     remove: remove,
-    enable: enable,
     disable: disable,
-    recording: recording
+    recording: recording,
+    startProxy: startProxy
   };
 };

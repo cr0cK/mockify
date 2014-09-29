@@ -66,7 +66,8 @@ module.exports = (function () {
     });
 
     socket.on('enableTarget', function (targetProperties) {
-      target.enable(targetProperties).then(function (childStdout) {
+      // enable a target starts a proxy but return it own websocket event
+      target.startProxy(targetProperties).then(function (childStdout) {
         io.emit('enableTarget', childStdout);
       }, alert.error);
     });
@@ -82,6 +83,12 @@ module.exports = (function () {
         .then(function (msgLog) {
           io.emit('recordingTarget', msgLog);
         }, alert.error);
+    });
+
+    socket.on('startProxy', function (targetProperties) {
+      target.startProxy(targetProperties).then(function (childStdout) {
+        io.emit('startProxy', childStdout);
+      }, alert.error);
     });
   });
 })();
