@@ -148,6 +148,16 @@ program
       .catch(log);
   });
 
+program
+  .command('start-mock <id>')
+  .description(
+    'Start the mock of a target.')
+  .action(function (id) {
+    procKr.startMock(id)
+      .then(logHdlr.lognExit, alertHdlr.error)
+      .catch(log);
+  });
+
 program.parse(process.argv);
 
 if (!program.args.length) {

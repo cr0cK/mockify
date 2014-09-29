@@ -12,8 +12,8 @@
       express     = require('express'),
       bodyParser  = require('body-parser'),
       router      = express.Router(),
-      db          = require('../app/lib/db'),
-      proxyId     = argv.proxyId;
+      db          = require('../lib/db'),
+      targetId    = argv.targetId;
 
   /**
    * Write log on stdout.
@@ -25,7 +25,7 @@
   /**
    * Express app with an in-memory database which will be used to mock data.
    */
-  var runApp = function (Proxy, db) {
+  var runApp = function (target, db) {
     var mockData = (function () {
       return function (req, res) {
         // search a response for the current query
@@ -33,7 +33,7 @@
           method: req.method,
           url: req.url,
           parameters: JSON.stringify(req.body),
-          proxyId: Proxy.id
+          targetId: target.id
         }, function (err, responses) {
           if (err) {
             log('An error has occurred when fetching data.', err);
@@ -45,10 +45,10 @@
               res.status(404).send('No response has been found.');
 
               log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
-                404, req.method, req.url, Proxy.port));
+                404, req.method, req.url, target.port));
             } else {
               log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
-                response.status, response.method, response.url, Proxy.port));
+                response.status, response.method, response.url, target.port));
 
               // set headers
               _.forEach(response.resHeaders, function (value, key) {
@@ -71,7 +71,7 @@
     var app = express();
 
     app
-      .set('port', Proxy.port)
+      .set('port', target.port)
       // to support JSON-encoded bodies()
       .use(bodyParser.json())
       // to support URL-encoded bodies
@@ -83,21 +83,21 @@
         var message = _s.sprintf('%s %d %s %s',
           'Mock listening on port',
           app.get('port'),
-          'and mocking the proxy ID:',
-          proxyId
+          'and mocking the target ID:',
+          targetId
         );
 
         log(message);
       });
   };
 
-  // search proxy in DB
+  // search Target in DB
   db.whenReady().then(function () {
-    if (!proxyId) {
-      log('The proxy has not been set.');
+    if (!targetId) {
+      log('The target has not been set.');
     }
 
-    db.model('Proxy').get(proxyId, function (err, Proxy_) {
+    db.model('Target').get(targetId, function (err, target_) {
       if (err) {
         log('An error has occurred when fetching data.', err);
         process.exit(1);
@@ -110,8 +110,8 @@
           return;
         }
 
-        // run the Express app with the Proxy row and the in-memory database
-        runApp(Proxy_, db_);
+        // run the Express app with the target row and the in-memory database
+        runApp(target_, db_);
       });
     });
   });

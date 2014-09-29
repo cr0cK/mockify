@@ -18,7 +18,7 @@ module.exports = (function () {
         resHeaders  : Object,
         body        : Object,
         comment     : String,
-        proxyId     : Number
+        targetId    : Number
 
       }, {
         cache       : false,

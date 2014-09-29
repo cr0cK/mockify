@@ -33,7 +33,7 @@ module.exports = (function () {
         // can be null because it will be updated when receiving the response
         ' "body" TEXT,' +
         ' "comment" TEXT,' +
-        ' "proxyId" INTEGER,' +
+        ' "targetId" INTEGER,' +
         // replace if the query is the same than a previous one
         ' UNIQUE (status, url, method, parameters) ON CONFLICT REPLACE)',
 

@@ -85,7 +85,8 @@
      * Enable/disable the mock.
      */
     Target.prototype.toggleMock = function () {
-      webSocket.emit('toggleMockTarget', _.publicProperties(this));
+      var event_ = this._mocking ? 'startMock' : 'startProxy';
+      webSocket.emit(event_, _.publicProperties(this));
     };
 
     /**

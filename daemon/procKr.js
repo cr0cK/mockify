@@ -90,5 +90,11 @@ module.exports = (function () {
         io.emit('startProxy', childStdout);
       }, alert.error);
     });
+
+    socket.on('startMock', function (targetProperties) {
+      target.startMock(targetProperties).then(function (childStdout) {
+        io.emit('startMock', childStdout);
+      }, alert.error);
+    });
   });
 })();
