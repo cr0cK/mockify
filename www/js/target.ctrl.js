@@ -38,7 +38,7 @@
       };
 
       /**
-       * Register a target in the DB and start it.
+       * Register a target in the DB.
        */
       $scope.addAndStartTarget = function (port, url) {
         port = port || $scope.defaultValues.port;
@@ -57,6 +57,8 @@
         });
 
         target.add();
+
+        $scope.targetsList.push(target);
 
         delete $scope.target;
         delete $scope.port;
