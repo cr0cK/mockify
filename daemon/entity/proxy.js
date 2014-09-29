@@ -1,3 +1,7 @@
+/**
+ * DEPRECATED - NOT USED
+ */
+
 'use strict';
 
 module.exports = (function () {
