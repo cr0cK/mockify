@@ -20,6 +20,17 @@ module.exports = (function () {
     console.log(msgLog);
   }, alert.error);
 
+  target.eventEmitter()
+    .on('proxyOut', function (msgLog) {
+      io.emit('proxyOut', msgLog);
+    })
+    .on('proxyResponse', function (msgLog) {
+      io.emit('proxyResponse', msgLog);
+    })
+    .on('proxyError', function (msgLog) {
+      io.emit('proxyError', msgLog);
+    });
+
   io.sockets.on('connection', function (socket) {
     socket.on('hello', function () {
       io.emit('hello', 'Hi! This is procKr daemon.');

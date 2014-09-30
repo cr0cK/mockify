@@ -23,5 +23,6 @@ module.exports = (function () {
     enableTarget: target.enable,
     disableTarget: target.disable,
     recordingTarget: target.recording,
+    log: target.log
   };
 })();

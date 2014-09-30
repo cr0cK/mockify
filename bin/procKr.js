@@ -138,6 +138,16 @@ program
       .catch(log);
   });
 
+program
+  .command('log')
+  .description(
+    'See logs.')
+  .action(function () {
+    procKr.log()
+      .on('response', log)
+      .on('out', log);
+  });
+
 program.parse(process.argv);
 
 if (!program.args.length) {
