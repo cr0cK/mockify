@@ -97,14 +97,11 @@ module.exports = function (rootDir) {
       ]);
 
       proxyChilds[target.id()].stdout.on('data', function (data) {
-        var str = data.toString('utf8'),
-            matches = str.match(/\[([^-]+)-([^\]]+)\]/),
-            who = matches.length === 3 && matches[1],
-            what = matches.length === 3 && matches[2],
-            event_ = who && what && who + _s.capitalize(what);
+        var str = data.toString('utf8');
 
         deferred.resolve(str);
 
+        var event_ = _extractEvent(data);
         if (event_) {
           eventEmitter().emit(event_, str);
         }
@@ -144,6 +141,7 @@ module.exports = function (rootDir) {
           child.kill('SIGHUP');
           child.on('exit', function () {
             resolve(target);
+            eventEmitter().emit('proxyOut', 'The child has been stopped');
           });
         } else {
           resolve(target);
@@ -179,6 +177,19 @@ module.exports = function (rootDir) {
     });
 
     return deferred.promise;
+  };
+
+  /**
+   * Extract the event name from the prefix of the child log message.
+   * @return {String}   The event name
+   */
+  var _extractEvent = function (data) {
+    var str = data.toString('utf8'),
+        matches = str.match(/\[([^-]+)-([^\]]+)\]/),
+        who = matches.length === 3 && matches[1],
+        what = matches.length === 3 && matches[2];
+
+    return who && what && who + _s.capitalize(what);
   };
 
   return {

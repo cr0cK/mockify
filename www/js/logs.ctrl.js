@@ -12,14 +12,20 @@
     function ($scope, webSocket) {
       $scope.logs = [];
 
-      webSocket.on('log', function (data) {
+      webSocket.on('proxyOut', function (data) {
         $scope.$apply(function () {
-          if (
-            data.type !== 'error' ||
-            data.type === 'error' && /Error/.test(data.message)
-          ) {
-            $scope.logs.push(data);
-          }
+          $scope.logs.push({
+            message: data
+          });
+        });
+      });
+
+      webSocket.on('proxyError', function (data) {
+        $scope.$apply(function () {
+          $scope.logs.push({
+            type: 'error',
+            message: data
+          });
         });
       });
     }

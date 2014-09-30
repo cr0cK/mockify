@@ -9,19 +9,13 @@
     function ($scope, webSocket) {
       $scope.logs = [];
 
-      var displayLog = function (data) {
+      webSocket.on('proxyResponse', function (data) {
         $scope.$apply(function () {
-          if (
-            data.type !== 'error' ||
-            data.type === 'error' && /Error/.test(data.message)
-          ) {
-            $scope.logs.push(data);
-          }
+          $scope.logs.push({
+            message: data
+          });
         });
-      };
-
-      webSocket.on('mockLog', displayLog);
-      webSocket.on('proxyLog', displayLog);
+      });
     }
   ]);
 })();
