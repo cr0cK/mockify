@@ -140,8 +140,7 @@ program
 
 program
   .command('log')
-  .description(
-    'See logs.')
+  .description('See logs.')
   .action(function () {
     procKr.log()
       .on('response', log)
