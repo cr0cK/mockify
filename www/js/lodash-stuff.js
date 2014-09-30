@@ -35,8 +35,30 @@
     return properties;
   }
 
+  /**
+   * Format a deep comparison between two arrays of objects,
+   * omitted of their Angular extra keys.
+   * @param  {Array}
+   * @param  {Array}
+   * @return {Boolean}
+   */
+  function isAlmostEqual(array1, array2) {
+    var arrays_ = [];
+
+    _.forEach([array1, array2], function (array) {
+      arrays_.push(_.map(array, function (obj) {
+        return _.omit(obj, function (value, key) {
+          return /^\$+/.test(key);
+        });
+      }));
+    });
+
+    return _.isEqual(arrays_[0], arrays_[1]);
+  }
+
   _.mixin({
     privateMerge: privateMerge,
-    publicProperties: publicProperties
+    publicProperties: publicProperties,
+    isAlmostEqual: isAlmostEqual
   });
 })();

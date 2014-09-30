@@ -20,6 +20,7 @@ module.exports = (function () {
     console.log(msgLog);
   }, alert.error);
 
+  // when childs are talking, send messages via websockets to the client
   target.eventEmitter()
     .on('proxyOut', function (msgLog) {
       io.emit('proxyOut', msgLog);
@@ -31,6 +32,19 @@ module.exports = (function () {
       io.emit('proxyError', msgLog);
     });
 
+  var listTargets = function () {
+    target.list().then(function (targets) {
+      io.emit('listTargets', {
+        message: 'List of saved targets:',
+        targets: targets
+      });
+    }, alert.error);
+  };
+
+  // send to the client the list of targets every X seconds
+  setInterval(listTargets, 3000);
+
+  // listen events from the client and answer with the same event
   io.sockets.on('connection', function (socket) {
     socket.on('hello', function () {
       io.emit('hello', 'Hi! This is procKr daemon.');
@@ -48,14 +62,7 @@ module.exports = (function () {
       }, alert.error);
     });
 
-    socket.on('listTargets', function () {
-      target.list().then(function (targets) {
-        io.emit('listTargets', {
-          message: 'List of saved targets:',
-          targets: targets
-        });
-      }, alert.error);
-    });
+    socket.on('listTargets', listTargets);
 
     socket.on('addTarget', function (targetProperties) {
       target.add(targetProperties).then(function (targets) {

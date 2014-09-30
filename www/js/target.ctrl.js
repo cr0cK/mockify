@@ -100,24 +100,23 @@
        */
 
       /**
-       * Get the list of targets.
+       * Refresh the list of targets when receiving the websocket event.
+       * In order to prevent memory leaks, we refresh the DOM only if the
+       * list of targets (and their properties) has been modified.
        */
-      var listTargets = function () {
-        webSocket.emit('listTargets');
-
-        webSocket.on('listTargets', function (data) {
-          $scope.$apply(function () {
-            $scope.targetsList = _.map(data.targets, function (targetProps) {
-              return new Target(targetProps);
-            });
-          });
+      webSocket.on('listTargets', function (data) {
+        var targets = _.map(data.targets, function (targetProps) {
+          return new Target(targetProps);
         });
-      };
 
-      listTargets();
+        var refresh = !_.isAlmostEqual($scope.targetsList, targets);
 
-      // refresh targets every X seconds
-      $interval(listTargets, 3000);
+        if ($scope.targetsList === undefined || refresh) {
+          $scope.$apply(function () {
+            $scope.targetsList = targets;
+          });
+        }
+      });
     }
   ]);
 })();
