@@ -2,13 +2,24 @@
 
 module.exports = function (rootDir) {
   var _               = require('lodash'),
+      _s              = require('underscore.string'),
       Q               = require('q'),
       spawn           = require('child_process').spawn,
       path            = require('path'),
       Target          = require('./../entity/target'),
       targetStorage   = require('./../storage/target'),
+      eventEmitter_   = new (require('events').EventEmitter)(),
       proxyChilds     = {},
       mockChilds      = {};
+
+  /**
+   * Return the event emitter instance.
+   * Used to emit ws on child events.
+   * @return {EventEmitter}
+   */
+  var eventEmitter = function () {
+    return eventEmitter_;
+  };
 
   /**
    * Emit a ws with the list of targets.
@@ -208,11 +219,19 @@ module.exports = function (rootDir) {
     ]);
 
     proxyChilds[target.id()].stdout.on('data', function (data) {
-      deferred.resolve(data.toString('utf8'));
+      var str = data.toString('utf8');
+
+      deferred.resolve(str);
+
+      var event_ = _extractEvent(data);
+      if (event_) {
+        eventEmitter().emit(event_, str);
+      }
     });
 
     proxyChilds[target.id()].stderr.on('data', function (data) {
       deferred.reject(data.toString('utf8'));
+      eventEmitter().emit('childStderr', data.toString('utf8'));
     });
 
     return deferred.promise;
@@ -232,17 +251,39 @@ module.exports = function (rootDir) {
     ]);
 
     mockChilds[target.id()].stdout.on('data', function (data) {
-      deferred.resolve(data.toString('utf8'));
+      var str = data.toString('utf8');
+
+      deferred.resolve(str);
+
+      var event_ = _extractEvent(data);
+      if (event_) {
+        eventEmitter().emit(event_, str);
+      }
     });
 
     mockChilds[target.id()].stderr.on('data', function (data) {
       deferred.reject(data.toString('utf8'));
+      eventEmitter().emit('childStderr', data.toString('utf8'));
     });
 
     return deferred.promise;
   };
 
+  /**
+   * Extract the event name from the prefix of the child log message.
+   * @return {String}   The event name
+   */
+  var _extractEvent = function (data) {
+    var str = data.toString('utf8'),
+        matches = str.match(/\[([^-]+)-([^\]]+)\]/),
+        who = matches.length === 3 && matches[1],
+        what = matches.length === 3 && matches[2];
+
+    return who && what && who + _s.capitalize(what);
+  };
+
   return {
+    eventEmitter: eventEmitter,
     list: list,
     add: add,
     remove: remove,

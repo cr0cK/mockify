@@ -16,8 +16,22 @@ var httpProxy   = require('http-proxy'),
     url         = require('url'),
     db          = require('../lib/db'),
     targetId    = argv.targetId,
-    log         = function (message) { console.log(message); },
     exit        = function () { process.exit(1); };
+
+/**
+ * Write log on stdout.
+ */
+var log = function (message) {
+  console.log('[proxy-out] ' + message);
+};
+
+var logError = function (message) {
+  console.log('[proxy-error] ' + message);
+};
+
+var logResponse = function (message) {
+  console.log('[proxy-response] ' + message);
+};
 
 /**
  * Start the proxy.
@@ -62,7 +76,7 @@ var startProxy = function (port, url_) {
     // don't send the cookies of localhost
     proxyReq._headers.cookie = '';
 
-    var message = _s.sprintf('[proxyLog][%s] %s%s -> %s%s',
+    var message = _s.sprintf('[%s] %s%s -> %s%s',
       req.method,
       req.headers.host,
       req.url,
@@ -71,7 +85,7 @@ var startProxy = function (port, url_) {
     );
 
     // stdout captured by the main app
-    log(message);
+    logResponse(message);
 
     // set a header to identify the query in order to save its response
     var uuid = _.uuid();
@@ -91,7 +105,7 @@ var startProxy = function (port, url_) {
 
       db.model('Response').create([data], function (err) {
         if (err) {
-          log('An error has occurred', err);
+          logError('An error has occurred ' + err);
         }
       });
     });
@@ -120,7 +134,7 @@ var startProxy = function (port, url_) {
 
           response.save(function (err) {
             if (err) {
-              log('An error has occurred', err);
+              logError('An error has occurred. ' + err);
             }
           });
         }
@@ -132,7 +146,7 @@ var startProxy = function (port, url_) {
 db.whenReady().then(function () {
   db.model('Target').get(targetId, function (err, target) {
     if (!target) {
-      log('The target has not been found.');
+      logError('The target has not been found.');
       exit();
     }
 

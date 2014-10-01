@@ -150,12 +150,20 @@ program
 
 program
   .command('start-mock <id>')
-  .description(
-    'Start the mock of a target.')
+  .description('Start the mock of a target.')
   .action(function (id) {
     procKr.startMock(id)
       .then(logHdlr.lognExit, alertHdlr.error)
       .catch(log);
+  });
+
+program
+  .command('log')
+  .description('See logs.')
+  .action(function () {
+    procKr.log()
+      .on('response', log)
+      .on('out', log);
   });
 
 program.parse(process.argv);

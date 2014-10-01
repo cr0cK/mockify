@@ -19,7 +19,15 @@
    * Write log on stdout.
    */
   var log = function (message) {
-    console.log(message);
+    console.log('[mock-out] ' + message);
+  };
+
+  var logError = function (message) {
+    console.log('[mock-error] ' + message);
+  };
+
+  var logResponse = function (message) {
+    console.log('[mock-response] ' + message);
   };
 
   /**
@@ -36,7 +44,7 @@
           targetId: target.id
         }, function (err, responses) {
           if (err) {
-            log('An error has occurred when fetching data.', err);
+            log('An error has occurred when fetching data. ' + err);
             res.status(500).send(err);
           } else {
             var response = _.first(responses);
@@ -44,11 +52,11 @@
             if (!response) {
               res.status(404).send('No response has been found.');
 
-              log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
-                404, req.method, req.url, target.port));
+              logResponse(_s.sprintf('%d %s %s on localhost:%s',
+                404, req.method, req.url, Proxy.port));
             } else {
-              log(_s.sprintf('[mockLog]%d %s %s on localhost:%s',
-                response.status, response.method, response.url, target.port));
+              logResponse(_s.sprintf('%d %s %s on localhost:%s',
+                response.status, response.method, response.url, Proxy.port));
 
               // set headers
               _.forEach(response.resHeaders, function (value, key) {
@@ -99,15 +107,15 @@
 
     db.model('Target').get(targetId, function (err, target_) {
       if (err) {
-        log('An error has occurred when fetching data.', err);
+        logError('An error has occurred when fetching data. ' +  err);
         process.exit(1);
       }
 
       // dump the database in memory, used for this process
       db.toMemory(function (err, db_) {
         if (err) {
-          log('err', err);
-          return;
+          logError('err ' + err);
+          process.exit(1);
         }
 
         // run the Express app with the target row and the in-memory database

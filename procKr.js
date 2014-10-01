@@ -23,6 +23,7 @@ module.exports = (function () {
     disableTarget: target.disable,
     recordingTarget: target.recording,
     startProxy: target.startProxy,
-    startMock: target.startMock
+    startMock: target.startMock,
+    log: target.log
   };
 })();
