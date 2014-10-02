@@ -22,15 +22,15 @@ var httpProxy   = require('http-proxy'),
  * Write log on stdout.
  */
 var log = function (message) {
-  console.log('[proxy-out] ' + message);
+  process.stdout.write('[proxy-out] ' + message + '\n');
 };
 
 var logError = function (message) {
-  console.log('[proxy-error] ' + message);
+  process.stderr.write('[proxy-error] ' + message + '\n');
 };
 
 var logResponse = function (message) {
-  console.log('[proxy-response] ' + message);
+  process.stdout.write('[proxy-response] ' + message + '\n');
 };
 
 /**
@@ -38,16 +38,17 @@ var logResponse = function (message) {
  * @param  {int}  port  Port to listen
  * @param  {url_} url_  Url to proxy
  */
-var startProxy = function (port, url_) {
+var startProxy = function (target) {
   var server = require('http').createServer(function (req, res) {
     // You can define here your custom logic to handle the request
     // and then proxy the request.
-    proxy.web(req, res, {target: url_});
+    proxy.web(req, res, {target: target.url});
   });
 
-  server.listen(port);
+  server.listen(target.port);
 
-  log('Proxy listening on localhost:' + port + ' and proxying ' + url_);
+  log(_s.sprintf('Proxy listening on localhost:%s and proxying %s',
+    target.port, target.url));
 
   // create proxy
   var proxy = httpProxy.createProxyServer({
@@ -65,7 +66,7 @@ var startProxy = function (port, url_) {
   //
   proxy.on('proxyReq', function handleProxyRequest(proxyReq, req, res) {
     // hack the host in the header to be able to proxy a different host
-    var parsedTarget = url.parse(url_);
+    var parsedTarget = url.parse(target.url);
     proxyReq._headers.host = parsedTarget.host;
 
     // generate a random uuid to not match Etag and avoid "304 not modified"
@@ -87,31 +88,39 @@ var startProxy = function (port, url_) {
     // stdout captured by the main app
     logResponse(message);
 
-    // set a header to identify the query in order to save its response
-    var uuid = _.uuid();
-    proxyReq.setHeader('X-procKr-rowuuid', uuid);
+    // save the response only if recording the target
+    if (target.recording) {
+      // set a header to identify the query in order to save its response
+      var uuid = _.uuid();
+      proxyReq.setHeader('X-procKr-rowuuid', uuid);
 
-    // decode body to json
-    jsonBody(req, res, function (__, json) {
-      var data = {
-        uuid: uuid,
-        dateCreated: moment().toDate(),
-        url: req.url,
-        method: req.method,
-        parameters: (_.isObject(json) && json) || {},
-        reqHeaders: req.headers,
-        targetId: targetId
-      };
+      // decode body to json
+      jsonBody(req, res, function (__, json) {
+        var data = {
+          uuid: uuid,
+          dateCreated: moment().toDate(),
+          url: req.url,
+          method: req.method,
+          parameters: (_.isObject(json) && json) || {},
+          reqHeaders: req.headers,
+          targetId: targetId
+        };
 
-      db.model('Response').create([data], function (err) {
-        if (err) {
-          logError('An error has occurred ' + err);
-        }
+        db.model('Response').create([data], function (err) {
+          if (err) {
+            logError('An error has occurred ' + err);
+          }
+        });
       });
-    });
+    }
   });
 
   proxy.on('proxyRes', function (res) {
+    // do nothing if not recording the target
+    if (!target.recording) {
+      return;
+    }
+
     var buffers = [];
     res.on('data', function (chunk) {
       buffers.push(chunk);
@@ -153,6 +162,6 @@ db.whenReady().then(function () {
       exit();
     }
 
-    startProxy(target.port, target.url);
+    startProxy(target);
   });
 });

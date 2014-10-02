@@ -115,6 +115,11 @@ module.exports = function (rootDir) {
 
   /**
    * Enable / disable the recording state of the target.
+   *
+   * Because it's hot to fetch the target when processing the request because
+   * of the asynchronous workflow, we restart the proxy when toggling the
+   * recording flag. It's simpler.
+   *
    * @param  {Object}   Target properties + status (true/false)
    */
   var recording = function (data) {
@@ -126,15 +131,37 @@ module.exports = function (rootDir) {
         return;
       }
 
-      targetStorage.update(target, {recording: data.status},
-        function (err, target_) {
-          err && deferred.reject(err);
-          var msg = target_.recording() ?
-            'The proxy is recording data right now.' :
-            'The proxy has stopped recording data.';
+      return _stopChilds(target)
+        .then(function () {
+          var deferred_ = Q.defer();
+
+          targetStorage.update(target, {recording: data.status},
+            function (err, target_) {
+              err && deferred_.reject(err);
+              deferred_.resolve(target_);
+            }
+          );
+
+          return deferred_.promise;
+        })
+
+        .then(function (target) {
+          return _startProxy(target);
+        })
+
+        .then(function () {
+          var onMsg =
+            'The recording of data has been activated on the target.\n' +
+            'The proxy has been restarted.';
+          var offMsg =
+            'The recording of data has been deactivated on the target.\n' +
+            'The proxy has been restarted.';
+          var msg = data.status ? onMsg : offMsg;
+
           deferred.resolve(msg);
-        }
-      );
+        })
+
+        .catch(deferred.reject);
     });
 
     return deferred.promise;
