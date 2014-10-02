@@ -163,7 +163,8 @@ program
   .action(function () {
     procKr.log()
       .on('response', logHdlr.childLog)
-      .on('out', logHdlr.childLog);
+      .on('out', logHdlr.childLog)
+      .on('error_', logHdlr.childLog);
   });
 
 program.parse(process.argv);

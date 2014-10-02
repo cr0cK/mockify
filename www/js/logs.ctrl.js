@@ -18,6 +18,12 @@
             $scope.logs.push(logData);
           });
         });
+
+        webSocket.on(eventSource + 'Error', function (logData) {
+          $scope.$apply(function () {
+            $scope.logs.push(logData);
+          });
+        });
       });
     }
   ]);
