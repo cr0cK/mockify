@@ -66,7 +66,7 @@ module.exports = function () {
         default:
           color = cliColor.white;
           break;
-      };
+      }
     }
 
     return clog(color(msgData.message.trim()));
