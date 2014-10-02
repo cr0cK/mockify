@@ -8,6 +8,7 @@ module.exports = function (rootDir) {
       path            = require('path'),
       Target          = require('./../entity/target'),
       targetStorage   = require('./../storage/target'),
+      isRunning       = require('is-running'),
       eventEmitter_   = new (require('events').EventEmitter)(),
       proxyChilds     = {},
       mockChilds      = {};
@@ -36,6 +37,16 @@ module.exports = function (rootDir) {
       // set the state of the target according to the current process childs
       _.forEach(targets, function (target) {
         var id = target.id();
+
+        // check that the process is still running
+        if (_.has(proxyChilds, id) && !isRunning(proxyChilds[id].pid)) {
+          delete proxyChilds[id];
+        }
+
+        if (_.has(mockChilds, id) && !isRunning(mockChilds[id].pid)) {
+          delete mockChilds[id];
+        }
+
         target.proxying(_.has(proxyChilds, id));
         target.mocking(_.has(mockChilds, id));
       });
