@@ -52,10 +52,10 @@
             if (!response) {
               res.status(404).send('No response has been found.');
 
-              logResponse(_s.sprintf('%d %s %s on localhost:%s',
-                404, req.method, req.url, target.port));
+              logResponse(_s.sprintf('%s %s %s on localhost:%s',
+                '404', req.method, req.url, target.port));
             } else {
-              logResponse(_s.sprintf('%d %s %s on localhost:%s',
+              logResponse(_s.sprintf('%s %s %s on localhost:%s',
                 response.status, response.method, response.url, target.port));
 
               // set headers

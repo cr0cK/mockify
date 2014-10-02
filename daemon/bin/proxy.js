@@ -132,11 +132,14 @@ var startProxy = function (port, url_) {
           response.status = res_.statusCode;
           response.body = megaBuffer.toString('utf8');
 
-          response.save(function (err) {
-            if (err) {
-              logError('An error has occurred. ' + err);
-            }
-          });
+          // be sure to have a complete response before saving it
+          if (response.resHeaders && response.status && response.body) {
+            response.save(function (err) {
+              if (err) {
+                logError('An error has occurred. ' + err);
+              }
+            });
+          }
         }
       });
     });
