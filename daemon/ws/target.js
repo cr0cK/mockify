@@ -228,7 +228,7 @@ module.exports = function (rootDir) {
         eventEmitter().emit(event_, {
           source: 'proxy',
           type: 'info',
-          message: message
+          message: _removeLogPrefix(message)
         });
       }
     });
@@ -238,7 +238,7 @@ module.exports = function (rootDir) {
       eventEmitter().emit('proxyError', {
         source: 'proxy',
         type: 'error',
-        message: data.toString('utf8')
+        message: _removeLogPrefix(data.toString('utf8'))
       });
     });
 
@@ -268,7 +268,7 @@ module.exports = function (rootDir) {
         eventEmitter().emit(event_, {
           source: 'mock',
           type: 'info',
-          message: message
+          message: _removeLogPrefix(message)
         });
       }
     });
@@ -278,7 +278,7 @@ module.exports = function (rootDir) {
       eventEmitter().emit('mockError', {
         source: 'mock',
         type: 'error',
-        message: data.toString('utf8')
+        message: _removeLogPrefix(data.toString('utf8'))
       });
     });
 
@@ -296,6 +296,15 @@ module.exports = function (rootDir) {
         what = matches.length === 3 && matches[2];
 
     return who && what && who + _s.capitalize(what);
+  };
+
+  /**
+   * Remove the prefix of log messages (example: '[mock-response]'')
+   * @param  {String} message
+   * @return {String}
+   */
+  var _removeLogPrefix = function (message) {
+    return message.replace(/^\[.+\]\s*/, '');
   };
 
   return {
