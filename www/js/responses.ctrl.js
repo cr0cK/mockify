@@ -10,11 +10,9 @@
       $scope.logs = [];
 
       _.forEach(['proxy', 'mock'], function (eventSource) {
-        webSocket.on(eventSource + 'Response', function (data) {
+        webSocket.on(eventSource + 'Response', function (logData) {
           $scope.$apply(function () {
-            $scope.logs.push({
-              message: data
-            });
+            $scope.logs.push(logData);
           });
         });
       });

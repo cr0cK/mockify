@@ -13,20 +13,9 @@
       $scope.logs = [];
 
       _.forEach(['proxy', 'mock'], function (eventSource) {
-        webSocket.on(eventSource + 'Out', function (data) {
+        webSocket.on(eventSource + 'Out', function (logData) {
           $scope.$apply(function () {
-            $scope.logs.push({
-              message: data
-            });
-          });
-        });
-
-        webSocket.on(eventSource + 'Error', function (data) {
-          $scope.$apply(function () {
-            $scope.logs.push({
-              type: 'error',
-              message: data
-            });
+            $scope.logs.push(logData);
           });
         });
       });

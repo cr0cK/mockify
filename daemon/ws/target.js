@@ -219,19 +219,27 @@ module.exports = function (rootDir) {
     ]);
 
     proxyChilds[target.id()].stdout.on('data', function (data) {
-      var str = data.toString('utf8');
+      var message = data.toString('utf8');
 
-      deferred.resolve(str);
+      deferred.resolve(message);
 
       var event_ = _extractEvent(data);
       if (event_) {
-        eventEmitter().emit(event_, str);
+        eventEmitter().emit(event_, {
+          source: 'proxy',
+          type: 'info',
+          message: message
+        });
       }
     });
 
     proxyChilds[target.id()].stderr.on('data', function (data) {
       deferred.reject(data.toString('utf8'));
-      eventEmitter().emit('childStderr', data.toString('utf8'));
+      eventEmitter().emit('proxyError', {
+        source: 'proxy',
+        type: 'error',
+        message: data.toString('utf8')
+      });
     });
 
     return deferred.promise;
@@ -251,19 +259,27 @@ module.exports = function (rootDir) {
     ]);
 
     mockChilds[target.id()].stdout.on('data', function (data) {
-      var str = data.toString('utf8');
+      var message = data.toString('utf8');
 
-      deferred.resolve(str);
+      deferred.resolve(message);
 
       var event_ = _extractEvent(data);
       if (event_) {
-        eventEmitter().emit(event_, str);
+        eventEmitter().emit(event_, {
+          source: 'mock',
+          type: 'info',
+          message: message
+        });
       }
     });
 
     mockChilds[target.id()].stderr.on('data', function (data) {
       deferred.reject(data.toString('utf8'));
-      eventEmitter().emit('childStderr', data.toString('utf8'));
+      eventEmitter().emit('mockError', {
+        source: 'mock',
+        type: 'error',
+        message: data.toString('utf8')
+      });
     });
 
     return deferred.promise;

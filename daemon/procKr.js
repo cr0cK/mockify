@@ -5,7 +5,8 @@
 'use strict';
 
 module.exports = (function () {
-  var io              = require('./ws/io'),
+  var _               = require('lodash'),
+      io              = require('./ws/io'),
       http            = require('./ws/http'),
       db              = require('./lib/db'),
       daemonRootDir   = __dirname,
@@ -21,16 +22,18 @@ module.exports = (function () {
   }, alert.error);
 
   // when childs are talking, send messages via websockets to the client
-  target.eventEmitter()
-    .on('proxyOut', function (msgLog) {
-      io.emit('proxyOut', msgLog);
-    })
-    .on('proxyResponse', function (msgLog) {
-      io.emit('proxyResponse', msgLog);
-    })
-    .on('proxyError', function (msgLog) {
-      io.emit('proxyError', msgLog);
-    });
+  _.forEach(['proxy', 'mock'], function (eventSource) {
+    target.eventEmitter()
+      .on(eventSource + 'Out', function (logData) {
+        io.emit('proxyOut', logData);
+      })
+      .on(eventSource + 'Response', function (logData) {
+        io.emit('proxyResponse', logData);
+      })
+      .on(eventSource + 'Error', function (logData) {
+        io.emit('proxyError', logData);
+      });
+  });
 
   var listTargets = function () {
     target.list().then(function (targets) {

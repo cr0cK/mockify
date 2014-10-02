@@ -2,7 +2,7 @@
 
 <ul class="responses">
   <li ng-repeat="log in logs track by $index">
-    <span ng-class="'log-' + log.type">{{log.message}}</span>
+    <span ng-class="['log-' + log.source, 'log-' + log.type]">{{log.message}}</span>
   </li>
 
   <li ng-show="!logs.length">

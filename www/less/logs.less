@@ -1,15 +1,15 @@
 ul.logs, ul.responses {
   span {
-    &.log-error {
-      color: @error-color;
-    }
-
-    &.log-infoMock {
+    &.log-mock {
       color: @mock-color;
     }
 
-    &.log-infoProxy {
+    &.log-proxy {
       color: @proxy-color;
+    }
+
+    &.log-error {
+      color: red !important;
     }
   }
 

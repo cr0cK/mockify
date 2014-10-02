@@ -162,8 +162,8 @@ program
   .description('See logs.')
   .action(function () {
     procKr.log()
-      .on('response', log)
-      .on('out', log);
+      .on('response', logHdlr.childLog)
+      .on('out', logHdlr.childLog);
   });
 
 program.parse(process.argv);
