@@ -15,18 +15,18 @@ var argv        = require('minimist')(process.argv.slice(2)),
     targetId    = argv.targetId;
 
 /**
- * Write log on stdout.
+ * Write log on stdout/stderr.
  */
 var log = function (message) {
-  console.log('[mock-out] ' + message);
+  process.stdout.write('[mock-out] ' + message + '\n');
 };
 
 var logError = function (message) {
-  console.log('[mock-error] ' + message);
+  process.stderr.write('[mock-error] ' + message + '\n');
 };
 
 var logResponse = function (message) {
-  console.log('[mock-response] ' + message);
+  process.stdout.write('[mock-response] ' + message + '\n');
 };
 
 /**
