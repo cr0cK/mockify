@@ -4,7 +4,7 @@ www/vendor
 www/build
 
 daemon/db.sqlite
-daemon/log
+daemon/log/*.log
 
 http-build
 http/views/layout.html
