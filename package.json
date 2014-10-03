@@ -1,6 +1,6 @@
 {
   "name": "mockify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "start": "./node_modules/.bin/forever start daemon/app.js",
     "stop": "./node_modules/.bin/forever stop daemon/app.js",
