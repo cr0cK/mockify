@@ -2,23 +2,27 @@
 
 'use strict';
 
-var rootDir = process.env.PWD,
-    settings = require('./gulpsettings.js'),
-    path = require('path'),
-    gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    less = require('gulp-less-sourcemap'),
-    clean = require('gulp-clean'),
-    jshint = require('gulp-jshint'),
-    jscs = require('gulp-jscs'),
-    inject = require('gulp-inject'),
-    expect = require('gulp-expect-file'),
-    templateCache = require('gulp-angular-templatecache'),
-    minifyCss = require('gulp-minify-css'),
-    rename = require('gulp-rename'),
-    shell  = require('gulp-shell'),
-    green = gutil.colors.green,
-    cyan = gutil.colors.cyan,
+var rootDir         = process.env.PWD,
+    settings        = require('./gulpsettings.js'),
+    path            = require('path'),
+    gulp            = require('gulp'),
+    gutil           = require('gulp-util'),
+    less            = require('gulp-less-sourcemap'),
+    clean           = require('gulp-clean'),
+    jshint          = require('gulp-jshint'),
+    jscs            = require('gulp-jscs'),
+    inject          = require('gulp-inject'),
+    expect          = require('gulp-expect-file'),
+    freeze          = require('gulp-freeze'),
+    annotate        = require('gulp-ng-annotate'),
+    uglify          = require('gulp-uglify'),
+    concat          = require('gulp-concat'),
+    templateCache   = require('gulp-angular-templatecache'),
+    minifyCss       = require('gulp-minify-css'),
+    rename          = require('gulp-rename'),
+    shell           = require('gulp-shell'),
+    green           = gutil.colors.green,
+    cyan            = gutil.colors.cyan,
     startLog = function (log) {
       return gutil.log(gutil.colors.bold(log));
     };
@@ -46,9 +50,7 @@ gulp.task('_buildCSS', ['clean'], function () {
 
   return gulp
     .src('./www/less/**/main.less')
-    .pipe(less({
-      sourceMap: true
-    }))
+    .pipe(less())
     .pipe(gulp.dest(settings.buildDir + '/css'));
 });
 
@@ -61,7 +63,8 @@ gulp.task('_compileCSS', ['clean'], function () {
   return gulp
     .src('./www/less/**/main.less')
     .pipe(less())
-    .pipe(minifyCss())
+    .pipe(minifyCss({keepSpecialComments: 0}))
+    .pipe(freeze())
     .pipe(gulp.dest(settings.buildDir + '/css'));
 });
 
@@ -138,9 +141,27 @@ gulp.task('_buildTemplates', ['_clean'], function () {
 });
 
 /**
+ * Compile templates to Angular templates in the build dir.
+ */
+gulp.task('_compileTemplates', ['_clean'], function () {
+  startLog(':: Build templates');
+  return gulp
+    .src('./www/templates/**/*.html')
+    .pipe(templateCache({
+      module: 'templates',
+      standalone: true
+    }))
+    .pipe(annotate())
+    .pipe(uglify())
+    .pipe(freeze())
+    .pipe(gulp.dest(settings.buildDir + '/js'));
+});
+
+/**
  * Build JS files.
  */
-gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
+gulp.task('_buildJS',
+  ['clean', '_lintServer', '_lintPublic', '_buildTemplates'], function () {
   startLog(':: Build public JS');
 
   gulp
@@ -165,10 +186,43 @@ gulp.task('_buildJS', ['clean', '_lintServer', '_lintPublic'], function () {
 });
 
 /**
+ * Copy vendors files.
+ */
+gulp.task('_copyVendors', ['clean'], function () {
+  startLog(':: Copy vendors files');
+
+  gulp
+    .src(settings.vendorFiles)
+    .pipe(expect(settings.vendorFiles));
+
+  return gulp
+    .src(settings.vendorFiles)
+    .pipe(concat('vendors.js'))
+    .pipe(annotate())
+    .pipe(uglify())
+    .pipe(freeze())
+    .pipe(gulp.dest(settings.buildDir + '/js'));
+});
+
+/**
+ * Compile JS files.
+ */
+gulp.task('_compileJS', ['clean', '_compileTemplates'], function () {
+  startLog(':: Compile public JS');
+
+  return gulp
+    .src('./www/js/**/*.js')
+    .pipe(concat('mockify.js'))
+    .pipe(annotate())
+    .pipe(uglify())
+    .pipe(freeze())
+    .pipe(gulp.dest(settings.buildDir + '/js'));
+});
+
+/**
  * Inject the builded assets in the main layout.
  */
-gulp.task('_buildAssets',
-  ['clean', '_buildCSS', '_buildTemplates', '_buildJS'], function () {
+gulp.task('_buildAssets', ['clean', '_buildCSS', '_buildJS'], function () {
   startLog(':: Inject assets in the layout');
 
   return gulp
@@ -178,6 +232,34 @@ gulp.task('_buildAssets',
         .src([].concat(
           settings.vendorFiles,
           settings.buildDir + '/js/**/*.js',
+          settings.buildDir + '/css/main.css'
+        ), { read: false }),
+        {
+          ignorePath: ['/http-build/static', '/www'],
+          addPrefix: '/static'
+        }
+      )
+    )
+    .pipe(rename('layout.html'))
+    .pipe(gulp.dest(rootDir + '/http/views'));
+});
+
+/**
+ * Inject the compiled assets in the main layout.
+ */
+gulp.task('_compileAssets',
+  ['clean', '_compileCSS', '_compileJS'], function () {
+  startLog(':: Inject assets in the layout');
+
+  return gulp
+    .src(rootDir + '/http/views/_layout.html')
+    .pipe(
+      inject(gulp
+        .src([].concat(
+          settings.buildDir + '/css/**/*.css',
+          settings.buildDir + '/js/vendors*.js',
+          settings.buildDir + '/js/templates*.js',
+          settings.buildDir + '/js/mockify*.js',
           settings.buildDir + '/css/main.css'
         ), { read: false }),
         {
@@ -231,6 +313,7 @@ gulp.task('help', function() {
   gutil.log(' - npm install');
   gutil.log(' - bower install');
   gutil.log(' - ./gulp build');
+  gutil.log(' - ./gulp compile');
   gutil.log(' - ./gulp serve');
 
   gutil.log('');
@@ -240,8 +323,7 @@ gulp.task('help', function() {
   gutil.log(' - ' + green('watch') + ': watch JS and less files and trigger' +
     ' the build task on modifications');
   gutil.log(' - ' + green('build') + ': build less and JS files.');
-  // gutil.log(' - ' + green('compile') + ': compile (minify) less and JS
-  // files.');
+  gutil.log(' - ' + green('compile') + ': minify less and JS files.');
   gutil.log(' - ' + green('start') + ': start mockify.');
   gutil.log(' - ' + green('debug') + ': start mockify with a breakpoint at ' +
     'loading.');
@@ -260,7 +342,7 @@ gulp.task('build', [
   '_copyImages', '_copyFonts',
   '_buildAssets']);
 gulp.task('compile', [
-  '_compileCSS', '_compileJS',
+  '_compileCSS', '_compileJS', '_copyVendors',
   '_copyImages', '_copyFonts',
   '_compileAssets']);
 gulp.task('watch', ['build', '_watch']);
