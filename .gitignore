@@ -6,4 +6,6 @@ www/build
 daemon/db.sqlite
 daemon/log/*.log
 
+doc/.*
+
 npm-debug.log
