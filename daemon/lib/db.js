@@ -12,7 +12,7 @@ module.exports = (function () {
       Q         = require('q');
 
   var file      = 'db.sqlite',
-      absFile   = path.join(process.env.PWD, 'daemon', file),
+      absFile   = path.join(__dirname, '..', file),
       conStr    = 'sqlite://' + absFile,
       exists    = fs.existsSync(absFile),
       models    = require('./models'),

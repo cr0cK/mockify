@@ -22,7 +22,7 @@ module.exports = (function () {
 
     } else {
       httpChild = spawn('node', [
-        path.join(process.env.PWD, 'http', 'app.js')
+        path.join(__dirname, '..', '..', 'http', 'app.js')
       ]);
 
       httpChild.stdout.on('data', function (data) {

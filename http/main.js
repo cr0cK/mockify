@@ -26,7 +26,7 @@ module.exports = function () {
     .use(compress())
     .use(favicon())
     .use(methodOverride())
-    .use(express.static(path.join(process.env.PWD, 'http-build')))
+    .use(express.static(path.join(__dirname, '..', 'http-build')))
     .use(indexRouter)
     // .use('/api', apiRouter)
     .use(function (req, res) {
