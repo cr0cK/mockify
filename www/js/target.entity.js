@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.entity.target', [
-    'procKr.service.webSocket'
+  angular.module('mockify.entity.target', [
+    'mockify.service.webSocket'
   ])
 
   /**

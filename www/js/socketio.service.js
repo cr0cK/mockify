@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.service.webSocket', [
+  angular.module('mockify.service.webSocket', [
   ])
 
   .factory('webSocketService', ['$rootScope', '$interval',

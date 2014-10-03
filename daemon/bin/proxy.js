@@ -1,6 +1,6 @@
 /**
  * This is the proxy binary which allows to proxy and save queries in the
- * procKr database?
+ * mockify database?
  */
 
 /* global Buffer */
@@ -92,7 +92,7 @@ var startProxy = function (target) {
     if (target.recording) {
       // set a header to identify the query in order to save its response
       var uuid = _.uuid();
-      proxyReq.setHeader('X-procKr-rowuuid', uuid);
+      proxyReq.setHeader('X-mockify-rowuuid', uuid);
 
       // decode body to json
       jsonBody(req, res, function (__, json) {
@@ -128,7 +128,7 @@ var startProxy = function (target) {
 
     res.on('end', function () {
       var res_ = this.req.res;
-      var uuid = this.req._headers['x-prockr-rowuuid'];
+      var uuid = this.req._headers['x-mockify-rowuuid'];
 
       var megaBuffer = Buffer.concat(buffers);
 

@@ -4,7 +4,7 @@ module.exports = (function () {
   var indexRouter = require('express').Router();
 
   function index(req, res) {
-    res.render('index', { title: 'procKr' });
+    res.render('index', { title: 'mockify' });
   }
 
   indexRouter.route('/').get(index);

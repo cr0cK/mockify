@@ -204,17 +204,17 @@ gulp.task('_watch', function () {
 });
 
 /**
- * Start procKr.
+ * Start mockify.
  */
 gulp.task('_start', shell.task([
-  'nodemon -L --watch daemon --debug daemon/procKr.js'
+  'nodemon -L --watch daemon --debug daemon/mockify.js'
 ]));
 
 /**
- * Start procKr with a breakpoint at loading.
+ * Start mockify with a breakpoint at loading.
  */
 gulp.task('_debug', shell.task([
-  'nodemon -L --watch daemon --debug --debug-brk daemon/procKr.js'
+  'nodemon -L --watch daemon --debug --debug-brk daemon/mockify.js'
 ]));
 
 /**
@@ -242,8 +242,8 @@ gulp.task('help', function() {
   gutil.log(' - ' + green('build') + ': build less and JS files.');
   // gutil.log(' - ' + green('compile') + ': compile (minify) less and JS
   // files.');
-  gutil.log(' - ' + green('start') + ': start procKr.');
-  gutil.log(' - ' + green('debug') + ': start procKr with a breakpoint at ' +
+  gutil.log(' - ' + green('start') + ': start mockify.');
+  gutil.log(' - ' + green('debug') + ': start mockify with a breakpoint at ' +
     'loading.');
   gutil.log(' - ' + green('inspector') + ': start node-inspector.');
   gutil.log('');

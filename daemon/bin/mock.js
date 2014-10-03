@@ -1,6 +1,6 @@
 /**
  * This is the mock binary which allows to 'start' fake APIs by serving the
- * data in the procKr database.
+ * data in the mockify database.
  */
 
 'use strict';
@@ -62,7 +62,7 @@ var runApp = function (target, db) {
               res.setHeader(key, value);
             });
 
-            res.setHeader('X-procKr-rowuuid', response.uuid);
+            res.setHeader('X-mockify-rowuuid', response.uuid);
 
             res
               .status(response.status || 500)

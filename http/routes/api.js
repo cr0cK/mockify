@@ -9,7 +9,7 @@ module.exports = (function () {
 
   function index(req, res) {
     res.json({
-      message: 'Welcome to the procKr api!\nAPI is reachable.'
+      message: 'Welcome to the mockify api!\nAPI is reachable.'
     });
   }
 

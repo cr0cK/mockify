@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.alert', [
-    'procKr.service.webSocket'
+  angular.module('mockify.alert', [
+    'mockify.service.webSocket'
   ])
 
   /**

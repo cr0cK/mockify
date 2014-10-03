@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.dashboard', [
-    'procKr.process',
-    'procKr.responses',
-    'procKr.logs'
+  angular.module('mockify.dashboard', [
+    'mockify.process',
+    'mockify.responses',
+    'mockify.logs'
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {

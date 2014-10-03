@@ -1,5 +1,5 @@
 /**
- * Handler for targets for the procKr cli.
+ * Handler for targets for the mockify cli.
  */
 
 'use strict';

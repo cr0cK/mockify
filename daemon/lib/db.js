@@ -126,7 +126,7 @@ module.exports = (function () {
      */
     toMemory: function (callback) {
       var self = this;
-      var file = 'procKr_dump_' + _.uuid() + '.sql';
+      var file = 'mockify_dump_' + _.uuid() + '.sql';
       var destFile = path.join(os.tmpDir(), file);
       var cmdLind = 'sqlite3 ' + absFile + ' .dump > ' + destFile;
 

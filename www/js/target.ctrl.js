@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.process', [
-    'procKr.service.webSocket',
-    'procKr.service.localStorage',
-    'procKr.entity.target',
+  angular.module('mockify.process', [
+    'mockify.service.webSocket',
+    'mockify.service.localStorage',
+    'mockify.entity.target',
 
     'toggle-switch'
   ])

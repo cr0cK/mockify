@@ -1,14 +1,14 @@
 (function () {
   'use strict';
 
-  angular.module('procKr', [
+  angular.module('mockify', [
     'ui.router',
     'ui.bootstrap',
 
     'templates',
 
-    'procKr.alert',
-    'procKr.dashboard'
+    'mockify.alert',
+    'mockify.dashboard'
   ])
 
   .config(function ($urlRouterProvider, $stateProvider) {

@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.responses', [
-    'procKr.service.webSocket'
+  angular.module('mockify.responses', [
+    'mockify.service.webSocket'
   ])
 
   .controller('ResponsesCtrl', ['$scope', 'webSocketService',

@@ -4,7 +4,7 @@
 
 var settings = (function () {
   return {
-    appName: 'procKr',
+    appName: 'mockify',
     buildDir: 'http-build/static',
     serverFiles: [
       'bin/**/*.js',

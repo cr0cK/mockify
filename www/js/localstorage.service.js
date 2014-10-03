@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.service.localStorage', [
+  angular.module('mockify.service.localStorage', [
   ])
 
   .factory('localStorageFactory', ['$window', function ($window) {

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('procKr.logs.directives', [
+  angular.module('mockify.logs.directives', [
   ])
 
   /**
