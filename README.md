@@ -58,7 +58,7 @@ Mockify uses a SQLite database to store data and spawn in-memory databases for m
 
 ## The different parts of mockify
 
-![alt tag](https://github.com/cr0cK/mockify/blob/doc/doc/architecture.png)
+![alt tag](https://github.com/cr0cK/mockify/blob/master/doc/architecture.png)
 
 ## Features
 
@@ -67,7 +67,7 @@ Mockify uses a SQLite database to store data and spawn in-memory databases for m
 
 ## Using mockify with the built-in webapp
 
-![alt tag](https://github.com/cr0cK/mockify/blob/doc/doc/mockify.png)
+![alt tag](https://github.com/cr0cK/mockify/blob/master/doc/mockify.png)
 
 ## Using mockify from the command line
 
